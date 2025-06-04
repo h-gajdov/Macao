@@ -16,11 +16,12 @@ public class Card : MonoBehaviour {
     public SpriteRenderer spriteRenderer;
 
     private void OnValidate() {
-        spriteRenderer.sharedMaterial.SetTexture("_FrontTexture", Global.cardFaces[GetValueString()]);
+        if (!Global.CardFaces.ContainsKey(GetValueString())) return;
+        spriteRenderer.sharedMaterial.SetTexture("_FrontTexture", Global.CardFaces[GetValueString()]);
     }
 
     private void Start() {
-        spriteRenderer.material.SetTexture("_FrontTexture", Global.cardFaces[GetValueString()]);
+        spriteRenderer.material.SetTexture("_FrontTexture", Global.CardFaces[GetValueString()]);
     }
 
     public string GetValueString() {
