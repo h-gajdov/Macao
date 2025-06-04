@@ -10,16 +10,21 @@ public class CardArranger : MonoBehaviour {
     public int numberOfCards = 10;
 
     public void GenerateCards() {
+        float tmp = 0;
         for (int i = 0; i < numberOfCards; i++) {
             Transform card = Instantiate(cardPrefab, transform, true).transform;
-            Transform renderer = card.GetChild(0);
 
             card.localPosition = Vector3.zero;
+            card.localPosition = new Vector3(0, 0, tmp);
             card.eulerAngles = Vector3.right * 90; // (90, 0, 0)
 
-            Vector3 currScale = renderer.localScale;
-            renderer.localScale = new Vector3(currScale.x / 2, currScale.y / 2, currScale.z);
-            cardsInHand.Add(card.GetComponent<Card>());
+            //Vector3 currScale = card.localScale;
+            //card.localScale = new Vector3(currScale.x / 2, currScale.y / 2, currScale.z);
+
+            Card cl = card.GetComponent<Card>();
+            cl.spriteRenderer.sortingOrder = card.GetSiblingIndex();
+            cardsInHand.Add(cl);
+            cl.Randomize();
         }
     }
 
@@ -45,7 +50,6 @@ public class CardArranger : MonoBehaviour {
             Transform card = transform.GetChild(i);
             Vector3 currLocalPosition = card.localPosition;
             card.localPosition = new Vector3(startX + i * spacing, currLocalPosition.y, currLocalPosition.z);
-            card.GetComponent<Card>().spriteRenderer.sortingOrder = i;
         }
     }
 }

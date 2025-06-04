@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2670504978827762094}
   - component: {fileID: 2670504978827762095}
+  - component: {fileID: 6700969571854580606}
   m_Layer: 0
   m_Name: Card
   m_TagString: Untagged
@@ -26,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 2670504978827762092}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_Children:
   - {fileID: 2670504979619125473}
   m_Father: {fileID: 0}
@@ -47,6 +48,21 @@ MonoBehaviour:
   value: 6
   suit: 0
   spriteRenderer: {fileID: 2670504979619125472}
+  selectSpeed: 10
+  hovered: 0
+--- !u!65 &6700969571854580606
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2670504978827762092}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 4.989794, y: 7.215058, z: 0.01}
+  m_Center: {x: 0.008368492, y: 0.005697489, z: 0}
 --- !u!1 &2670504979619125486
 GameObject:
   m_ObjectHideFlags: 0
