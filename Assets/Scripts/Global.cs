@@ -1,0 +1,27 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public static class Global {
+    public static Dictionary<string, Texture> cardFaces = new Dictionary<string, Texture>();
+
+    public static void Initialize() {
+        cardFaces.Clear();
+        for (int cardValue = 1; cardValue <= 13; cardValue++) {
+            string first = cardValue.ToString();
+            if (cardValue == 1) first = "A";
+            else if (cardValue > 10) {
+                switch (cardValue) {
+                    case 11: first = "J"; break;
+                    case 12: first = "Q"; break;
+                    case 13: first = "K"; break;
+                }
+            }
+            foreach (Suit s in System.Enum.GetValues(typeof(Suit))) {
+                string key = first + s.ToString()[0];
+                Texture value = Resources.Load<Texture>("Sprites/Cards/" + key);
+                cardFaces.Add(key, value);
+            }
+        }
+    }
+}

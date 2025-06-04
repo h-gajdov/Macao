@@ -15,19 +15,12 @@ public class Card : MonoBehaviour {
     public Suit suit;
     public SpriteRenderer spriteRenderer;
 
-    private Texture LoadFace() {
-        Debug.Log(GetValueString());
-        Texture face = Resources.Load<Texture>("Sprites/Cards/" + GetValueString());
-        Debug.Log(face);
-        return face;
-    }
-
     private void OnValidate() {
-        spriteRenderer.sharedMaterial.SetTexture("_FrontTexture", LoadFace());
+        spriteRenderer.sharedMaterial.SetTexture("_FrontTexture", Global.cardFaces[GetValueString()]);
     }
 
     private void Start() {
-        spriteRenderer.material.SetTexture("_FrontTexture", LoadFace());
+        spriteRenderer.material.SetTexture("_FrontTexture", Global.cardFaces[GetValueString()]);
     }
 
     public string GetValueString() {
