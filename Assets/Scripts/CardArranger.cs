@@ -20,7 +20,7 @@ public class CardArranger : MonoBehaviour {
 
             card.localPosition = Vector3.zero;
             card.localPosition = new Vector3(0, 0, tmp);
-            if (player.IsMine) card.localEulerAngles = Vector3.right * 90; // (90, 0, 0)
+            if (player.photonView.IsMine) card.localEulerAngles = Vector3.right * 90; // (90, 0, 0)
             else card.localEulerAngles = Vector3.right * -90;
 
             Card cl = card.GetComponent<Card>();
@@ -45,7 +45,7 @@ public class CardArranger : MonoBehaviour {
     }
     
     private void Update() {
-        if (!player.IsMine) return;
+        if (!player.photonView.IsMine) return;
         CheckHoveredCards();
     }
 

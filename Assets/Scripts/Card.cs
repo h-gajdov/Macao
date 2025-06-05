@@ -33,7 +33,7 @@ public class Card : MonoBehaviour {
     private void Update() {
         initialPosition = GetComponentInParent<CardArranger>().GetTargetPosition(transform);
         if(hovered) {
-            Hover(1, transform.localPosition.z < 0.9f, 999);
+            Hover(1.5f, transform.localPosition.z < 0.9f, 999);
         } else {
             Hover(0, transform.localPosition.z > 0.1f, transform.GetSiblingIndex());
         }
