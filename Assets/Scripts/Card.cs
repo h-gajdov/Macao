@@ -17,7 +17,10 @@ public class Card : MonoBehaviour {
     public SpriteRenderer spriteRenderer;
     public float selectSpeed = 10f;
     public bool hovered = false;
+    public bool hidden = false;
 
+    Vector3 initialPosition;
+    
     private void OnValidate() {
         if (!Global.CardFaces.ContainsKey(GetValueString())) return;
         spriteRenderer.sharedMaterial.SetTexture("_FrontTexture", Global.CardFaces[GetValueString()]);
@@ -28,6 +31,7 @@ public class Card : MonoBehaviour {
     }
 
     private void Update() {
+        initialPosition = GetComponentInParent<CardArranger>().GetTargetPosition(transform);
         if(hovered) {
             Hover(1, transform.localPosition.z < 0.9f, 999);
         } else {
@@ -61,24 +65,12 @@ public class Card : MonoBehaviour {
 
     private void Hover(float target, bool condition, int sortLevel) {
         Vector3 currPosition = transform.localPosition;
-        Vector3 targetPosition = new Vector3(currPosition.x, 0, target);
-        spriteRenderer.sortingOrder = sortLevel;
-        if(!condition) {
-            transform.localPosition = targetPosition;
-            return;
-        }
-        transform.localPosition = Vector3.Slerp(currPosition, targetPosition, selectSpeed * Time.deltaTime);
-    }
-
-    public IEnumerator HoverExit() {
-        Vector3 currPosition = transform.localPosition;
-        Vector3 targetPosition = new Vector3(currPosition.x, 0, 0); ;
-        while (transform.localPosition.z > 0.1f) {
-            currPosition = transform.localPosition;
-            targetPosition = new Vector3(currPosition.x, 0, 0);
-            transform.localPosition = Vector3.Slerp(currPosition, targetPosition, 10 * selectSpeed * Time.deltaTime);
-            yield return null;
-        }
-        transform.localPosition = targetPosition;
+        Vector3 targetPosition = new Vector3(initialPosition.x, initialPosition.y, target);
+        //spriteRenderer.sortingOrder = sortLevel;
+        //if(!condition) {
+        //    transform.localPosition = targetPosition;
+        //    return;
+        //}
+        transform.localPosition = Vector3.Lerp(currPosition, targetPosition, selectSpeed * Time.deltaTime);
     }
 }

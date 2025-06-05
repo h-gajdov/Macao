@@ -7,7 +7,11 @@ public class CardArranger : MonoBehaviour {
     public List<Card> cardsInHand = new List<Card>();
     public float maxWidth = 5f;
     public float spaceBetweenCards = 0.1f;
+    public float smoothness = 2f;
     public int numberOfCards = 10;
+
+    Card prevSelected;
+    Player player;
 
     public void GenerateCards() {
         float tmp = 0;
@@ -16,10 +20,8 @@ public class CardArranger : MonoBehaviour {
 
             card.localPosition = Vector3.zero;
             card.localPosition = new Vector3(0, 0, tmp);
-            card.eulerAngles = Vector3.right * 90; // (90, 0, 0)
-
-            //Vector3 currScale = card.localScale;
-            //card.localScale = new Vector3(currScale.x / 2, currScale.y / 2, currScale.z);
+            if (player.IsMine) card.localEulerAngles = Vector3.right * 90; // (90, 0, 0)
+            else card.localEulerAngles = Vector3.right * -90;
 
             Card cl = card.GetComponent<Card>();
             cl.spriteRenderer.sortingOrder = card.GetSiblingIndex();
@@ -33,15 +35,21 @@ public class CardArranger : MonoBehaviour {
 
         cardsInHand.Clear();
         foreach (Transform child in transform) Destroy(child.gameObject);
-
+        player = transform.parent.GetComponent<Player>();
         GenerateCards();
     }
 
     private void Start() {
+        player = transform.parent.GetComponent<Player>();
         GenerateCards();
     }
     
     private void Update() {
+        if (!player.IsMine) return;
+        CheckHoveredCards();
+    }
+
+    private void SpaceCards() {
         int count = transform.childCount;
         float spacing = Mathf.Min(spaceBetweenCards, maxWidth / (count - 1));
         float startX = -(spacing * (count - 1)) / 2f;
@@ -49,7 +57,53 @@ public class CardArranger : MonoBehaviour {
         for (int i = 0; i < count; i++) {
             Transform card = transform.GetChild(i);
             Vector3 currLocalPosition = card.localPosition;
-            card.localPosition = new Vector3(startX + i * spacing, currLocalPosition.y, currLocalPosition.z);
+            Vector3 targetPosition = new Vector3(startX + i * spacing, currLocalPosition.y, currLocalPosition.z);
+
+            if (GameMath.SqrDistance(currLocalPosition, targetPosition) > 0.05f * 0.05f)
+                card.localPosition = Vector3.Lerp(currLocalPosition, targetPosition, smoothness * Time.deltaTime);
+            else card.localPosition = targetPosition;
         }
+    }
+
+    public Vector3 GetTargetPosition(Transform card) {
+        int count = transform.childCount;
+        float spacing = Mathf.Min(spaceBetweenCards, maxWidth / (count - 1));
+        float startX = -(spacing * (count - 1)) / 2f;
+
+        Vector3 currLocalPosition = card.localPosition;
+        Vector3 targetPosition = new Vector3(startX + card.GetSiblingIndex() * spacing, currLocalPosition.y, currLocalPosition.z);
+
+        return targetPosition;
+    }
+
+    private void CheckHoveredCards() {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit[] hits = Physics.RaycastAll(ray);
+
+        if (hits.Length == 0) {
+            if (prevSelected != null) {
+                prevSelected.hovered = false;
+                prevSelected = null;
+            }
+            return;
+        }
+        
+        if(prevSelected != null) prevSelected.hovered = false;
+
+        prevSelected = GetTopCardOfHits(hits);
+        if(prevSelected.transform.parent == transform) { //If it is a child of the card arranger else ignore it
+            prevSelected.hovered = true;
+        }
+    }
+
+    private Card GetTopCardOfHits(RaycastHit[] hits) {
+        Card selectedCard = hits[0].transform.GetComponent<Card>();
+        foreach (RaycastHit raycastHit in hits) {
+            Card card = raycastHit.transform.GetComponent<Card>();
+            if (card == null) continue;
+            //if (selectedCard.transform.GetSiblingIndex() < card.transform.GetSiblingIndex()) selectedCard = card;
+            if (selectedCard.spriteRenderer.sortingOrder < card.spriteRenderer.sortingOrder) selectedCard = card;
+        }
+        return selectedCard;
     }
 }

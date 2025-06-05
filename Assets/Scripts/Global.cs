@@ -4,6 +4,7 @@ using UnityEngine;
 
 public static class Global {
     public static Dictionary<string, Texture> CardFaces = new Dictionary<string, Texture>();
+    public static Texture BackFace;
 
     public static void Initialize() {
         CardFaces.Clear();
@@ -23,5 +24,7 @@ public static class Global {
                 CardFaces.Add(key, value);
             }
         }
+
+        BackFace = Resources.Load<Texture>("Sprites/Cards/Back");
     }
 }
