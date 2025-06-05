@@ -39,8 +39,30 @@ public class Card : MonoBehaviour {
         }
     }
 
-    public void UpdateImage() {
+    public void Initialize() {
         spriteRenderer.material.SetTexture("_FrontTexture", Global.CardFaces[GetValueString()]);
+        spriteRenderer.sortingOrder = transform.GetSiblingIndex();
+    }
+
+    public void Initialize(string valueString) {
+        if (!char.IsDigit(valueString[0])) {
+            switch (valueString[0]) {
+                case 'A': value = 1; break;
+                case 'J': value = 11; break;
+                case 'Q': value = 12; break;
+                case 'K': value = 13; break;
+            }
+        } else {
+            value = int.Parse(valueString.Substring(0, valueString.Length - 1));
+        }
+
+        foreach (Suit s in System.Enum.GetValues(typeof(Suit))) {
+            if (s.ToString()[0] != valueString[1]) continue;
+            suit = s;
+            break;
+        }
+
+        Initialize();
     }
     
     public void Randomize() {
@@ -66,7 +88,6 @@ public class Card : MonoBehaviour {
     private void Hover(float target, bool condition, int sortLevel) {
         Vector3 currPosition = transform.localPosition;
         Vector3 targetPosition = new Vector3(initialPosition.x, initialPosition.y, target);
-        //spriteRenderer.sortingOrder = sortLevel;
         //if(!condition) {
         //    transform.localPosition = targetPosition;
         //    return;

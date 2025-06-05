@@ -1,7 +1,9 @@
 using Photon.Pun;
 using Photon.Realtime;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour {
@@ -43,17 +45,33 @@ public class GameManager : MonoBehaviour {
     private void Update() {
         debug = Players;
 
-        float distanceCameraToOrigin = Vector3.Distance(MainCamera.transform.position, Vector3.zero);
-        float halfWidth = Screen.width / 2;
-        float halfHeight = Screen.height / 2;
-        PlayerPositions = new Vector3[] {
-            Camera.main.ScreenToWorldPoint(new Vector3(halfWidth, boundSlider, distanceCameraToOrigin)),
-            Camera.main.ScreenToWorldPoint(new Vector3(halfWidth, Screen.height - boundSlider, distanceCameraToOrigin)),
-            Camera.main.ScreenToWorldPoint(new Vector3(boundSlider, halfHeight, distanceCameraToOrigin)),
-            Camera.main.ScreenToWorldPoint(new Vector3(Screen.width - boundSlider, halfHeight, distanceCameraToOrigin)),
-        };
-
         AssignPositions();
+
+        if (Input.GetKeyDown(KeyCode.K)) DealCards();
+    }
+
+    public List<string> ShuffleCards() {
+        System.Random prng = new System.Random(0);
+        //List<string> shuffeledDeck = Global.AllCardStrings.OrderBy(i => Guid.NewGuid()).ToList();
+        List<string> shuffeledDeck = Global.AllCardStrings.OrderBy(i => prng.Next()).ToList();
+        return shuffeledDeck;
+    }
+
+    public void DealCards() {
+        List<string> deck = ShuffleCards();
+        foreach(string card in deck) {
+            Debug.Log(card);
+        }
+
+        int rrIndex = 0;
+        int count = 0;
+
+        while(count != 7) {
+            int idx = rrIndex + count * Players.Count;
+            Players[rrIndex].cardArranger.SpawnCard(deck[idx]);
+            rrIndex = (rrIndex + 1) % Players.Count;
+            if(rrIndex == 0) count++;
+        }
     }
 
     public static void AssignPositions() {

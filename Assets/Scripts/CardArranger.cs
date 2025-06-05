@@ -14,34 +14,53 @@ public class CardArranger : MonoBehaviour {
     Player player;
 
     public void GenerateCards() {
-        float tmp = 0;
         for (int i = 0; i < numberOfCards; i++) {
-            Transform card = Instantiate(cardPrefab, transform, true).transform;
-
-            card.localPosition = Vector3.zero;
-            card.localPosition = new Vector3(0, 0, tmp);
-            if (player.photonView.IsMine) card.localEulerAngles = Vector3.right * 90; // (90, 0, 0)
-            else card.localEulerAngles = Vector3.right * -90;
-
-            Card cl = card.GetComponent<Card>();
-            cl.spriteRenderer.sortingOrder = card.GetSiblingIndex();
-            cardsInHand.Add(cl);
-            cl.Randomize();
+            SpawnCard();
         }
     }
 
-    private void OnValidate() {
-        if (!Application.isPlaying) return;
-
-        cardsInHand.Clear();
-        foreach (Transform child in transform) Destroy(child.gameObject);
-        player = transform.parent.GetComponent<Player>();
-        GenerateCards();
+    public void SpawnCards(string[] valueStrings) {
+        foreach(string card in valueStrings) {
+            SpawnCard(card);
+        }
     }
+
+    public void SpawnCard(string valueString) {
+        Transform card = Instantiate(cardPrefab, transform, true).transform;
+
+        card.localPosition = Vector3.zero;
+        if (true) card.localEulerAngles = Vector3.right * 90; // (90, 0, 0)
+        else card.localEulerAngles = Vector3.right * -90;
+
+        Card cl = card.GetComponent<Card>();
+        cl.spriteRenderer.sortingOrder = card.GetSiblingIndex();
+        cardsInHand.Add(cl);
+        cl.Initialize(valueString);
+    }
+
+    public void SpawnCard() {
+        Transform card = Instantiate(cardPrefab, transform, true).transform;
+
+        card.localPosition = Vector3.zero;
+        if (player.photonView.IsMine) card.localEulerAngles = Vector3.right * 90; // (90, 0, 0)
+        else card.localEulerAngles = Vector3.right * -90;
+
+        Card cl = card.GetComponent<Card>();
+        cl.spriteRenderer.sortingOrder = card.GetSiblingIndex();
+        cardsInHand.Add(cl);
+        cl.Randomize();
+    }
+
+    //private void OnValidate() {
+    //    if (!Application.isPlaying) return;
+
+    //    cardsInHand.Clear();
+    //    foreach (Transform child in transform) Destroy(child.gameObject);
+    //    player = transform.parent.GetComponent<Player>();
+    //}
 
     private void Start() {
         player = transform.parent.GetComponent<Player>();
-        GenerateCards();
     }
     
     private void Update() {
