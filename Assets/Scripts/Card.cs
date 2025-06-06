@@ -18,7 +18,9 @@ public class Card : MonoBehaviour {
     public float selectSpeed = 10f;
     public bool hovered = false;
     public bool hidden = false;
+    public bool thrown = false;
 
+    CardArranger cardArranger;
     Vector3 initialPosition;
     
     private void OnValidate() {
@@ -27,11 +29,12 @@ public class Card : MonoBehaviour {
     }
 
     private void Start() {
+        cardArranger = GetComponentInParent<CardArranger>();
         spriteRenderer.material.SetTexture("_FrontTexture", Global.CardFaces[GetValueString()]);
     }
 
     private void Update() {
-        initialPosition = GetComponentInParent<CardArranger>().GetTargetPosition(transform);
+        initialPosition = (!thrown) ? cardArranger.GetTargetPosition(transform) : Vector3.zero;
         if(hovered) {
             Hover(1.5f, transform.localPosition.z < 0.9f, 999);
         } else {

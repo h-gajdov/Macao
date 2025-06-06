@@ -115,7 +115,8 @@ public class CardArranger : MonoBehaviour {
 
             if(Input.GetMouseButtonDown(0)) {
                 prevSelected.transform.parent = GameManager.instance.cardsPool;
-                prevSelected.transform.localPosition = Vector3.zero;
+                prevSelected.thrown = true;
+                prevSelected.spriteRenderer.sortingOrder = 10 + prevSelected.transform.GetSiblingIndex();
                 //prevSelected = null;
                 //prevSelected.hovered = false;
             }
