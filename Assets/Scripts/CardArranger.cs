@@ -112,6 +112,13 @@ public class CardArranger : MonoBehaviour {
         prevSelected = GetTopCardOfHits(hits);
         if(prevSelected.transform.parent == transform) { //If it is a child of the card arranger else ignore it
             prevSelected.hovered = true;
+
+            if(Input.GetMouseButtonDown(0)) {
+                prevSelected.transform.parent = GameManager.instance.cardsPool;
+                prevSelected.transform.localPosition = Vector3.zero;
+                //prevSelected = null;
+                //prevSelected.hovered = false;
+            }
         }
     }
 

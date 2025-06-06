@@ -8,7 +8,10 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour {
     public static List<Player> Players = new List<Player>();
+    public static Player localPlayer;
+
     public GameObject playerPrefab;
+    public Transform cardsPool;
     public float boundSlider = 0.1f;
 
     public List<Player> debug;
@@ -22,6 +25,8 @@ public class GameManager : MonoBehaviour {
         Vector3.up * 90,
         Vector3.up * -90
     };
+
+    public static GameManager instance;
 
     private void OnValidate() {
         Global.Initialize();
@@ -40,6 +45,12 @@ public class GameManager : MonoBehaviour {
             Camera.main.ScreenToWorldPoint(new Vector3(boundSlider, halfHeight, distanceCameraToOrigin)),
             Camera.main.ScreenToWorldPoint(new Vector3(Screen.width - boundSlider, halfHeight, distanceCameraToOrigin)),
         };
+
+        if (instance == null) instance = this;
+        else {
+            Destroy(this);
+            return;
+        }
     }
 
     private void Update() {
@@ -47,30 +58,8 @@ public class GameManager : MonoBehaviour {
 
         AssignPositions();
 
-        if (Input.GetKeyDown(KeyCode.K)) DealCards();
-    }
-
-    public List<string> ShuffleCards() {
-        System.Random prng = new System.Random(0);
-        //List<string> shuffeledDeck = Global.AllCardStrings.OrderBy(i => Guid.NewGuid()).ToList();
-        List<string> shuffeledDeck = Global.AllCardStrings.OrderBy(i => prng.Next()).ToList();
-        return shuffeledDeck;
-    }
-
-    public void DealCards() {
-        List<string> deck = ShuffleCards();
-        foreach(string card in deck) {
-            Debug.Log(card);
-        }
-
-        int rrIndex = 0;
-        int count = 0;
-
-        while(count != 7) {
-            int idx = rrIndex + count * Players.Count;
-            Players[rrIndex].cardArranger.SpawnCard(deck[idx]);
-            rrIndex = (rrIndex + 1) % Players.Count;
-            if(rrIndex == 0) count++;
+        if (Input.GetKeyDown(KeyCode.K)) {
+            localPlayer.photonView.RPC("DealCards", RpcTarget.All);
         }
     }
 
