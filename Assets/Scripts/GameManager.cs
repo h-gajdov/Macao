@@ -8,6 +8,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour {
     public static List<Player> Players = new List<Player>();
+    public static Suit CurrentSuit;
     public static Player localPlayer;
 
     public GameObject playerPrefab;

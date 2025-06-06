@@ -19,23 +19,45 @@ public class Card : MonoBehaviour {
     public bool hovered = false;
     public bool hidden = false;
     public bool thrown = false;
+    public bool CanBeThrown { get; private set; } = true;
 
     CardArranger cardArranger;
     Vector3 initialPosition;
-    
-    private void OnValidate() {
-        if (!Global.CardFaces.ContainsKey(GetValueString())) return;
-        spriteRenderer.sharedMaterial.SetTexture("_FrontTexture", Global.CardFaces[GetValueString()]);
+    //private void OnValidate() {
+    //    if (!Global.CardFaces.ContainsKey(GetValueString())) return;
+    //    Initialize();
+    //}
+
+    public void MakeAvailable() {
+        CanBeThrown = true;
+        spriteRenderer.material.SetFloat("_ColorStrength", 0);
+    }
+
+    public void MakeUnavailable() {
+        CanBeThrown = false;
+        Debug.Log(value);
+        spriteRenderer.material.SetFloat("_ColorStrength", 0.5f);
     }
 
     private void Start() {
         cardArranger = GetComponentInParent<CardArranger>();
-        spriteRenderer.material.SetTexture("_FrontTexture", Global.CardFaces[GetValueString()]);
+        Initialize();
+    }
+
+    public void Throw() {
+        if (!CanBeThrown) return;
+
+        transform.parent = GameManager.instance.cardsPool;
+        thrown = true;
+        CanBeThrown = false;
+        spriteRenderer.sortingOrder = 10 + transform.GetSiblingIndex();
+        if(cardArranger != null && cardArranger.cardsInHand.Contains(this)) cardArranger.cardsInHand.Remove(this);
     }
 
     private void Update() {
         initialPosition = (!thrown) ? cardArranger.GetTargetPosition(transform) : Vector3.zero;
-        if(hovered) {
+
+        if(hovered && CanBeThrown) {
             Hover(1.5f, transform.localPosition.z < 0.9f, 999);
         } else {
             Hover(0, transform.localPosition.z > 0.1f, transform.GetSiblingIndex());
@@ -43,7 +65,8 @@ public class Card : MonoBehaviour {
     }
 
     public void Initialize() {
-        spriteRenderer.material.SetTexture("_FrontTexture", Global.CardFaces[GetValueString()]);
+        Sprite sprite = Global.CardFaces[GetValueString()].sprite;
+        spriteRenderer.sprite = sprite;
         spriteRenderer.sortingOrder = transform.GetSiblingIndex();
     }
 
@@ -91,10 +114,6 @@ public class Card : MonoBehaviour {
     private void Hover(float target, bool condition, int sortLevel) {
         Vector3 currPosition = transform.localPosition;
         Vector3 targetPosition = new Vector3(initialPosition.x, initialPosition.y, target);
-        //if(!condition) {
-        //    transform.localPosition = targetPosition;
-        //    return;
-        //}
         transform.localPosition = Vector3.Lerp(currPosition, targetPosition, selectSpeed * Time.deltaTime);
     }
 }

@@ -2,8 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public class Face {
+    public Texture texture;
+    public Sprite sprite;
+
+    public Face(Texture texture, Sprite sprite) {
+        this.texture = texture;
+        this.sprite = sprite;
+    }
+}
+
 public static class Global {
-    public static Dictionary<string, Texture> CardFaces = new Dictionary<string, Texture>();
+    public static Dictionary<string, Face> CardFaces = new Dictionary<string, Face>();
     public static List<string> AllCardStrings = new List<string>();
     public static Texture BackFace;
 
@@ -22,7 +32,9 @@ public static class Global {
             }
             foreach (Suit s in System.Enum.GetValues(typeof(Suit))) {
                 string key = first + s.ToString()[0];
-                Texture value = Resources.Load<Texture>("Sprites/Cards/" + key);
+                Texture2D texture = Resources.Load<Texture2D>("Sprites/Cards/" + key);
+                Sprite sprite = Resources.Load<Sprite>("Sprites/Cards/" + key);
+                Face value = new Face(texture, sprite);
                 CardFaces.Add(key, value);
                 AllCardStrings.Add(key);
             }

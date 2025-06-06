@@ -25,9 +25,7 @@ public class CardArranger : MonoBehaviour {
         }
     }
 
-    public void SpawnCard(string valueString) {
-        Transform card = Instantiate(cardPrefab, transform, true).transform;
-
+    private Card SetInitialTransformOfCard(Transform card) {
         card.localPosition = Vector3.zero;
         if (true) card.localEulerAngles = Vector3.right * 90; // (90, 0, 0)
         else card.localEulerAngles = Vector3.right * -90;
@@ -35,20 +33,28 @@ public class CardArranger : MonoBehaviour {
         Card cl = card.GetComponent<Card>();
         cl.spriteRenderer.sortingOrder = card.GetSiblingIndex();
         cardsInHand.Add(cl);
-        cl.Initialize(valueString);
+        return cl;
     }
 
-    public void SpawnCard() {
+    public Card SpawnCard(string valueString, Transform parent) {
+        Transform card = Instantiate(cardPrefab, parent, true).transform;
+        Card cl = SetInitialTransformOfCard(card);
+        cl.Initialize(valueString);
+        return cl;
+    }
+
+    public Card SpawnCard(string valueString) {
         Transform card = Instantiate(cardPrefab, transform, true).transform;
+        Card cl = SetInitialTransformOfCard(card);
+        cl.Initialize(valueString);
+        return cl;
+    }
 
-        card.localPosition = Vector3.zero;
-        if (player.photonView.IsMine) card.localEulerAngles = Vector3.right * 90; // (90, 0, 0)
-        else card.localEulerAngles = Vector3.right * -90;
-
-        Card cl = card.GetComponent<Card>();
-        cl.spriteRenderer.sortingOrder = card.GetSiblingIndex();
-        cardsInHand.Add(cl);
+    public Card SpawnCard() {
+        Transform card = Instantiate(cardPrefab, transform, true).transform;
+        Card cl = SetInitialTransformOfCard(card);
         cl.Randomize();
+        return cl;
     }
 
     //private void OnValidate() {
@@ -66,6 +72,14 @@ public class CardArranger : MonoBehaviour {
     private void Update() {
         if (!player.photonView.IsMine) return;
         CheckHoveredCards();
+        SetAvailabilityOfCards(); //TODO: Remove this and make it check when your turn comes
+    }
+
+    private void SetAvailabilityOfCards() {
+        foreach (Card cl in cardsInHand) {
+            if (cl.suit == GameManager.CurrentSuit) cl.MakeAvailable();
+            else cl.MakeUnavailable();
+        }
     }
 
     private void SpaceCards() {
@@ -73,10 +87,16 @@ public class CardArranger : MonoBehaviour {
         float spacing = Mathf.Min(spaceBetweenCards, maxWidth / (count - 1));
         float startX = -(spacing * (count - 1)) / 2f;
 
-        for (int i = 0; i < count; i++) {
-            Transform card = transform.GetChild(i);
+        int i = 0;
+        foreach(Card cl in cardsInHand) {
+            Transform card = cl.transform;
             Vector3 currLocalPosition = card.localPosition;
-            Vector3 targetPosition = new Vector3(startX + i * spacing, currLocalPosition.y, currLocalPosition.z);
+            Vector3 targetPosition = new Vector3(startX + i++ * spacing, currLocalPosition.y, currLocalPosition.z);
+
+            Debug.Log("CALLED");
+
+            if (cl.suit == GameManager.CurrentSuit) cl.MakeAvailable();
+            else cl.MakeUnavailable();
 
             if (GameMath.SqrDistance(currLocalPosition, targetPosition) > 0.05f * 0.05f)
                 card.localPosition = Vector3.Lerp(currLocalPosition, targetPosition, smoothness * Time.deltaTime);
@@ -114,11 +134,7 @@ public class CardArranger : MonoBehaviour {
             prevSelected.hovered = true;
 
             if(Input.GetMouseButtonDown(0)) {
-                prevSelected.transform.parent = GameManager.instance.cardsPool;
-                prevSelected.thrown = true;
-                prevSelected.spriteRenderer.sortingOrder = 10 + prevSelected.transform.GetSiblingIndex();
-                //prevSelected = null;
-                //prevSelected.hovered = false;
+                prevSelected.Throw();
             }
         }
     }

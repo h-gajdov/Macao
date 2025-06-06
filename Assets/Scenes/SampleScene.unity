@@ -147,7 +147,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 628322504}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.5180147, y: -14.601704, z: 7.1816025}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -277,6 +277,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 4493684548790912109, guid: 3eb090641031b6f4c9230214077877a9, type: 3}
+  cardsPool: {fileID: 628322505}
   boundSlider: 0.1
   debug: []
 --- !u!4 &822452578
@@ -434,52 +435,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ff31b687f617ec47b5f744f662450f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!21 &1586538656
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Card (Instance)
-  m_Shader: {fileID: -6465566751694194690, guid: e273fd7700184c24d843ff53b7aa6d9c, type: 3}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - Texture2D_16c0cf18fbc341999b06df7828429ffb:
-        m_Texture: {fileID: 2800000, guid: 6647c1ac33e007f44abf21023e43adfe, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - Texture2D_543027cb9bb147a3804587c30a5bda77:
-        m_Texture: {fileID: 2800000, guid: e52587cd5589dd44fb354ee9eeea3b24, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _FrontTexture:
-        m_Texture: {fileID: 2800000, guid: 2ab1766db73ed1141a32d9eec310a253, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_Lightmaps:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_LightmapsInd:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_ShadowMasks:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Floats: []
-    m_Colors: []
-  m_BuildTextureStacks: []
 --- !u!1001 &2670504979062896121
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -542,6 +497,6 @@ PrefabInstance:
     - target: {fileID: 2670504979619125472, guid: 443c19f2f76df804787d9608146bcae1, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 1586538656}
+      objectReference: {fileID: 2100000, guid: 0a80fed89c5ce434794c56766682e6ec, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 443c19f2f76df804787d9608146bcae1, type: 3}

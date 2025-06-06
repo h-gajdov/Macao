@@ -30,9 +30,6 @@ public class Player : MonoBehaviour {
     [PunRPC]
     public void DealCards() {
         List<string> deck = ShuffleCards();
-        foreach (string card in deck) {
-            Debug.Log(card);
-        }
 
         int rrIndex = 0;
         int count = 0;
@@ -43,5 +40,11 @@ public class Player : MonoBehaviour {
             rrIndex = (rrIndex + 1) % GameManager.Players.Count;
             if (rrIndex == 0) count++;
         }
+
+        Card firstCardInPool = cardArranger.SpawnCard(deck.Last(), GameManager.instance.cardsPool);
+        GameManager.CurrentSuit = firstCardInPool.suit;
+        firstCardInPool.Throw();
+        firstCardInPool.transform.position = Vector3.zero;
+        Debug.Log(GameManager.CurrentSuit);
     }
 }
