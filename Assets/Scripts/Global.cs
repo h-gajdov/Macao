@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.ParticleSystem;
 
 public class Face {
     public Texture texture;
@@ -14,6 +15,7 @@ public class Face {
 
 public static class Global {
     public static Dictionary<string, Face> CardFaces = new Dictionary<string, Face>();
+    public static Dictionary<Suit, Sprite> SuitSprites = new Dictionary<Suit, Sprite>();
     public static List<string> AllCardStrings = new List<string>();
     public static Texture BackFace;
 
@@ -39,6 +41,13 @@ public static class Global {
                 AllCardStrings.Add(key);
             }
         }
+
+        SuitSprites.Clear();
+        foreach (Suit key in System.Enum.GetValues(typeof(Suit))) {
+            Sprite value = Resources.Load<Sprite>("Sprites/Suits/" + key);
+            SuitSprites.Add(key, value);
+        }
+
         BackFace = Resources.Load<Texture>("Sprites/Cards/Back");
     }
 }

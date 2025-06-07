@@ -77,7 +77,7 @@ public class CardArranger : MonoBehaviour {
 
     private void SetAvailabilityOfCards() {
         foreach (Card cl in cardsInHand) {
-            if (cl.suit == GameManager.CurrentSuit) cl.MakeAvailable();
+            if (cl.CheckAvailability()) cl.MakeAvailable();
             else cl.MakeUnavailable();
         }
     }
@@ -92,11 +92,6 @@ public class CardArranger : MonoBehaviour {
             Transform card = cl.transform;
             Vector3 currLocalPosition = card.localPosition;
             Vector3 targetPosition = new Vector3(startX + i++ * spacing, currLocalPosition.y, currLocalPosition.z);
-
-            Debug.Log("CALLED");
-
-            if (cl.suit == GameManager.CurrentSuit) cl.MakeAvailable();
-            else cl.MakeUnavailable();
 
             if (GameMath.SqrDistance(currLocalPosition, targetPosition) > 0.05f * 0.05f)
                 card.localPosition = Vector3.Lerp(currLocalPosition, targetPosition, smoothness * Time.deltaTime);

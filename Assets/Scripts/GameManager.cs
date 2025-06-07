@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour {
     public static List<Player> Players = new List<Player>();
-    public static Suit CurrentSuit;
+    public static Card CurrentCard;
     public static Player localPlayer;
 
     public GameObject playerPrefab;
@@ -31,6 +31,11 @@ public class GameManager : MonoBehaviour {
 
     private void OnValidate() {
         Global.Initialize();
+    }
+
+    public static void SetCurrentCard(Card card) {
+        CurrentCard = card;
+        UIManager.instance.ChangeSuit(card.suit.ToString());
     }
 
     private void Start() {

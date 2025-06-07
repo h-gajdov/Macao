@@ -42,9 +42,9 @@ public class Player : MonoBehaviour {
         }
 
         Card firstCardInPool = cardArranger.SpawnCard(deck.Last(), GameManager.instance.cardsPool);
-        GameManager.CurrentSuit = firstCardInPool.suit;
+        GameManager.CurrentCard = firstCardInPool;
+        UIManager.instance.currentSuit.sprite = Global.SuitSprites[GameManager.CurrentCard.suit];
         firstCardInPool.Throw();
         firstCardInPool.transform.position = Vector3.zero;
-        Debug.Log(GameManager.CurrentSuit);
     }
 }

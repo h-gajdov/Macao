@@ -35,8 +35,11 @@ public class Card : MonoBehaviour {
 
     public void MakeUnavailable() {
         CanBeThrown = false;
-        Debug.Log(value);
         spriteRenderer.material.SetFloat("_ColorStrength", 0.5f);
+    }
+
+    public bool CheckAvailability() {
+        return suit == GameManager.CurrentCard.suit || value == GameManager.CurrentCard.value || value == 11;
     }
 
     private void Start() {
@@ -51,13 +54,20 @@ public class Card : MonoBehaviour {
         thrown = true;
         CanBeThrown = false;
         spriteRenderer.sortingOrder = 10 + transform.GetSiblingIndex();
+
+        GameManager.SetCurrentCard(this);
+
+        if(value == 11) {
+            UIManager.instance.selectSuitButtons.SetActive(true);
+        }
+
         if(cardArranger != null && cardArranger.cardsInHand.Contains(this)) cardArranger.cardsInHand.Remove(this);
     }
 
     private void Update() {
         initialPosition = (!thrown) ? cardArranger.GetTargetPosition(transform) : Vector3.zero;
 
-        if(hovered && CanBeThrown) {
+        if(hovered) {
             Hover(1.5f, transform.localPosition.z < 0.9f, 999);
         } else {
             Hover(0, transform.localPosition.z > 0.1f, transform.GetSiblingIndex());
@@ -115,5 +125,14 @@ public class Card : MonoBehaviour {
         Vector3 currPosition = transform.localPosition;
         Vector3 targetPosition = new Vector3(initialPosition.x, initialPosition.y, target);
         transform.localPosition = Vector3.Lerp(currPosition, targetPosition, selectSpeed * Time.deltaTime);
+    }
+
+    public static Suit StringToSuit(string suit) {
+        switch(suit) {
+            case "Hearts": return Suit.Hearts;
+            case "Spades": return Suit.Spades;
+            case "Clubs": return Suit.Clubs;
+        }
+        return Suit.Diamonds;
     }
 }
