@@ -30,6 +30,8 @@ public class Player : MonoBehaviour {
     [PunRPC]
     public void DealCards() {
         List<string> deck = ShuffleCards();
+        List<string> toRemove = new List<string>();
+        foreach (string card in deck) Debug.Log(card);
 
         int rrIndex = 0;
         int count = 0;
@@ -37,6 +39,7 @@ public class Player : MonoBehaviour {
         while (count != 7) {
             int idx = rrIndex + count * GameManager.Players.Count;
             GameManager.Players[rrIndex].cardArranger.SpawnCard(deck[idx]);
+            toRemove.Add(deck[idx]);
             rrIndex = (rrIndex + 1) % GameManager.Players.Count;
             if (rrIndex == 0) count++;
         }
@@ -46,5 +49,10 @@ public class Player : MonoBehaviour {
         UIManager.instance.currentSuit.sprite = Global.SuitSprites[GameManager.CurrentCard.suit];
         firstCardInPool.Throw();
         firstCardInPool.transform.position = Vector3.zero;
+        toRemove.Add(deck.Last());
+
+        deck.RemoveAll((card) => toRemove.Contains(card));
+        CardStackManager.SetUndealtCards(deck);
+        GameManager.ChangeTurn();
     }
 }

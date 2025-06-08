@@ -12,6 +12,7 @@ public class CardArranger : MonoBehaviour {
 
     Card prevSelected;
     Player player;
+    bool allUnavailable = false; //TODO: Delete this when moving CheckAvailability out of Update
 
     public void GenerateCards() {
         for (int i = 0; i < numberOfCards; i++) {
@@ -32,7 +33,7 @@ public class CardArranger : MonoBehaviour {
 
         Card cl = card.GetComponent<Card>();
         cl.spriteRenderer.sortingOrder = card.GetSiblingIndex();
-        cardsInHand.Add(cl);
+        if(card.IsChildOf(transform)) cardsInHand.Add(cl);
         return cl;
     }
 
@@ -72,7 +73,18 @@ public class CardArranger : MonoBehaviour {
     private void Update() {
         if (!player.photonView.IsMine) return;
         CheckHoveredCards();
-        SetAvailabilityOfCards(); //TODO: Remove this and make it check when your turn comes
+        if(!allUnavailable) SetAvailabilityOfCards(); //TODO: Remove this and make it check when your turn comes
+    }
+
+    public void EnableCards() {
+        allUnavailable = false;
+    }
+
+    public void DisableAllCards() {
+        foreach (Card cl in cardsInHand) {
+            cl.MakeUnavailable();
+        }
+        allUnavailable = true;
     }
 
     private void SetAvailabilityOfCards() {
@@ -125,10 +137,11 @@ public class CardArranger : MonoBehaviour {
         if(prevSelected != null) prevSelected.hovered = false;
 
         prevSelected = GetTopCardOfHits(hits);
-        if(prevSelected.transform.parent == transform) { //If it is a child of the card arranger else ignore it
+        if(prevSelected != null && prevSelected.transform.parent == transform) { //If it is a child of the card arranger else ignore it
             prevSelected.hovered = true;
 
             if(Input.GetMouseButtonDown(0)) {
+                prevSelected.thrownByPlayer = player;
                 prevSelected.Throw();
             }
         }
@@ -136,6 +149,8 @@ public class CardArranger : MonoBehaviour {
 
     private Card GetTopCardOfHits(RaycastHit[] hits) {
         Card selectedCard = hits[0].transform.GetComponent<Card>();
+        if (selectedCard == null) return null;
+
         foreach (RaycastHit raycastHit in hits) {
             Card card = raycastHit.transform.GetComponent<Card>();
             if (card == null) continue;

@@ -14,6 +14,7 @@ public class Card : MonoBehaviour {
     [Range(1, 13)]
     public int value;
     public Suit suit;
+    public Player thrownByPlayer;
     public SpriteRenderer spriteRenderer;
     public float selectSpeed = 10f;
     public bool hovered = false;
@@ -55,13 +56,14 @@ public class Card : MonoBehaviour {
         CanBeThrown = false;
         spriteRenderer.sortingOrder = 10 + transform.GetSiblingIndex();
 
-        GameManager.SetCurrentCard(this);
-
-        if(value == 11) {
+        if(cardArranger != null && cardArranger.cardsInHand.Contains(this)) cardArranger.cardsInHand.Remove(this);
+        if (value == 11) {
             UIManager.instance.selectSuitButtons.SetActive(true);
+            GameManager.SetPendingCard(this);
+            return;
         }
 
-        if(cardArranger != null && cardArranger.cardsInHand.Contains(this)) cardArranger.cardsInHand.Remove(this);
+        GameManager.SetCurrentCard(this);
     }
 
     private void Update() {
@@ -93,7 +95,7 @@ public class Card : MonoBehaviour {
         }
 
         foreach (Suit s in System.Enum.GetValues(typeof(Suit))) {
-            if (s.ToString()[0] != valueString[1]) continue;
+            if (s.ToString()[0] != valueString[valueString.Length - 1]) continue;
             suit = s;
             break;
         }
@@ -125,6 +127,7 @@ public class Card : MonoBehaviour {
         Vector3 currPosition = transform.localPosition;
         Vector3 targetPosition = new Vector3(initialPosition.x, initialPosition.y, target);
         transform.localPosition = Vector3.Lerp(currPosition, targetPosition, selectSpeed * Time.deltaTime);
+        spriteRenderer.sortingOrder = transform.GetSiblingIndex();
     }
 
     public static Suit StringToSuit(string suit) {

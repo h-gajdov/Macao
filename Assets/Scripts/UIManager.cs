@@ -20,7 +20,14 @@ public class UIManager : MonoBehaviour {
     public void ChangeSuit(string suit) {
         Suit toSuit = Card.StringToSuit(suit);
         currentSuit.sprite = Global.SuitSprites[toSuit];
-        GameManager.CurrentCard.suit = toSuit;
         selectSuitButtons.SetActive(false);
+
+        if(GameManager.pendingCard != null) {
+            GameManager.pendingCard.thrownByPlayer.cardArranger.EnableCards();
+            GameManager.CurrentCard = GameManager.pendingCard;
+            GameManager.pendingCard = null;
+        }
+
+        GameManager.CurrentCard.suit = toSuit;
     }
 }

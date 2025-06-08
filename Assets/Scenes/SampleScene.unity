@@ -156,9 +156,9 @@ RectTransform:
   m_Father: {fileID: 2122933357}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 60.749973, y: -50}
   m_SizeDelta: {x: 71.5, y: 71.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &71882209
@@ -204,7 +204,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 71882210}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 894235345}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: ChangeSuit
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Clubs
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &71882210
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -276,9 +288,9 @@ RectTransform:
   m_Father: {fileID: 2122933357}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 303.74988, y: -50}
   m_SizeDelta: {x: 71.5, y: 71.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &416863045
@@ -324,7 +336,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 416863046}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 894235345}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: ChangeSuit
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Hearts
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &416863046
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -585,9 +609,9 @@ RectTransform:
   m_Father: {fileID: 2122933357}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 182.24992, y: -50}
   m_SizeDelta: {x: 71.5, y: 71.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &735276300
@@ -633,7 +657,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 735276301}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 894235345}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: ChangeSuit
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Diamonds
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &735276301
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1085,9 +1121,9 @@ RectTransform:
   m_Father: {fileID: 2122933357}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 425.24982, y: -50}
   m_SizeDelta: {x: 71.5, y: 71.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1675099620
@@ -1133,7 +1169,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1675099621}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 894235345}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: ChangeSuit
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Spades
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1675099621
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1188,7 +1236,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2122933357
 RectTransform:
   m_ObjectHideFlags: 0
