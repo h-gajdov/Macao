@@ -10,10 +10,55 @@ public enum Suit {
     Spades
 }
 
-public class Card : MonoBehaviour {
+[System.Serializable]
+public class CardData {
     [Range(1, 13)]
     public int value;
     public Suit suit;
+
+    public CardData() {
+        value = 1;
+        suit = Suit.Hearts;
+    }
+
+    public CardData(int value, Suit suit) {
+        this.value = value;
+        this.suit = suit;
+    }
+
+    public static CardData ConvertValueStringToCardData(string valueString) {
+        CardData data = new CardData();
+        if (!char.IsDigit(valueString[0])) {
+            switch (valueString[0]) {
+                case 'A': data.value = 1; break;
+                case 'J': data.value = 11; break;
+                case 'Q': data.value = 12; break;
+                case 'K': data.value = 13; break;
+            }
+        } else {
+            data.value = int.Parse(valueString.Substring(0, valueString.Length - 1));
+        }
+
+        foreach (Suit s in System.Enum.GetValues(typeof(Suit))) {
+            if (s.ToString()[0] != valueString[valueString.Length - 1]) continue;
+            data.suit = s;
+            break;
+        }
+        return data;
+    }
+}
+
+[System.Serializable]
+public class CardDataArrayWrapper {
+    public CardData[] cardDatas;
+
+    public CardDataArrayWrapper(CardData[] cardDatas) {
+        this.cardDatas = cardDatas;
+    }
+}
+
+public class Card : MonoBehaviour {
+    public CardData data;
     public Player thrownByPlayer;
     public SpriteRenderer spriteRenderer;
     public float selectSpeed = 10f;
@@ -24,6 +69,7 @@ public class Card : MonoBehaviour {
 
     CardArranger cardArranger;
     Vector3 initialPosition;
+
     //private void OnValidate() {
     //    if (!Global.CardFaces.ContainsKey(GetValueString())) return;
     //    Initialize();
@@ -40,7 +86,7 @@ public class Card : MonoBehaviour {
     }
 
     public bool CheckAvailability() {
-        return suit == GameManager.CurrentCard.suit || value == GameManager.CurrentCard.value || value == 11;
+        return data.suit == GameManager.CurrentCard.data.suit || data.value == GameManager.CurrentCard.data.value || data.value == 11;
     }
 
     private void Start() {
@@ -57,7 +103,7 @@ public class Card : MonoBehaviour {
         spriteRenderer.sortingOrder = 10 + transform.GetSiblingIndex();
 
         if(cardArranger != null && cardArranger.cardsInHand.Contains(this)) cardArranger.cardsInHand.Remove(this);
-        if (value == 11) {
+        if (data.value == 11) {
             UIManager.instance.selectSuitButtons.SetActive(true);
             GameManager.SetPendingCard(this);
             return;
@@ -82,45 +128,34 @@ public class Card : MonoBehaviour {
         spriteRenderer.sortingOrder = transform.GetSiblingIndex();
     }
 
+    public void Initialize(CardData card) {
+        data = card;
+        Initialize();
+    }
+
     public void Initialize(string valueString) {
-        if (!char.IsDigit(valueString[0])) {
-            switch (valueString[0]) {
-                case 'A': value = 1; break;
-                case 'J': value = 11; break;
-                case 'Q': value = 12; break;
-                case 'K': value = 13; break;
-            }
-        } else {
-            value = int.Parse(valueString.Substring(0, valueString.Length - 1));
-        }
-
-        foreach (Suit s in System.Enum.GetValues(typeof(Suit))) {
-            if (s.ToString()[0] != valueString[valueString.Length - 1]) continue;
-            suit = s;
-            break;
-        }
-
+        data = CardData.ConvertValueStringToCardData(valueString);
         Initialize();
     }
     
     public void Randomize() {
-        value = Random.Range(1, 14);
+        data.value = Random.Range(1, 14);
         Suit[] allSuits = { Suit.Hearts, Suit.Diamonds, Suit.Clubs, Suit.Spades };
-        suit = allSuits[Random.Range(0, allSuits.Length)];
+        data.suit = allSuits[Random.Range(0, allSuits.Length)];
     }
 
     public string GetValueString() {
-        string first = value.ToString();
-        if (value == 1) first = "A";
-        else if(value > 10) {
-            switch(value) {
+        string first = data.value.ToString();
+        if (data.value == 1) first = "A";
+        else if(data.value > 10) {
+            switch(data.value) {
                 case 11: first = "J"; break;
                 case 12: first = "Q"; break;
                 case 13: first = "K"; break;
             }
         }
 
-        return first + suit.ToString()[0];
+        return first + data.suit.ToString()[0];
     }
 
     private void Hover(float target, bool condition, int sortLevel) {

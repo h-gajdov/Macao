@@ -49,7 +49,7 @@ public class GameManager : MonoBehaviour {
 
     public static void SetCurrentCard(Card card) {
         CurrentCard = card;
-        UIManager.instance.ChangeSuit(card.suit.ToString());
+        UIManager.instance.ChangeSuit(card.data.suit.ToString());
     }
 
     private void Start() {
@@ -79,8 +79,58 @@ public class GameManager : MonoBehaviour {
         AssignPositions();
 
         if (Input.GetKeyDown(KeyCode.K)) {
-            localPlayer.photonView.RPC("DealCards", RpcTarget.All);
+            DealCards();
         }
+    }
+
+    public List<string> ShuffleCards() {
+        System.Random prng = new System.Random(0);
+        //List<string> shuffeledDeck = Global.AllCardStrings.OrderBy(i => Guid.NewGuid()).ToList();
+        List<string> shuffeledDeck = Global.AllCardStrings.OrderBy(i => prng.Next()).ToList();
+        return shuffeledDeck;
+    }
+
+    public void DealCards() {
+        List<string> deck = ShuffleCards();
+        List<string> toRemove = new List<string>();
+        Dictionary<Player, List<CardData>> map = new Dictionary<Player, List<CardData>>();
+        foreach(Player p in Players) {
+            map.Add(p, new List<CardData>());
+        }
+
+        int rrIndex = 0;
+        int count = 0;
+
+        while (count != 7) {
+            int idx = rrIndex + count * Players.Count;
+            map[Players[rrIndex]].Add(CardData.ConvertValueStringToCardData(deck[idx]));
+            toRemove.Add(deck[idx]);
+            rrIndex = (rrIndex + 1) % Players.Count;
+            if (rrIndex == 0) count++;
+        }
+
+        SetFirstCard(deck.Last());
+        toRemove.Add(deck.Last());
+
+        deck.RemoveAll((card) => toRemove.Contains(card));
+        CardStackManager.SetUndealtCards(deck);
+        ChangeTurn();
+
+        int debug = 0;
+        foreach(Player player in Players) {
+            PhotonView pv = player.photonView;
+            CardDataArrayWrapper cardDatas = new CardDataArrayWrapper(map[player].ToArray());
+            string cardDatasJson = JsonUtility.ToJson(cardDatas);
+            player.photonView.RPC("RPC_SyncDealtCards", player.photonView.Owner, cardDatasJson, CurrentCard.GetValueString());
+        }
+    }
+
+    public static void SetFirstCard(string value) {
+        Card firstCardInPool = Players[0].cardArranger.SpawnCard(value, instance.cardsPool);
+        CurrentCard = firstCardInPool;
+        UIManager.instance.currentSuit.sprite = Global.SuitSprites[CurrentCard.data.suit];
+        firstCardInPool.Throw();
+        firstCardInPool.transform.position = Vector3.zero;
     }
 
     public static void AssignPositions() {

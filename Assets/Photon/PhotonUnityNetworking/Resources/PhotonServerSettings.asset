@@ -42,6 +42,8 @@ MonoBehaviour:
   - SpawnPlayer
   - RegisterPlayer
   - DealCards
+  - RPC_SyncDealtCards
+  - RPC_SyncPlayerData
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

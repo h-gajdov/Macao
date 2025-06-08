@@ -26,6 +26,12 @@ public class CardArranger : MonoBehaviour {
         }
     }
 
+    public void SpawnCards(CardData[] cardData) {
+        foreach(CardData data in cardData) {
+            SpawnCard(data);
+        }
+    }
+
     private Card SetInitialTransformOfCard(Transform card) {
         card.localPosition = Vector3.zero;
         if (true) card.localEulerAngles = Vector3.right * 90; // (90, 0, 0)
@@ -51,11 +57,34 @@ public class CardArranger : MonoBehaviour {
         return cl;
     }
 
+    public Card SpawnCard(CardData data, Transform parent) {
+        Transform card = Instantiate(cardPrefab, parent, true).transform;
+        Card cl = SetInitialTransformOfCard(card);
+        cl.Initialize(data);
+        return cl;
+    }
+
+    public Card SpawnCard(CardData data) {
+        Transform card = Instantiate(cardPrefab, transform, true).transform;
+        Card cl = SetInitialTransformOfCard(card);
+        cl.Initialize(data);
+        return cl;
+    }
+
     public Card SpawnCard() {
         Transform card = Instantiate(cardPrefab, transform, true).transform;
         Card cl = SetInitialTransformOfCard(card);
         cl.Randomize();
         return cl;
+    }
+
+    public CardDataArrayWrapper GetCardDatas() {
+        CardData[] result = new CardData[cardsInHand.Count];
+        int i = 0;
+        foreach (Card card in cardsInHand) {
+            result[i++] = card.data;
+        }
+        return new CardDataArrayWrapper(result);
     }
 
     //private void OnValidate() {

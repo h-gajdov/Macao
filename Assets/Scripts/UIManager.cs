@@ -28,6 +28,6 @@ public class UIManager : MonoBehaviour {
             GameManager.pendingCard = null;
         }
 
-        GameManager.CurrentCard.suit = toSuit;
+        GameManager.CurrentCard.data.suit = toSuit;
     }
 }
