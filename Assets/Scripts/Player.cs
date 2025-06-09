@@ -11,6 +11,7 @@ public class Player : MonoBehaviour {
     private void Start() {
         cardArranger = GetComponentInChildren<CardArranger>();
         PV.RPC("RPC_SpawnPlayer", RpcTarget.AllBuffered);
+        if (PV.IsMine) GameManager.LocalPlayer = this;
     }
 
     [PunRPC]
@@ -21,9 +22,10 @@ public class Player : MonoBehaviour {
     }
 
     [PunRPC]
-    private void RPC_SyncDealtCards(string cardDatasJson, string currentCard) {
+    private void RPC_SyncDealtCards(string cardDatasJson, string currentCard, string[] undealtCards) {
         CardData[] cardDatas = JsonUtility.FromJson<CardDataArrayWrapper>(cardDatasJson).cardDatas;
         cardArranger.SpawnCards(cardDatas);
+        CardStackManager.SetUndealtCards(undealtCards);
 
         GameManager.SetFirstCard(currentCard);
         PV.RPC("RPC_SyncPlayerData", RpcTarget.OthersBuffered, cardDatasJson);

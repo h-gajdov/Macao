@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour {
 
     public static Card CurrentCard;
     public static Card pendingCard;
-    public static Player localPlayer;
+    public static Player LocalPlayer { get; set; }
 
     public GameObject playerPrefab;
     public Transform cardsPool;
@@ -170,7 +170,7 @@ public class GameManager : MonoBehaviour {
             PhotonView pv = player.PV;
             CardDataArrayWrapper cardDatas = new CardDataArrayWrapper(map[player].ToArray());
             string cardDatasJson = JsonUtility.ToJson(cardDatas);
-            player.PV.RPC("RPC_SyncDealtCards", player.PV.Owner, cardDatasJson, CurrentCard.GetValueString());
+            player.PV.RPC("RPC_SyncDealtCards", player.PV.Owner, cardDatasJson, CurrentCard.GetValueString(), deck.ToArray());
         }
     }
 
@@ -216,5 +216,10 @@ public class GameManager : MonoBehaviour {
             player.cardArranger.DisableAllCards();
             if (player == PlayerOnTurn) player.cardArranger.EnableCards();
         }
+    }
+
+    [PunRPC]
+    private void RPC_PickUpCard() {
+        CardStackManager.instance.PickUpCard();
     }
 }

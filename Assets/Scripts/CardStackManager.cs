@@ -25,7 +25,7 @@ public class CardStackManager : MonoBehaviour
     }
 
     private void OnMouseOver() {
-        if(Input.GetMouseButtonDown(0) && UndealtCards.Count > 0) {
+        if(Input.GetMouseButtonDown(0) && UndealtCards.Count > 0 && GameManager.PlayerOnTurn == GameManager.LocalPlayer) {
             GameManager.PV.RPC("RPC_PickUpCard", Photon.Pun.RpcTarget.AllBuffered);
         }
     }
@@ -51,9 +51,17 @@ public class CardStackManager : MonoBehaviour
 
     public static void SetUndealtCards(List<string> listOfUndealtCards) {
         UndealtCards.Clear();
-        listOfUndealtCards.Reverse();
-        foreach(string card in listOfUndealtCards) {
-            UndealtCards.Push(card);
+        SetUndealtCards(listOfUndealtCards.ToArray());
+        //listOfUndealtCards.Reverse();
+        //foreach(string card in listOfUndealtCards) {
+        //    UndealtCards.Push(card);
+        //}
+    }
+
+    public static void SetUndealtCards(string[] listOfUndealtCards) {
+        UndealtCards.Clear();
+        for(int i = listOfUndealtCards.Length - 1; i >= 0; i--) {
+            UndealtCards.Push(listOfUndealtCards[i]);
         }
     }
 }
