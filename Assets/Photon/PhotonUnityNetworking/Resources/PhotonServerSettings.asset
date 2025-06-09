@@ -50,6 +50,7 @@ MonoBehaviour:
   - RPC_SetPlayerOnTurnIndex
   - RPC_SetPlayerOnTurn
   - RPC_SpawnPlayer
+  - RPC_ChangeTurn
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

@@ -34,12 +34,14 @@ public class GameManager : MonoBehaviour {
     }
 
     public static void ChangeTurn() {
-        if (PlayerOnTurn.PV.IsMine) PlayerOnTurn.cardArranger.DisableAllCards();
+        if (PlayerOnTurn.PV.IsMine) {
+            PlayerOnTurn.cardArranger.DisableAllCards();
+            UIManager.instance.DisableButtons();
+        }
 
         playerTurnIndex = (playerTurnIndex + 1) % Players.Count;
         PlayerOnTurn = Players[playerTurnIndex];
 
-        //TODO: Make this code better. REFACTOR IT!
         PlayerOnTurn.cardArranger.EnableCards();
     }
 
@@ -221,5 +223,11 @@ public class GameManager : MonoBehaviour {
     [PunRPC]
     private void RPC_PickUpCard() {
         CardStackManager.instance.PickUpCard();
+        UIManager.instance.skipTurnButton.interactable = true;
+    }
+
+    [PunRPC]
+    private void RPC_ChangeTurn() {
+        ChangeTurn();
     }
 }

@@ -7,6 +7,7 @@ using Photon.Pun;
 public class UIManager : MonoBehaviour {
     public Image currentSuit;
     public GameObject selectSuitButtons;
+    public Button skipTurnButton;
     public PhotonView PV;
 
     public static UIManager instance;
@@ -37,5 +38,14 @@ public class UIManager : MonoBehaviour {
         }
 
         GameManager.CurrentCard.data.suit = toSuit;
+    }
+
+    public void SkipTurn() {
+        GameManager.PV.RPC("RPC_ChangeTurn", RpcTarget.AllBuffered);
+    }
+
+    public void DisableButtons() {
+        skipTurnButton.interactable = false;
+        selectSuitButtons.SetActive(false);
     }
 }
