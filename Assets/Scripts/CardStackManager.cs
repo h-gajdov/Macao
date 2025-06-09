@@ -26,6 +26,7 @@ public class CardStackManager : MonoBehaviour
 
     private void OnMouseOver() {
         if(Input.GetMouseButtonDown(0) && UndealtCards.Count > 0 && GameManager.PlayerOnTurn == GameManager.LocalPlayer) {
+            UIManager.instance.skipTurnButton.interactable = true;
             GameManager.PV.RPC("RPC_PickUpCard", Photon.Pun.RpcTarget.AllBuffered);
         }
     }

@@ -223,7 +223,6 @@ public class GameManager : MonoBehaviour {
     [PunRPC]
     private void RPC_PickUpCard() {
         CardStackManager.instance.PickUpCard();
-        UIManager.instance.skipTurnButton.interactable = true;
     }
 
     [PunRPC]
