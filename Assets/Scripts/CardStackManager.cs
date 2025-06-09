@@ -9,6 +9,16 @@ public class CardStackManager : MonoBehaviour
     public Color selectedColor;
     public float smoothness = 5f;
 
+    public static CardStackManager instance;
+
+    private void Awake() {
+        if (instance == null) instance = this;
+        else {
+            Destroy(gameObject);
+            return;
+        }
+    }
+
     private void OnMouseEnter() {
         StopAllCoroutines();
         StartCoroutine(LerpToColor(selectedColor));
@@ -16,16 +26,19 @@ public class CardStackManager : MonoBehaviour
 
     private void OnMouseOver() {
         if(Input.GetMouseButtonDown(0) && UndealtCards.Count > 0) {
-            Debug.Log(UndealtCards.Peek());
-            Card card = GameManager.PlayerOnTurn.cardArranger.SpawnCard(UndealtCards.Pop());
-            if (UndealtCards.Count == 0) spriteRenderer.gameObject.SetActive(false);
-            card.transform.position = transform.position;
+            GameManager.PV.RPC("RPC_PickUpCard", Photon.Pun.RpcTarget.AllBuffered);
         }
     }
 
     private void OnMouseExit() {
         StopAllCoroutines();
         StartCoroutine(LerpToColor(Color.white));
+    }
+
+    public void PickUpCard() {
+        Card card = GameManager.PlayerOnTurn.cardArranger.SpawnCard(UndealtCards.Pop());
+        if (UndealtCards.Count == 0) spriteRenderer.gameObject.SetActive(false);
+        card.transform.position = transform.position;
     }
 
     private IEnumerator LerpToColor(Color target) {

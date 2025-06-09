@@ -69,6 +69,7 @@ public class Card : MonoBehaviour {
 
     CardArranger cardArranger;
     Vector3 initialPosition;
+    Vector3 initialRotation;
 
     //private void OnValidate() {
     //    if (!Global.CardFaces.ContainsKey(GetValueString())) return;
@@ -94,19 +95,24 @@ public class Card : MonoBehaviour {
         Initialize();
     }
 
-    public void Throw() {
-        if (!CanBeThrown) return;
-
+    public void Throw(Player player) {
+        thrownByPlayer = player;
         transform.parent = GameManager.instance.cardsPool;
         thrown = true;
         CanBeThrown = false;
+        hidden = false;
         spriteRenderer.sortingOrder = 10 + transform.GetSiblingIndex();
 
-        if(cardArranger != null && cardArranger.cardsInHand.Contains(this)) cardArranger.cardsInHand.Remove(this);
-        if (data.value == 11) {
-            UIManager.instance.selectSuitButtons.SetActive(true);
-            GameManager.SetPendingCard(this);
-            return;
+        initialRotation = Vector3.right * 90f;
+
+        if (cardArranger != null && cardArranger.cardsInHand.Contains(this)) {
+            cardArranger.cardsInHand.Remove(this);
+            if (data.value == 11) {
+                GameManager.SetPendingCard(this);
+                if (player.PV.IsMine) UIManager.instance.selectSuitButtons.SetActive(true);
+                return;
+            }
+            GameManager.ChangeTurn();
         }
 
         GameManager.SetCurrentCard(this);
@@ -120,12 +126,15 @@ public class Card : MonoBehaviour {
         } else {
             Hover(0, transform.localPosition.z > 0.1f, transform.GetSiblingIndex());
         }
+
+        transform.localRotation = Quaternion.Lerp(transform.localRotation, Quaternion.Euler(initialRotation), selectSpeed * Time.deltaTime);
     }
 
     public void Initialize() {
         Sprite sprite = Global.CardFaces[GetValueString()].sprite;
         spriteRenderer.sprite = sprite;
         spriteRenderer.sortingOrder = transform.GetSiblingIndex();
+        initialRotation = (hidden) ? Vector3.right * -90 : Vector3.right * 90;
     }
 
     public void Initialize(CardData card) {

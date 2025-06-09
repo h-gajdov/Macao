@@ -44,6 +44,12 @@ MonoBehaviour:
   - DealCards
   - RPC_SyncDealtCards
   - RPC_SyncPlayerData
+  - RPC_Throw
+  - RPC_ChangeSuit
+  - RPC_PickUpCard
+  - RPC_SetPlayerOnTurnIndex
+  - RPC_SetPlayerOnTurn
+  - RPC_SpawnPlayer
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

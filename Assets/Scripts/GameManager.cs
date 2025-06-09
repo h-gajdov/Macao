@@ -1,6 +1,5 @@
 using Photon.Pun;
 using Photon.Realtime;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +7,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour {
     public static List<Player> Players = new List<Player>();
+    public static PhotonView PV;
     public static Player PlayerOnTurn { get; private set; }
     private static int playerTurnIndex = 0;
 
@@ -23,28 +23,29 @@ public class GameManager : MonoBehaviour {
 
     public static Camera MainCamera;
 
-    public static Vector3[] PlayerPositions;
-    public static Vector3[] PlayerRotations = {
-        Vector3.zero,
-        Vector3.up * 180,
-        Vector3.up * 90,
-        Vector3.up * -90
-    };
+    public static Vector3[][] PlayerPositions = new Vector3[4][];
+    public static Vector3[][] PlayerRotations = new Vector3[4][];
 
     public static GameManager instance;
 
     private void OnValidate() {
         Global.Initialize();
+        PV = GetComponent<PhotonView>();
     }
 
     public static void ChangeTurn() {
+        if (PlayerOnTurn.PV.IsMine) PlayerOnTurn.cardArranger.DisableAllCards();
+
         playerTurnIndex = (playerTurnIndex + 1) % Players.Count;
         PlayerOnTurn = Players[playerTurnIndex];
+
+        //TODO: Make this code better. REFACTOR IT!
+        PlayerOnTurn.cardArranger.EnableCards();
     }
 
     public static void SetPendingCard(Card card) {
         pendingCard = card;
-        card.thrownByPlayer.cardArranger.DisableAllCards();
+        if(card.thrownByPlayer.PV.IsMine) card.thrownByPlayer.cardArranger.DisableAllCards();
     }
 
     public static void SetCurrentCard(Card card) {
@@ -52,29 +53,76 @@ public class GameManager : MonoBehaviour {
         UIManager.instance.ChangeSuit(card.data.suit.ToString());
     }
 
-    private void Start() {
-        Global.Initialize();
-
-        MainCamera = Camera.main;
+    private void InitializePositions() {
         float distanceCameraToOrigin = Vector3.Distance(MainCamera.transform.position, Vector3.zero);
         float halfWidth = Screen.width / 2;
         float halfHeight = Screen.height / 2;
-        PlayerPositions = new Vector3[] {
+        PlayerPositions[0] = new Vector3[] {
+            Camera.main.ScreenToWorldPoint(new Vector3(halfWidth, boundSlider, distanceCameraToOrigin)),
+        };
+
+        PlayerPositions[1] = new Vector3[] {
             Camera.main.ScreenToWorldPoint(new Vector3(halfWidth, boundSlider, distanceCameraToOrigin)),
             Camera.main.ScreenToWorldPoint(new Vector3(halfWidth, Screen.height - boundSlider, distanceCameraToOrigin)),
+        };
+
+        PlayerPositions[2] = new Vector3[] {
+            Camera.main.ScreenToWorldPoint(new Vector3(halfWidth, boundSlider, distanceCameraToOrigin)),
             Camera.main.ScreenToWorldPoint(new Vector3(boundSlider, halfHeight, distanceCameraToOrigin)),
+            Camera.main.ScreenToWorldPoint(new Vector3(halfWidth, Screen.height - boundSlider, distanceCameraToOrigin)),
+        };
+
+        PlayerPositions[3] = new Vector3[] {
+            Camera.main.ScreenToWorldPoint(new Vector3(halfWidth, boundSlider, distanceCameraToOrigin)),
+            Camera.main.ScreenToWorldPoint(new Vector3(boundSlider, halfHeight, distanceCameraToOrigin)),
+            Camera.main.ScreenToWorldPoint(new Vector3(halfWidth, Screen.height - boundSlider, distanceCameraToOrigin)),
             Camera.main.ScreenToWorldPoint(new Vector3(Screen.width - boundSlider, halfHeight, distanceCameraToOrigin)),
         };
 
+        PlayerRotations[0] = new Vector3[] {
+            Vector3.zero,
+        };
+
+        PlayerRotations[1] = new Vector3[] {
+            Vector3.zero,
+            Vector3.up * 180,
+        };
+
+        PlayerRotations[2] = new Vector3[] {
+            Vector3.zero,
+            Vector3.up * 90,
+            Vector3.up * 180,
+        };
+
+        PlayerRotations[3] = new Vector3[] {
+            Vector3.zero,
+            Vector3.up * 90,
+            Vector3.up * 180,
+            Vector3.up * -90
+        };
+    }
+
+    private void Awake() {
+        Global.Initialize();
+
+        MainCamera = Camera.main;
+        InitializePositions();
+
         if (instance == null) instance = this;
         else {
-            Destroy(this);
+            Destroy(gameObject);
             return;
         }
+
+        PV = GetComponent<PhotonView>();
     }
 
     private void Update() {
         debug = Players;
+
+        if(Input.GetKeyDown(KeyCode.G)) {
+            SpawnPlayer();
+        }
 
         AssignPositions();
 
@@ -114,14 +162,15 @@ public class GameManager : MonoBehaviour {
 
         deck.RemoveAll((card) => toRemove.Contains(card));
         CardStackManager.SetUndealtCards(deck);
-        ChangeTurn();
 
-        int debug = 0;
+        int playerOnTurnIdx = Random.Range(0, Players.Count);
+        PV.RPC("RPC_SetPlayerOnTurn", RpcTarget.AllBuffered, playerOnTurnIdx);
+
         foreach(Player player in Players) {
-            PhotonView pv = player.photonView;
+            PhotonView pv = player.PV;
             CardDataArrayWrapper cardDatas = new CardDataArrayWrapper(map[player].ToArray());
             string cardDatasJson = JsonUtility.ToJson(cardDatas);
-            player.photonView.RPC("RPC_SyncDealtCards", player.photonView.Owner, cardDatasJson, CurrentCard.GetValueString());
+            player.PV.RPC("RPC_SyncDealtCards", player.PV.Owner, cardDatasJson, CurrentCard.GetValueString());
         }
     }
 
@@ -129,18 +178,43 @@ public class GameManager : MonoBehaviour {
         Card firstCardInPool = Players[0].cardArranger.SpawnCard(value, instance.cardsPool);
         CurrentCard = firstCardInPool;
         UIManager.instance.currentSuit.sprite = Global.SuitSprites[CurrentCard.data.suit];
-        firstCardInPool.Throw();
+        firstCardInPool.Throw(null);
         firstCardInPool.transform.position = Vector3.zero;
     }
 
     public static void AssignPositions() {
+        if (Players.Count == 0) return;
+
+        int startIdx = 0;
+        for(int i = 0; i < Players.Count; i++) {
+            if (!Players[i].PV.IsMine) continue;
+            startIdx = i;
+            break;
+        }
+
+        Vector3[] positions = PlayerPositions[Players.Count - 1];
+        Vector3[] rotations = PlayerRotations[Players.Count - 1];
+
         for (int i = 0; i < Players.Count; i++) {
-            Players[i].transform.position = PlayerPositions[i];
-            Players[i].transform.eulerAngles = PlayerRotations[i];
+            int playerIdx = (startIdx + i) % Players.Count;
+            Players[playerIdx].transform.position = positions[i];
+            Players[playerIdx].transform.eulerAngles = rotations[i];
         }
     }
 
     public void SpawnPlayer() {
         Player player = PhotonNetwork.Instantiate("Prefabs/" + playerPrefab.name, Vector3.zero, Quaternion.identity).GetComponent<Player>();
+    }
+
+    [PunRPC]
+    private void RPC_SetPlayerOnTurn(int value) {
+        playerTurnIndex = value;
+        PlayerOnTurn = Players[playerTurnIndex];
+
+        //TODO: Make this code better. REFACTOR IT!
+        foreach (Player player in Players) {
+            player.cardArranger.DisableAllCards();
+            if (player == PlayerOnTurn) player.cardArranger.EnableCards();
+        }
     }
 }

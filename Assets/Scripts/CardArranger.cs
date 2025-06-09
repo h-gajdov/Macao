@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class CardArranger : MonoBehaviour {
     public GameObject cardPrefab;
@@ -34,12 +35,13 @@ public class CardArranger : MonoBehaviour {
 
     private Card SetInitialTransformOfCard(Transform card) {
         card.localPosition = Vector3.zero;
-        if (true) card.localEulerAngles = Vector3.right * 90; // (90, 0, 0)
-        else card.localEulerAngles = Vector3.right * -90;
 
         Card cl = card.GetComponent<Card>();
         cl.spriteRenderer.sortingOrder = card.GetSiblingIndex();
         if(card.IsChildOf(transform)) cardsInHand.Add(cl);
+
+        cl.hidden = !player.PV.IsMine;
+
         return cl;
     }
 
@@ -100,7 +102,7 @@ public class CardArranger : MonoBehaviour {
     }
     
     private void Update() {
-        if (!player.photonView.IsMine) return;
+        if (!player.PV.IsMine) return;
         CheckHoveredCards();
         if(!allUnavailable) SetAvailabilityOfCards(); //TODO: Remove this and make it check when your turn comes
     }
@@ -170,8 +172,12 @@ public class CardArranger : MonoBehaviour {
             prevSelected.hovered = true;
 
             if(Input.GetMouseButtonDown(0)) {
-                prevSelected.thrownByPlayer = player;
-                prevSelected.Throw();
+                if (GameManager.PlayerOnTurn != player) {
+                    Debug.LogError("It's not your turn!");
+                    return;
+                }
+                if (!prevSelected.CanBeThrown) return;
+                player.PV.RPC("RPC_Throw", RpcTarget.AllBuffered, cardsInHand.IndexOf(prevSelected));
             }
         }
     }

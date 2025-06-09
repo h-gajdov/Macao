@@ -5,16 +5,17 @@ using System.Linq;
 using UnityEngine;
 
 public class Player : MonoBehaviour {
-    public PhotonView photonView;
+    public PhotonView PV;
     public CardArranger cardArranger;
 
     private void Start() {
         cardArranger = GetComponentInChildren<CardArranger>();
+        PV.RPC("RPC_SpawnPlayer", RpcTarget.AllBuffered);
+    }
 
-        if (photonView.IsMine) {
-            GameManager.localPlayer = this;
-            GameManager.Players.Insert(0, this);
-        } else GameManager.Players.Add(this);
+    [PunRPC]
+    private void RPC_SpawnPlayer() {
+        if(!GameManager.Players.Contains(this)) GameManager.Players.Add(this);
 
         GameManager.AssignPositions();
     }
@@ -25,12 +26,18 @@ public class Player : MonoBehaviour {
         cardArranger.SpawnCards(cardDatas);
 
         GameManager.SetFirstCard(currentCard);
-        photonView.RPC("RPC_SyncPlayerData", RpcTarget.OthersBuffered, cardDatasJson);
+        PV.RPC("RPC_SyncPlayerData", RpcTarget.OthersBuffered, cardDatasJson);
     }
 
     [PunRPC]
     private void RPC_SyncPlayerData(string cardDatasJson) {
         CardData[] cardDatas = JsonUtility.FromJson<CardDataArrayWrapper>(cardDatasJson).cardDatas;
         cardArranger.SpawnCards(cardDatas);
+    }
+
+    [PunRPC]
+    private void RPC_Throw(int cardIndex) {
+        Card card = cardArranger.cardsInHand[cardIndex];
+        card.Throw(this);
     }
 }
