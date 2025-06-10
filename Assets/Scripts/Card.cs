@@ -116,6 +116,14 @@ public class Card : MonoBehaviour {
             }
             GameManager.SetCurrentCard(this);
             GameManager.ChangeTurn();
+
+            if(data.value == 7) {
+                CardStackManager.PoolOfForcedPickup += 2;
+                if (!GameManager.PlayerOnTurn.cardArranger.Contains(7))
+                    CardStackManager.PickUpCardsFromPoolOfForcedPickup();
+                else
+                    UIManager.instance.takeCards.gameObject.SetActive(true);
+            }
         }
 
         GameManager.SetCurrentCard(this);

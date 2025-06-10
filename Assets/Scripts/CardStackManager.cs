@@ -3,9 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CardStackManager : MonoBehaviour
-{
+public class CardStackManager : MonoBehaviour {
     public static Stack<string> UndealtCards = new Stack<string>();
+    public static int PoolOfForcedPickup = 0;
+
     public SpriteRenderer spriteRenderer;
     public Color selectedColor;
     public float smoothness = 5f;
@@ -65,6 +66,17 @@ public class CardStackManager : MonoBehaviour
         UndealtCards.Clear();
         for(int i = listOfUndealtCards.Length - 1; i >= 0; i--) {
             UndealtCards.Push(listOfUndealtCards[i]);
+        }
+    }
+
+    public static void PickUpCardsFromPoolOfForcedPickup() {
+        PickUpNCards(PoolOfForcedPickup);
+        PoolOfForcedPickup = 0;
+    }
+
+    private static void PickUpNCards(int n) {
+        while(n-- > 0) {
+            instance.PickUpCard();
         }
     }
 }

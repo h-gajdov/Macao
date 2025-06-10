@@ -8,6 +8,7 @@ public class UIManager : MonoBehaviour {
     public Image currentSuit;
     public GameObject selectSuitButtons;
     public Button skipTurnButton;
+    public Button takeCards;
     public PhotonView PV;
 
     public static UIManager instance;
@@ -46,6 +47,11 @@ public class UIManager : MonoBehaviour {
 
     public void DisableButtons() {
         skipTurnButton.interactable = false;
+        takeCards.gameObject.SetActive(false);
         selectSuitButtons.SetActive(false);
+    }
+
+    public void TakeCardsFromPoolOfForcedPickup() {
+        GameManager.PV.RPC("RPC_PickUpCardsFromPoolOfForcedPickup", RpcTarget.AllBuffered);
     }
 }

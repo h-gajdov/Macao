@@ -42,6 +42,13 @@ public class GameManager : MonoBehaviour {
             !cardArranger.Contains(11)) {
             CardStackManager.instance.PickUpCard();
         }
+
+        if (!cardArranger.Contains(value) &&
+            !cardArranger.Contains(suit) &&
+            !cardArranger.Contains(11)) {
+            instance.StartCoroutine(WaitBeforeChangeOfTurn());
+            //ChangeTurn();
+        }
     }
 
     public static void ChangeTurn() {
@@ -253,7 +260,17 @@ public class GameManager : MonoBehaviour {
     }
 
     [PunRPC]
+    private void RPC_PickUpCardsFromPoolOfForcedPickup() {
+        CardStackManager.PickUpCardsFromPoolOfForcedPickup();
+    }
+
+    [PunRPC]
     private void RPC_ChangeTurn() {
+        ChangeTurn();
+    }
+
+    private static IEnumerator WaitBeforeChangeOfTurn() {
+        yield return new WaitForSecondsRealtime(1f);
         ChangeTurn();
     }
 }
