@@ -33,6 +33,17 @@ public class GameManager : MonoBehaviour {
         PV = GetComponent<PhotonView>();
     }
 
+    private static void ForcePickUp() {
+        int value = CurrentCard.data.value;
+        Suit suit = CurrentCard.data.suit;
+        CardArranger cardArranger = PlayerOnTurn.cardArranger;
+        if (!cardArranger.Contains(value) &&
+            !cardArranger.Contains(suit) &&
+            !cardArranger.Contains(11)) {
+            CardStackManager.instance.PickUpCard();
+        }
+    }
+
     public static void ChangeTurn() {
         if (PlayerOnTurn.PV.IsMine) {
             PlayerOnTurn.cardArranger.DisableAllCards();
@@ -43,6 +54,22 @@ public class GameManager : MonoBehaviour {
         PlayerOnTurn = Players[playerTurnIndex];
 
         PlayerOnTurn.cardArranger.EnableCards();
+
+        ForcePickUp();
+    }
+
+    public static void ChangeTurn(bool forcePickUp) {
+        if (PlayerOnTurn.PV.IsMine) {
+            PlayerOnTurn.cardArranger.DisableAllCards();
+            UIManager.instance.DisableButtons();
+        }
+
+        playerTurnIndex = (playerTurnIndex + 1) % Players.Count;
+        PlayerOnTurn = Players[playerTurnIndex];
+
+        PlayerOnTurn.cardArranger.EnableCards();
+
+        if(forcePickUp) ForcePickUp();
     }
 
     public static void SetPendingCard(Card card) {

@@ -1,7 +1,8 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Photon.Pun;
+using static UnityEngine.Rendering.DebugUI;
 
 public class CardArranger : MonoBehaviour {
     public GameObject cardPrefab;
@@ -193,5 +194,19 @@ public class CardArranger : MonoBehaviour {
             if (selectedCard.spriteRenderer.sortingOrder < card.spriteRenderer.sortingOrder) selectedCard = card;
         }
         return selectedCard;
+    }
+
+    public bool Contains(int value) {
+        foreach(Card card in cardsInHand) {
+            if (card.data.value == value) return true;
+        }
+        return false;
+    }
+
+    public bool Contains(Suit suit) {
+        foreach (Card card in cardsInHand) {
+            if (card.data.suit == suit) return true;
+        }
+        return false;
     }
 }

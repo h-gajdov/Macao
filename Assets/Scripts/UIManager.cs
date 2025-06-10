@@ -34,9 +34,9 @@ public class UIManager : MonoBehaviour {
             GameManager.pendingCard.thrownByPlayer.cardArranger.EnableCards();
             GameManager.CurrentCard = GameManager.pendingCard;
             GameManager.pendingCard = null;
+            GameManager.CurrentCard.data.suit = toSuit;
             GameManager.ChangeTurn();
         }
-
         GameManager.CurrentCard.data.suit = toSuit;
     }
 

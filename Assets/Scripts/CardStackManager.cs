@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -26,8 +27,7 @@ public class CardStackManager : MonoBehaviour
 
     private void OnMouseOver() {
         if(Input.GetMouseButtonDown(0) && UndealtCards.Count > 0 && GameManager.PlayerOnTurn == GameManager.LocalPlayer) {
-            UIManager.instance.skipTurnButton.interactable = true;
-            GameManager.PV.RPC("RPC_PickUpCard", Photon.Pun.RpcTarget.AllBuffered);
+            GameManager.PV.RPC("RPC_PickUpCard", RpcTarget.AllBuffered);
         }
     }
 
@@ -37,6 +37,8 @@ public class CardStackManager : MonoBehaviour
     }
 
     public void PickUpCard() {
+        UIManager.instance.skipTurnButton.interactable = GameManager.PlayerOnTurn.PV.IsMine;
+
         Card card = GameManager.PlayerOnTurn.cardArranger.SpawnCard(UndealtCards.Pop());
         if (UndealtCards.Count == 0) spriteRenderer.gameObject.SetActive(false);
         card.transform.position = transform.position;

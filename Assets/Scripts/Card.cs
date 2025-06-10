@@ -112,8 +112,9 @@ public class Card : MonoBehaviour {
                 if (player.PV.IsMine) UIManager.instance.selectSuitButtons.SetActive(true);
                 return;
             } else if(data.value == 8 || data.value == 1) {
-                GameManager.ChangeTurn();
+                GameManager.ChangeTurn(false);
             }
+            GameManager.SetCurrentCard(this);
             GameManager.ChangeTurn();
         }
 
