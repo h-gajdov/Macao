@@ -1,18 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public enum Suit { 
     Hearts,
     Diamonds,
     Clubs,
-    Spades
+    Spades,
+    All
 }
 
 [System.Serializable]
 public class CardData {
-    [Range(1, 13)]
+    [Range(1, 15)]
     public int value;
     public Suit suit;
 
@@ -28,6 +28,17 @@ public class CardData {
 
     public static CardData ConvertValueStringToCardData(string valueString) {
         CardData data = new CardData();
+
+        if (valueString == "BJ") {
+            data.value = 14;
+            data.suit = Suit.All;
+            return data;
+        } else if (valueString == "RJ") {
+            data.value = 15;
+            data.suit = Suit.All;
+            return data;
+        }
+
         if (!char.IsDigit(valueString[0])) {
             switch (valueString[0]) {
                 case 'A': data.value = 1; break;
@@ -71,10 +82,10 @@ public class Card : MonoBehaviour {
     Vector3 initialPosition;
     Vector3 initialRotation;
 
-    //private void OnValidate() {
-    //    if (!Global.CardFaces.ContainsKey(GetValueString())) return;
-    //    Initialize();
-    //}
+    private void OnValidate() {
+        if (!Global.CardFaces.ContainsKey(GetValueString())) return;
+        Initialize();
+    }
 
     public void MakeAvailable() {
         CanBeThrown = true;
@@ -87,7 +98,7 @@ public class Card : MonoBehaviour {
     }
 
     public bool CheckAvailability() {
-        return data.suit == GameManager.CurrentCard.data.suit || data.value == GameManager.CurrentCard.data.value || data.value == 11;
+        return data.value == 14 || data.value == 15 || GameManager.CurrentCard.data.suit == Suit.All || data.suit == GameManager.CurrentCard.data.suit || data.value == GameManager.CurrentCard.data.value || data.value == 11;
     }
 
     private void Start() {
@@ -114,19 +125,35 @@ public class Card : MonoBehaviour {
             } else if(data.value == 8 || data.value == 1) {
                 GameManager.ChangeTurn(false);
             }
+
+            //if(GameManager.PlayerOnTurn.PV.IsMine) {
+            //    if (cardArranger.cardsInHand.Count == 1) {
+            //        UIManager.instance.StartCoroutine(UIManager.instance.WaitForLastCardButtonPress());
+            //    }
+            //    UIManager.instance.lastCard.interactable = true;
+            //}
+
             GameManager.SetCurrentCard(this);
             GameManager.ChangeTurn();
 
             if(data.value == 7) {
-                CardStackManager.PoolOfForcedPickup += 2;
-                if (!GameManager.PlayerOnTurn.cardArranger.Contains(7))
-                    CardStackManager.PickUpCardsFromPoolOfForcedPickup();
-                else
-                    UIManager.instance.takeCards.gameObject.SetActive(true);
+                SevensAndJokersLogic(2);
+            } else if(data.value == 14 || data.value == 15) {
+                SevensAndJokersLogic(4);
             }
         }
 
         GameManager.SetCurrentCard(this);
+    }
+
+    private void SevensAndJokersLogic(int amount) {
+        CardStackManager.PoolOfForcedPickup += amount;
+        if (!GameManager.PlayerOnTurn.cardArranger.Contains(7) &&
+            !GameManager.PlayerOnTurn.cardArranger.Contains(14) &&
+            !GameManager.PlayerOnTurn.cardArranger.Contains(15))
+            CardStackManager.PickUpCardsFromPoolOfForcedPickup();
+        else
+            UIManager.instance.takeCards.gameObject.SetActive(GameManager.PlayerOnTurn.PV.IsMine);
     }
 
     private void Update() {
@@ -172,6 +199,8 @@ public class Card : MonoBehaviour {
                 case 11: first = "J"; break;
                 case 12: first = "Q"; break;
                 case 13: first = "K"; break;
+                case 14: return "BJ";
+                case 15: return "RJ";
             }
         }
 
@@ -190,7 +219,8 @@ public class Card : MonoBehaviour {
             case "Hearts": return Suit.Hearts;
             case "Spades": return Suit.Spades;
             case "Clubs": return Suit.Clubs;
+            case "Diamonds": return Suit.Diamonds;
         }
-        return Suit.Diamonds;
+        return Suit.All;
     }
 }

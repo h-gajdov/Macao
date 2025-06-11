@@ -47,7 +47,6 @@ public class GameManager : MonoBehaviour {
             !cardArranger.Contains(suit) &&
             !cardArranger.Contains(11)) {
             instance.StartCoroutine(WaitBeforeChangeOfTurn());
-            //ChangeTurn();
         }
     }
 
@@ -178,7 +177,9 @@ public class GameManager : MonoBehaviour {
         List<string> deck = ShuffleCards();
         List<string> toRemove = new List<string>();
         Dictionary<Player, List<CardData>> map = new Dictionary<Player, List<CardData>>();
-        foreach(Player p in Players) {
+        foreach (string card in deck) Debug.Log(card);
+
+        foreach (Player p in Players) {
             map.Add(p, new List<CardData>());
         }
 

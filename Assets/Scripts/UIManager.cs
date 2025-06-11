@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour {
     public GameObject selectSuitButtons;
     public Button skipTurnButton;
     public Button takeCards;
+    public Button lastCard;
     public PhotonView PV;
 
     public static UIManager instance;
@@ -28,7 +29,9 @@ public class UIManager : MonoBehaviour {
     [PunRPC]
     private void RPC_ChangeSuit(string suit) {
         Suit toSuit = Card.StringToSuit(suit);
-        currentSuit.sprite = Global.SuitSprites[toSuit];
+        if(toSuit != Suit.All) {
+            currentSuit.sprite = Global.SuitSprites[toSuit];
+        }
         selectSuitButtons.SetActive(false);
 
         if (GameManager.pendingCard != null) {
@@ -38,7 +41,10 @@ public class UIManager : MonoBehaviour {
             GameManager.CurrentCard.data.suit = toSuit;
             GameManager.ChangeTurn();
         }
-        GameManager.CurrentCard.data.suit = toSuit;
+
+        if(toSuit != Suit.All) {
+            GameManager.CurrentCard.data.suit = toSuit;
+        }
     }
 
     public void SkipTurn() {
@@ -47,11 +53,28 @@ public class UIManager : MonoBehaviour {
 
     public void DisableButtons() {
         skipTurnButton.interactable = false;
+        lastCard.interactable = false;
         takeCards.gameObject.SetActive(false);
         selectSuitButtons.SetActive(false);
     }
 
     public void TakeCardsFromPoolOfForcedPickup() {
         GameManager.PV.RPC("RPC_PickUpCardsFromPoolOfForcedPickup", RpcTarget.AllBuffered);
+        takeCards.gameObject.SetActive(false);
+    }
+
+    public void LastCard() {
+        if(GameManager.PlayerOnTurn.cardArranger.cardsInHand.Count == 1) {
+            StopAllCoroutines();
+        } else {
+            CardStackManager.instance.PickUpCard();
+        }
+        lastCard.interactable = false;
+    }
+
+    public IEnumerator WaitForLastCardButtonPress() {
+        yield return new WaitForSeconds(2f);
+        GameManager.PV.RPC("RPC_PickUpCard", RpcTarget.AllBuffered);
+        lastCard.interactable = false;
     }
 }

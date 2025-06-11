@@ -56,10 +56,6 @@ public class CardStackManager : MonoBehaviour {
     public static void SetUndealtCards(List<string> listOfUndealtCards) {
         UndealtCards.Clear();
         SetUndealtCards(listOfUndealtCards.ToArray());
-        //listOfUndealtCards.Reverse();
-        //foreach(string card in listOfUndealtCards) {
-        //    UndealtCards.Push(card);
-        //}
     }
 
     public static void SetUndealtCards(string[] listOfUndealtCards) {

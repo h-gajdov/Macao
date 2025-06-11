@@ -33,6 +33,8 @@ public static class Global {
                 }
             }
             foreach (Suit s in System.Enum.GetValues(typeof(Suit))) {
+                if (s == Suit.All) break;
+
                 string key = first + s.ToString()[0];
                 Texture2D texture = Resources.Load<Texture2D>("Sprites/Cards/" + key);
                 Sprite sprite = Resources.Load<Sprite>("Sprites/Cards/" + key);
@@ -41,6 +43,21 @@ public static class Global {
                 AllCardStrings.Add(key);
             }
         }
+
+        //Black Joekr
+        AllCardStrings.Add("BJ");
+        Texture2D t = Resources.Load<Texture2D>("Sprites/Cards/BJ");
+        Sprite sp = Resources.Load<Sprite>("Sprites/Cards/BJ");
+        Face v = new Face(t, sp);
+        CardFaces.Add("BJ", v);
+
+        //Red Joker
+        AllCardStrings.Add("RJ");
+        t = Resources.Load<Texture2D>("Sprites/Cards/RJ");
+        sp = Resources.Load<Sprite>("Sprites/Cards/RJ");
+        v = new Face(t, sp);
+        CardFaces.Add("RJ", v);
+
 
         SuitSprites.Clear();
         foreach (Suit key in System.Enum.GetValues(typeof(Suit))) {
