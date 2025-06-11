@@ -63,9 +63,10 @@ public class UIManager : MonoBehaviour {
         takeCards.gameObject.SetActive(false);
     }
 
+    bool pressed = false;
     public void LastCard() {
         if(GameManager.PlayerOnTurn.cardArranger.cardsInHand.Count == 1) {
-            StopAllCoroutines();
+            pressed = true;
         } else {
             CardStackManager.instance.PickUpCard();
         }
@@ -73,8 +74,23 @@ public class UIManager : MonoBehaviour {
     }
 
     public IEnumerator WaitForLastCardButtonPress() {
+        if (!GameManager.PlayerOnTurn.PV.IsMine) {
+            GameManager.Locked = true;
+            while(GameManager.Locked) {
+                Debug.LogError("WAITING");
+                yield return null;
+            }
+            yield break;
+        }
+
+        lastCard.interactable = true;
         yield return new WaitForSeconds(2f);
-        GameManager.PV.RPC("RPC_PickUpCard", RpcTarget.AllBuffered);
+        if(!pressed) {
+            GameManager.PV.RPC("RPC_PickUpCard", RpcTarget.AllBuffered);
+        }
         lastCard.interactable = false;
+        pressed = false;
+        GameManager.PV.RPC("RPC_UnlockPlayers", RpcTarget.OthersBuffered);
+        yield return null;
     }
 }

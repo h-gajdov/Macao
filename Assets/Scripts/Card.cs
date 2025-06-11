@@ -106,7 +106,7 @@ public class Card : MonoBehaviour {
         Initialize();
     }
 
-    public void Throw(Player player) {
+    public IEnumerator Throw(Player player) {
         thrownByPlayer = player;
         transform.parent = GameManager.instance.cardsPool;
         thrown = true;
@@ -118,29 +118,27 @@ public class Card : MonoBehaviour {
 
         if (cardArranger != null && cardArranger.cardsInHand.Contains(this)) {
             cardArranger.cardsInHand.Remove(this);
+            if (cardArranger.cardsInHand.Count == 1) {
+                //UIManager.instance.StartCoroutine(UIManager.instance.WaitForLastCardButtonPress());
+                yield return UIManager.instance.WaitForLastCardButtonPress();
+            }
+
             if (data.value == 11) {
                 GameManager.SetPendingCard(this);
                 if (player.PV.IsMine) UIManager.instance.selectSuitButtons.SetActive(true);
-                return;
+                yield break;
             } else if(data.value == 8 || data.value == 1) {
                 GameManager.ChangeTurn(false);
             }
 
-            //if(GameManager.PlayerOnTurn.PV.IsMine) {
-            //    if (cardArranger.cardsInHand.Count == 1) {
-            //        UIManager.instance.StartCoroutine(UIManager.instance.WaitForLastCardButtonPress());
-            //    }
-            //    UIManager.instance.lastCard.interactable = true;
-            //}
-
             GameManager.SetCurrentCard(this);
             GameManager.ChangeTurn();
 
-            if(data.value == 7) {
-                SevensAndJokersLogic(2);
-            } else if(data.value == 14 || data.value == 15) {
-                SevensAndJokersLogic(4);
-            }
+            //if(data.value == 7) {
+            //    SevensAndJokersLogic(2);
+            //} else if(data.value == 14 || data.value == 15) {
+            //    SevensAndJokersLogic(4);
+            //}
         }
 
         GameManager.SetCurrentCard(this);

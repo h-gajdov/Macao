@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour {
     public static Vector3[][] PlayerRotations = new Vector3[4][];
 
     public static GameManager instance;
+    public static bool Locked = false;
 
     private void OnValidate() {
         Global.Initialize();
@@ -177,7 +178,6 @@ public class GameManager : MonoBehaviour {
         List<string> deck = ShuffleCards();
         List<string> toRemove = new List<string>();
         Dictionary<Player, List<CardData>> map = new Dictionary<Player, List<CardData>>();
-        foreach (string card in deck) Debug.Log(card);
 
         foreach (Player p in Players) {
             map.Add(p, new List<CardData>());
@@ -215,7 +215,8 @@ public class GameManager : MonoBehaviour {
         Card firstCardInPool = Players[0].cardArranger.SpawnCard(value, instance.cardsPool);
         CurrentCard = firstCardInPool;
         UIManager.instance.currentSuit.sprite = Global.SuitSprites[CurrentCard.data.suit];
-        firstCardInPool.Throw(null);
+        //firstCardInPool.Throw(null);
+        firstCardInPool.StartCoroutine(firstCardInPool.Throw(null));
         firstCardInPool.transform.position = Vector3.zero;
     }
 
@@ -268,6 +269,11 @@ public class GameManager : MonoBehaviour {
     [PunRPC]
     private void RPC_ChangeTurn() {
         ChangeTurn();
+    }
+
+    [PunRPC]
+    private void RPC_UnlockPlayers() {
+        Locked = false;
     }
 
     private static IEnumerator WaitBeforeChangeOfTurn() {

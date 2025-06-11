@@ -52,6 +52,7 @@ MonoBehaviour:
   - RPC_SpawnPlayer
   - RPC_ChangeTurn
   - RPC_PickUpCardsFromPoolOfForcedPickup
+  - RPC_UnlockPlayers
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
