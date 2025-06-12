@@ -4,9 +4,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 public class GameManager : MonoBehaviour {
     public static List<Player> Players = new List<Player>();
+    public static List<Card> CardPoolList = new List<Card>();
     public static PhotonView PV;
     public static Player PlayerOnTurn { get; private set; }
     private static int playerTurnIndex = 0;
@@ -19,7 +21,7 @@ public class GameManager : MonoBehaviour {
     public Transform cardsPool;
     public float boundSlider = 0.1f;
 
-    public List<Player> debug;
+    public List<Card> debug;
 
     public static Camera MainCamera;
 
@@ -35,23 +37,28 @@ public class GameManager : MonoBehaviour {
     }
 
     private static void ForcePickUp() {
-        int value = CurrentCard.data.value;
-        Suit suit = CurrentCard.data.suit;
-        CardArranger cardArranger = PlayerOnTurn.cardArranger;
-        if (!cardArranger.Contains(value) &&
-            !cardArranger.Contains(suit) &&
-            !cardArranger.Contains(11)) {
+        if (!CanThrow()) {
             CardStackManager.instance.PickUpCard();
         }
 
-        if (!cardArranger.Contains(value) &&
-            !cardArranger.Contains(suit) &&
-            !cardArranger.Contains(11)) {
+        if (!CanThrow()) {
             instance.StartCoroutine(WaitBeforeChangeOfTurn());
         }
     }
 
-    public static void ChangeTurn() {
+    public static bool CanThrow() {
+        int value = CurrentCard.data.value;
+        Suit suit = CurrentCard.data.suit;
+        CardArranger cardArranger = PlayerOnTurn.cardArranger;
+        return suit == Suit.All ||
+               cardArranger.Contains(value) ||
+               cardArranger.Contains(suit) ||
+               cardArranger.Contains(11) ||
+               cardArranger.Contains(14) ||
+               cardArranger.Contains(15);
+    }
+
+    private static void HandleTurnTransition() {
         if (PlayerOnTurn.PV.IsMine) {
             PlayerOnTurn.cardArranger.DisableAllCards();
             UIManager.instance.DisableButtons();
@@ -62,20 +69,16 @@ public class GameManager : MonoBehaviour {
 
         PlayerOnTurn.cardArranger.EnableCards();
 
+        if (PlayerOnTurn.PV.IsMine) UIManager.instance.replenishCardStack.interactable = true;
+    }
+
+    public static void ChangeTurn() {
+        HandleTurnTransition();
         ForcePickUp();
     }
 
     public static void ChangeTurn(bool forcePickUp) {
-        if (PlayerOnTurn.PV.IsMine) {
-            PlayerOnTurn.cardArranger.DisableAllCards();
-            UIManager.instance.DisableButtons();
-        }
-
-        playerTurnIndex = (playerTurnIndex + 1) % Players.Count;
-        PlayerOnTurn = Players[playerTurnIndex];
-
-        PlayerOnTurn.cardArranger.EnableCards();
-
+        HandleTurnTransition();
         if(forcePickUp) ForcePickUp();
     }
 
@@ -154,7 +157,7 @@ public class GameManager : MonoBehaviour {
     }
 
     private void Update() {
-        debug = Players;
+        debug = CardPoolList;
 
         if(Input.GetKeyDown(KeyCode.G)) {
             SpawnPlayer();

@@ -10,9 +10,12 @@ public class UIManager : MonoBehaviour {
     public Button skipTurnButton;
     public Button takeCards;
     public Button lastCard;
+    public Button replenishCardStack;
     public PhotonView PV;
 
     public static UIManager instance;
+
+    bool pressed = false;
 
     private void Start() {
         if (instance == null) instance = this;
@@ -54,6 +57,7 @@ public class UIManager : MonoBehaviour {
     public void DisableButtons() {
         skipTurnButton.interactable = false;
         lastCard.interactable = false;
+        replenishCardStack.interactable = false;
         takeCards.gameObject.SetActive(false);
         selectSuitButtons.SetActive(false);
     }
@@ -63,7 +67,6 @@ public class UIManager : MonoBehaviour {
         takeCards.gameObject.SetActive(false);
     }
 
-    bool pressed = false;
     public void LastCard() {
         if(GameManager.PlayerOnTurn.cardArranger.cardsInHand.Count == 1) {
             pressed = true;
@@ -77,7 +80,6 @@ public class UIManager : MonoBehaviour {
         if (!GameManager.PlayerOnTurn.PV.IsMine) {
             GameManager.Locked = true;
             while(GameManager.Locked) {
-                Debug.LogError("WAITING");
                 yield return null;
             }
             yield break;

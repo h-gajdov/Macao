@@ -1,6 +1,7 @@
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CardStackManager : MonoBehaviour {
@@ -38,11 +39,31 @@ public class CardStackManager : MonoBehaviour {
     }
 
     public void PickUpCard() {
+        if(UndealtCards.Count == 0) {
+            ReplenishCardStack();
+        }
+
         UIManager.instance.skipTurnButton.interactable = GameManager.PlayerOnTurn.PV.IsMine;
 
         Card card = GameManager.PlayerOnTurn.cardArranger.SpawnCard(UndealtCards.Pop());
-        if (UndealtCards.Count == 0) spriteRenderer.gameObject.SetActive(false);
+        if (UndealtCards.Count == 0) {
+            spriteRenderer.gameObject.SetActive(false);
+            UIManager.instance.replenishCardStack.gameObject.SetActive(true);
+        }
         card.transform.position = transform.position;
+    }
+
+    public void ReplenishCardStack() {
+        Card lastCard = GameManager.CardPoolList.Last();
+        GameManager.CardPoolList.Reverse();
+        foreach (Card card in GameManager.CardPoolList) {
+            UndealtCards.Push(card.GetValueString());
+        }
+
+        UIManager.instance.replenishCardStack.gameObject.SetActive(false);
+        spriteRenderer.gameObject.SetActive(true);
+        GameManager.CardPoolList.Clear();
+        GameManager.CardPoolList.Add(lastCard);
     }
 
     private IEnumerator LerpToColor(Color target) {

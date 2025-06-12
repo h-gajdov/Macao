@@ -115,11 +115,11 @@ public class Card : MonoBehaviour {
         spriteRenderer.sortingOrder = 10 + transform.GetSiblingIndex();
 
         initialRotation = Vector3.right * 90f;
+        GameManager.CardPoolList.Add(this);
 
         if (cardArranger != null && cardArranger.cardsInHand.Contains(this)) {
             cardArranger.cardsInHand.Remove(this);
             if (cardArranger.cardsInHand.Count == 1) {
-                //UIManager.instance.StartCoroutine(UIManager.instance.WaitForLastCardButtonPress());
                 yield return UIManager.instance.WaitForLastCardButtonPress();
             }
 
@@ -134,9 +134,9 @@ public class Card : MonoBehaviour {
             GameManager.SetCurrentCard(this);
             GameManager.ChangeTurn();
 
-            //if(data.value == 7) {
+            //if (data.value == 7) {
             //    SevensAndJokersLogic(2);
-            //} else if(data.value == 14 || data.value == 15) {
+            //} else if (data.value == 14 || data.value == 15) {
             //    SevensAndJokersLogic(4);
             //}
         }
