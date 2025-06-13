@@ -60,7 +60,7 @@ public class GameManager : MonoBehaviour {
     }
 
     private static void HandleTurnTransition() {
-        GameManager.CanPickUpCard = true;
+        CanPickUpCard = true;
         if (PlayerOnTurn.PV.IsMine) {
             PlayerOnTurn.cardArranger.DisableAllCards();
             UIManager.instance.DisableButtons();

@@ -45,7 +45,7 @@ public class UIManager : MonoBehaviour {
             GameManager.ChangeTurn();
         }
 
-        if(toSuit != Suit.All) {
+        if(toSuit != Suit.All && GameManager.CurrentCard != null) {
             GameManager.CurrentCard.data.suit = toSuit;
         }
     }
