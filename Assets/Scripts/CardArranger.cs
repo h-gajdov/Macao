@@ -177,7 +177,7 @@ public class CardArranger : MonoBehaviour {
                     Debug.LogError("It's not your turn!");
                     return;
                 }
-                if (!prevSelected.CanBeThrown) return;
+                if (!prevSelected.CanBeThrown || !Card.CanThrowCards) return;
                 player.PV.RPC("RPC_Throw", RpcTarget.AllBuffered, cardsInHand.IndexOf(prevSelected));
             }
         }

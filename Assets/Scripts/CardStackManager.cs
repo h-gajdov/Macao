@@ -58,6 +58,7 @@ public class CardStackManager : MonoBehaviour {
 
     public void ReplenishCardStack() {
         Card lastCard = GameManager.CardPoolList.Last();
+        GameManager.CardPoolList.Remove(lastCard);
         GameManager.CardPoolList.Reverse();
         foreach (Card card in GameManager.CardPoolList) {
             UndealtCards.Push(card.GetValueString());

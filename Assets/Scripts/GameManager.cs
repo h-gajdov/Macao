@@ -174,7 +174,7 @@ public class GameManager : MonoBehaviour {
 
     public List<string> ShuffleCards() {
         System.Random prng = new System.Random(0);
-        //List<string> shuffeledDeck = Global.AllCardStrings.OrderBy(i => Guid.NewGuid()).ToList();
+        //List<string> shuffeledDeck = Global.AllCardStrings.OrderBy(i => System.Guid.NewGuid()).ToList();
         List<string> shuffeledDeck = Global.AllCardStrings.OrderBy(i => prng.Next()).ToList();
         return shuffeledDeck;
     }

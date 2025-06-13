@@ -77,6 +77,7 @@ public class Card : MonoBehaviour {
     public bool hidden = false;
     public bool thrown = false;
     public bool CanBeThrown { get; private set; } = true;
+    public static bool CanThrowCards = true;
 
     CardArranger cardArranger;
     Vector3 initialPosition;
@@ -123,7 +124,9 @@ public class Card : MonoBehaviour {
         if (cardArranger != null && cardArranger.cardsInHand.Contains(this)) {
             cardArranger.cardsInHand.Remove(this);
             if (cardArranger.cardsInHand.Count == 1) {
+                CanThrowCards = false;
                 yield return UIManager.instance.WaitForLastCardButtonPress();
+                CanThrowCards = true;
             }
 
             if (data.value == 11) {
