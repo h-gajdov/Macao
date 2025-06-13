@@ -39,6 +39,9 @@ public class CardStackManager : MonoBehaviour {
     }
 
     public void PickUpCard() {
+        if (!GameManager.CanPickUpCard) return;
+        GameManager.CanPickUpCard = false;
+
         if(UndealtCards.Count == 0) {
             ReplenishCardStack();
         }

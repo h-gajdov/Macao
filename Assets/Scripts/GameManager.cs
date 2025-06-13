@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour {
 
     public static GameManager instance;
     public static bool Locked = false;
+    public static bool CanPickUpCard = true;
 
     private void OnValidate() {
         Global.Initialize();
@@ -59,6 +60,7 @@ public class GameManager : MonoBehaviour {
     }
 
     private static void HandleTurnTransition() {
+        GameManager.CanPickUpCard = true;
         if (PlayerOnTurn.PV.IsMine) {
             PlayerOnTurn.cardArranger.DisableAllCards();
             UIManager.instance.DisableButtons();
