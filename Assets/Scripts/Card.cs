@@ -98,6 +98,9 @@ public class Card : MonoBehaviour {
     }
 
     public bool CheckAvailability() {
+        if (CardStackManager.PoolOfForcedPickup != 0)
+            return data.value == 7 || data.value == 14 || data.value == 15;
+
         return data.value == 14 || data.value == 15 || GameManager.CurrentCard.data.suit == Suit.All || data.suit == GameManager.CurrentCard.data.suit || data.value == GameManager.CurrentCard.data.value || data.value == 11;
     }
 
@@ -134,11 +137,11 @@ public class Card : MonoBehaviour {
             GameManager.SetCurrentCard(this);
             GameManager.ChangeTurn();
 
-            //if (data.value == 7) {
-            //    SevensAndJokersLogic(2);
-            //} else if (data.value == 14 || data.value == 15) {
-            //    SevensAndJokersLogic(4);
-            //}
+            if (data.value == 7) {
+                SevensAndJokersLogic(2);
+            } else if (data.value == 14 || data.value == 15) {
+                SevensAndJokersLogic(4);
+            }
         }
 
         GameManager.SetCurrentCard(this);
