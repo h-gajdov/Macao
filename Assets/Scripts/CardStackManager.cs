@@ -2,6 +2,7 @@ using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 public class CardStackManager : MonoBehaviour {
@@ -39,7 +40,7 @@ public class CardStackManager : MonoBehaviour {
     }
 
     public void PickUpCard() {
-        if (!GameManager.CanPickUpCard) return;
+        //if (!GameManager.CanPickUpCard) return;
         GameManager.CanPickUpCard = false;
 
         if(UndealtCards.Count == 0) {
@@ -54,6 +55,7 @@ public class CardStackManager : MonoBehaviour {
             UIManager.instance.replenishCardStack.gameObject.SetActive(true);
         }
         card.transform.position = transform.position;
+        card.transform.eulerAngles = Vector3.right * -90f;
     }
 
     public void ReplenishCardStack() {

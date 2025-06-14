@@ -149,7 +149,7 @@ public class CardArranger : MonoBehaviour {
         float startX = -(spacing * (count - 1)) / 2f;
 
         Vector3 currLocalPosition = card.localPosition;
-        Vector3 targetPosition = new Vector3(startX + card.GetSiblingIndex() * spacing, currLocalPosition.y, currLocalPosition.z);
+        Vector3 targetPosition = Vector3.right * (startX + card.GetSiblingIndex() * spacing);
 
         return targetPosition;
     }

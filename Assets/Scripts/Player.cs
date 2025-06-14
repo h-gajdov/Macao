@@ -18,7 +18,7 @@ public class Player : MonoBehaviour {
     private void RPC_SpawnPlayer() {
         if(!GameManager.Players.Contains(this)) GameManager.Players.Add(this);
 
-        GameManager.AssignPositions();
+        //GameManager.AssignPositions();
     }
 
     [PunRPC]

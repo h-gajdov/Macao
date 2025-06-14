@@ -147,7 +147,7 @@ public class GameManager : MonoBehaviour {
         Global.Initialize();
 
         MainCamera = Camera.main;
-        InitializePositions();
+        //InitializePositions();
 
         if (instance == null) instance = this;
         else {
@@ -165,7 +165,7 @@ public class GameManager : MonoBehaviour {
             SpawnPlayer();
         }
 
-        AssignPositions();
+        //AssignPositions();
 
         if (Input.GetKeyDown(KeyCode.K)) {
             DealCards();
@@ -220,7 +220,6 @@ public class GameManager : MonoBehaviour {
         Card firstCardInPool = Players[0].cardArranger.SpawnCard(value, instance.cardsPool);
         CurrentCard = firstCardInPool;
         UIManager.instance.currentSuit.sprite = Global.SuitSprites[CurrentCard.data.suit];
-        //firstCardInPool.Throw(null);
         firstCardInPool.StartCoroutine(firstCardInPool.Throw(null));
         firstCardInPool.transform.position = Vector3.zero;
     }
@@ -247,6 +246,14 @@ public class GameManager : MonoBehaviour {
 
     public void SpawnPlayer() {
         Player player = PhotonNetwork.Instantiate("Prefabs/" + playerPrefab.name, Vector3.zero, Quaternion.identity).GetComponent<Player>();
+        Transform cam = MainCamera.transform;
+
+        Vector3 viewportBottom = new Vector3(0.5f, boundSlider, 10f);
+        Vector3 worldPosition = Camera.main.ViewportToWorldPoint(viewportBottom);
+
+        player.transform.position = worldPosition;
+        player.transform.LookAt(cam.position, Vector3.up);
+        player.transform.eulerAngles = Vector3.right * player.transform.eulerAngles.x;
     }
 
     [PunRPC]
