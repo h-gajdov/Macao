@@ -2,7 +2,6 @@ using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI;
 
 public class CardArranger : MonoBehaviour {
     public GameObject cardPrefab;
@@ -17,7 +16,7 @@ public class CardArranger : MonoBehaviour {
     public float maxWidth = 5f;
 
     Card prevSelected;
-    Player player;
+    [HideInInspector] public Player player;
     bool allUnavailable = false; //TODO: Delete this when moving CheckAvailability out of Update
 
     public void GenerateCards() {
@@ -35,35 +34,6 @@ public class CardArranger : MonoBehaviour {
     public void SpawnCards(CardData[] cardData) {
         foreach(CardData data in cardData) {
             SpawnCard(data);
-        }
-    }
-
-    public void ArrangeOpponentCards(List<Transform> cards, Transform centerPoint, float radius) {
-        int count = cards.Count;
-        float spacing = Mathf.Min(spaceBetweenCards, maxWidth / (count - 1));
-        float targetWidth = Mathf.Min(spacing * (count - 1), maxWidth);
-        float halfChord = targetWidth / 2f;
-        float angleRad = 2f * Mathf.Asin(halfChord / radius);
-        float angleRange = angleRad * Mathf.Rad2Deg;
-        float angleStep = angleRange / (count - 1);
-        float startAngle = -angleRange / 2f;
-
-        Vector3 arcAxis = Vector3.Cross(centerPoint.forward, centerPoint.right);
-        if(arcAxis == Vector3.zero)
-            arcAxis = Vector3.Cross(centerPoint.forward, Vector3.up);
-
-        for (int i = 0; i < count; i++) {
-            float angle = startAngle + angleStep * i;
-            float rad = Mathf.Deg2Rad * angle;
-
-            Quaternion rotation = Quaternion.AngleAxis(angle, arcAxis.normalized);
-            Vector3 offsetDirection = rotation * centerPoint.forward;
-
-            Vector3 pos = centerPoint.position + offsetDirection.normalized * radius;
-
-            cards[i].position = pos;
-            cards[i].LookAt(centerPoint.position);
-            cards[i].Rotate(0f, 180f, 0f);
         }
     }
 
@@ -128,16 +98,18 @@ public class CardArranger : MonoBehaviour {
     }
     
     private void Update() {
-        if (!player.PV.IsMine) return;
-        CheckHoveredCards();
-        //if(!allUnavailable) SetAvailabilityOfCards(); //TODO: Remove this and make it check when your turn comes
+        if (!player.PV.IsMine) {
+            List<GameObject> cards = new List<GameObject>();
+            foreach(Transform card in transform) {
+                cards.Add(card.gameObject);
+            }
 
-        List<Transform> cards = new List<Transform>();
-        foreach(Transform child in transform) {
-            cards.Add(child);
+            //ArrangeOpponentCards(cardsInHand, transform, baseRadius);
+            ArrangeOpponentCards(cards, transform, baseRadius);
+            return;
         }
-
-        ArrangeOpponentCards(cards, transform, baseRadius);
+        CheckHoveredCards();
+        if(!allUnavailable) SetAvailabilityOfCards(); //TODO: Remove this and make it check when your turn comes
     }
 
     public void EnableCards() {
@@ -172,6 +144,35 @@ public class CardArranger : MonoBehaviour {
             if (GameMath.SqrDistance(currLocalPosition, targetPosition) > 0.05f * 0.05f)
                 card.localPosition = Vector3.Lerp(currLocalPosition, targetPosition, smoothness * Time.deltaTime);
             else card.localPosition = targetPosition;
+        }
+    }
+
+    public void ArrangeOpponentCards(List<GameObject> cards, Transform centerPoint, float radius) {
+        int count = cards.Count;
+        float spacing = Mathf.Min(spaceBetweenCards, maxWidth / (count - 1));
+        float targetWidth = Mathf.Min(spacing * (count - 1), maxWidth);
+        float halfChord = targetWidth / 2f;
+        float angleRad = 2f * Mathf.Asin(halfChord / radius);
+        float angleRange = angleRad * Mathf.Rad2Deg;
+        float angleStep = angleRange / (count - 1);
+        float startAngle = -angleRange / 2f;
+
+        Vector3 arcAxis = Vector3.Cross(centerPoint.forward, centerPoint.right);
+        if (arcAxis == Vector3.zero)
+            arcAxis = Vector3.Cross(centerPoint.forward, Vector3.up);
+
+        for (int i = 0; i < count; i++) {
+            float angle = startAngle + angleStep * i;
+            float rad = Mathf.Deg2Rad * angle;
+
+            Quaternion rotation = Quaternion.AngleAxis(angle, arcAxis.normalized);
+            Vector3 offsetDirection = rotation * centerPoint.forward;
+
+            Vector3 currPosition = cards[i].transform.position;
+            Vector3 targetPosition = centerPoint.position + offsetDirection.normalized * radius;
+            cards[i].transform.position = Vector3.Lerp(currPosition, targetPosition, 10 * Time.deltaTime);
+            cards[i].transform.LookAt(centerPoint.position);
+            cards[i].transform.Rotate(0f, 180f, 0f);
         }
     }
 

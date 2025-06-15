@@ -100,25 +100,25 @@ public class GameManager : MonoBehaviour {
         float halfWidth = Screen.width / 2;
         float halfHeight = Screen.height / 2;
         PlayerPositions[0] = new Vector3[] {
-            Camera.main.ScreenToWorldPoint(new Vector3(halfWidth, boundSlider, distanceCameraToOrigin)),
+            Vector3.zero
         };
 
         PlayerPositions[1] = new Vector3[] {
-            Camera.main.ScreenToWorldPoint(new Vector3(halfWidth, boundSlider, distanceCameraToOrigin)),
-            Camera.main.ScreenToWorldPoint(new Vector3(halfWidth, Screen.height - boundSlider, distanceCameraToOrigin)),
+            Vector3.zero,
+            new Vector3(0, 0, 24f)
         };
 
         PlayerPositions[2] = new Vector3[] {
-            Camera.main.ScreenToWorldPoint(new Vector3(halfWidth, boundSlider, distanceCameraToOrigin)),
-            Camera.main.ScreenToWorldPoint(new Vector3(boundSlider, halfHeight, distanceCameraToOrigin)),
-            Camera.main.ScreenToWorldPoint(new Vector3(halfWidth, Screen.height - boundSlider, distanceCameraToOrigin)),
+            Vector3.zero,
+            new Vector3(-20f, 0, 10f),
+            new Vector3(0, 0, 24f)
         };
 
         PlayerPositions[3] = new Vector3[] {
-            Camera.main.ScreenToWorldPoint(new Vector3(halfWidth, boundSlider, distanceCameraToOrigin)),
-            Camera.main.ScreenToWorldPoint(new Vector3(boundSlider, halfHeight, distanceCameraToOrigin)),
-            Camera.main.ScreenToWorldPoint(new Vector3(halfWidth, Screen.height - boundSlider, distanceCameraToOrigin)),
-            Camera.main.ScreenToWorldPoint(new Vector3(Screen.width - boundSlider, halfHeight, distanceCameraToOrigin)),
+            Vector3.zero,
+            new Vector3(-20f, 0, 10f),
+            new Vector3(0, 0, 24f),
+            new Vector3(20f, 0, 10f)
         };
 
         PlayerRotations[0] = new Vector3[] {
@@ -132,15 +132,15 @@ public class GameManager : MonoBehaviour {
 
         PlayerRotations[2] = new Vector3[] {
             Vector3.zero,
-            Vector3.up * 90,
+            Vector3.up * 120,
             Vector3.up * 180,
         };
 
         PlayerRotations[3] = new Vector3[] {
             Vector3.zero,
-            Vector3.up * 90,
+            Vector3.up * 120,
             Vector3.up * 180,
-            Vector3.up * -90
+            -Vector3.up * 120,
         };
     }
 
@@ -148,7 +148,7 @@ public class GameManager : MonoBehaviour {
         Global.Initialize();
 
         MainCamera = Camera.main;
-        //InitializePositions();
+        InitializePositions();
 
         if (instance == null) instance = this;
         else {
@@ -166,7 +166,7 @@ public class GameManager : MonoBehaviour {
             SpawnPlayer();
         }
 
-        //AssignPositions();
+        AssignPositions();
 
         if (Input.GetKeyDown(KeyCode.K)) {
             DealCards();
@@ -195,7 +195,7 @@ public class GameManager : MonoBehaviour {
         while (count != 7) {
             int idx = rrIndex + count * Players.Count;
             map[Players[rrIndex]].Add(CardData.ConvertValueStringToCardData(deck[idx]));
-            //toRemove.Add(deck[idx]);
+            toRemove.Add(deck[idx]);
             rrIndex = (rrIndex + 1) % Players.Count;
             if (rrIndex == 0) count++;
         }
@@ -238,7 +238,7 @@ public class GameManager : MonoBehaviour {
         Vector3[] positions = PlayerPositions[Players.Count - 1];
         Vector3[] rotations = PlayerRotations[Players.Count - 1];
 
-        for (int i = 0; i < Players.Count; i++) {
+        for (int i = 1; i < Players.Count; i++) {
             int playerIdx = (startIdx + i) % Players.Count;
             Players[playerIdx].transform.position = positions[i];
             Players[playerIdx].transform.eulerAngles = rotations[i];
@@ -249,17 +249,14 @@ public class GameManager : MonoBehaviour {
         Player player = PhotonNetwork.Instantiate("Prefabs/" + playerPrefab.name, Vector3.zero, Quaternion.identity).GetComponent<Player>();
         Transform cam = MainCamera.transform;
 
-        if (Players.Count != 0) {
-            player.transform.position = debugPosition.transform.position;
-            return;
+        if (player.PV.IsMine) {
+            Vector3 viewportBottom = new Vector3(0.5f, boundSlider, 10f);
+            Vector3 worldPosition = Camera.main.ViewportToWorldPoint(viewportBottom);
+
+            player.transform.position = worldPosition;
+            player.transform.LookAt(cam.position, Vector3.up);
+            player.transform.eulerAngles = Vector3.right * player.transform.eulerAngles.x;
         }
-
-        Vector3 viewportBottom = new Vector3(0.5f, boundSlider, 10f);
-        Vector3 worldPosition = Camera.main.ViewportToWorldPoint(viewportBottom);
-
-        player.transform.position = worldPosition;
-        player.transform.LookAt(cam.position, Vector3.up);
-        player.transform.eulerAngles = Vector3.right * player.transform.eulerAngles.x;
     }
 
     [PunRPC]

@@ -161,14 +161,14 @@ public class Card : MonoBehaviour {
     }
 
     private void Update() {
+        if (!thrown && (cardArranger == null || !cardArranger.player.PV.IsMine)) return;
         initialPosition = (!thrown) ? cardArranger.GetTargetPosition(transform) : Vector3.zero;
 
-        if(hovered) {
-            Hover(1.5f, transform.localPosition.z < 0.9f, 999);
+        if (hovered) {
+            Hover(1.5f, 999);
         } else {
-            Hover(0, transform.localPosition.z > 0.1f, transform.GetSiblingIndex());
+            Hover(0, transform.GetSiblingIndex());
         }
-
         transform.localRotation = Quaternion.Lerp(transform.localRotation, Quaternion.Euler(initialRotation), selectSpeed * Time.deltaTime);
     }
 
@@ -211,7 +211,7 @@ public class Card : MonoBehaviour {
         return first + data.suit.ToString()[0];
     }
 
-    private void Hover(float target, bool condition, int sortLevel) {
+    private void Hover(float target, int sortLevel) {
         Vector3 currPosition = transform.localPosition;
         Vector3 targetPosition = new Vector3(initialPosition.x, initialPosition.y, target);
         transform.localPosition = Vector3.Lerp(currPosition, targetPosition, selectSpeed * Time.deltaTime);
