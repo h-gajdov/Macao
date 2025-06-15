@@ -57,7 +57,7 @@ public class CardStackManager : MonoBehaviour {
         card.transform.position = transform.position;
         card.transform.eulerAngles = Vector3.right * -90f;
     }
-
+    
     public void ReplenishCardStack() {
         Card lastCard = GameManager.CardPoolList.Last();
         GameManager.CardPoolList.Remove(lastCard);

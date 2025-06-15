@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour {
     public static Player LocalPlayer { get; set; }
 
     public GameObject playerPrefab;
+    public GameObject debugPosition; //TODO: delete this line
     public Transform cardsPool;
     public float boundSlider = 0.1f;
 
@@ -194,7 +195,7 @@ public class GameManager : MonoBehaviour {
         while (count != 7) {
             int idx = rrIndex + count * Players.Count;
             map[Players[rrIndex]].Add(CardData.ConvertValueStringToCardData(deck[idx]));
-            toRemove.Add(deck[idx]);
+            //toRemove.Add(deck[idx]);
             rrIndex = (rrIndex + 1) % Players.Count;
             if (rrIndex == 0) count++;
         }
@@ -247,6 +248,11 @@ public class GameManager : MonoBehaviour {
     public void SpawnPlayer() {
         Player player = PhotonNetwork.Instantiate("Prefabs/" + playerPrefab.name, Vector3.zero, Quaternion.identity).GetComponent<Player>();
         Transform cam = MainCamera.transform;
+
+        if (Players.Count != 0) {
+            player.transform.position = debugPosition.transform.position;
+            return;
+        }
 
         Vector3 viewportBottom = new Vector3(0.5f, boundSlider, 10f);
         Vector3 worldPosition = Camera.main.ViewportToWorldPoint(viewportBottom);

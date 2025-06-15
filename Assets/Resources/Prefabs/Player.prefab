@@ -46,9 +46,12 @@ MonoBehaviour:
   cardPrefab: {fileID: 2670504978827762092, guid: 443c19f2f76df804787d9608146bcae1, type: 3}
   cardsInHand: []
   maxWidth: 10
-  spaceBetweenCards: 0.5
+  spaceBetweenCards: 0.7
   smoothness: 2
   numberOfCards: 7
+  debug: 0.1
+  baseRadius: 13
+  angleRangeMult: 10
 --- !u!1 &4493684548790912109
 GameObject:
   m_ObjectHideFlags: 0

@@ -7,10 +7,14 @@ using static UnityEngine.Rendering.DebugUI;
 public class CardArranger : MonoBehaviour {
     public GameObject cardPrefab;
     public List<Card> cardsInHand = new List<Card>();
-    public float maxWidth = 5f;
-    public float spaceBetweenCards = 0.1f;
     public float smoothness = 2f;
     public int numberOfCards = 10;
+
+    [Space]
+    [Header("Cards Placement Parameters")]
+    public float spaceBetweenCards = 0.1f;
+    public float baseRadius = 5f;
+    public float maxWidth = 5f;
 
     Card prevSelected;
     Player player;
@@ -31,6 +35,35 @@ public class CardArranger : MonoBehaviour {
     public void SpawnCards(CardData[] cardData) {
         foreach(CardData data in cardData) {
             SpawnCard(data);
+        }
+    }
+
+    public void ArrangeOpponentCards(List<Transform> cards, Transform centerPoint, float radius) {
+        int count = cards.Count;
+        float spacing = Mathf.Min(spaceBetweenCards, maxWidth / (count - 1));
+        float targetWidth = Mathf.Min(spacing * (count - 1), maxWidth);
+        float halfChord = targetWidth / 2f;
+        float angleRad = 2f * Mathf.Asin(halfChord / radius);
+        float angleRange = angleRad * Mathf.Rad2Deg;
+        float angleStep = angleRange / (count - 1);
+        float startAngle = -angleRange / 2f;
+
+        Vector3 arcAxis = Vector3.Cross(centerPoint.forward, centerPoint.right);
+        if(arcAxis == Vector3.zero)
+            arcAxis = Vector3.Cross(centerPoint.forward, Vector3.up);
+
+        for (int i = 0; i < count; i++) {
+            float angle = startAngle + angleStep * i;
+            float rad = Mathf.Deg2Rad * angle;
+
+            Quaternion rotation = Quaternion.AngleAxis(angle, arcAxis.normalized);
+            Vector3 offsetDirection = rotation * centerPoint.forward;
+
+            Vector3 pos = centerPoint.position + offsetDirection.normalized * radius;
+
+            cards[i].position = pos;
+            cards[i].LookAt(centerPoint.position);
+            cards[i].Rotate(0f, 180f, 0f);
         }
     }
 
@@ -90,14 +123,6 @@ public class CardArranger : MonoBehaviour {
         return new CardDataArrayWrapper(result);
     }
 
-    //private void OnValidate() {
-    //    if (!Application.isPlaying) return;
-
-    //    cardsInHand.Clear();
-    //    foreach (Transform child in transform) Destroy(child.gameObject);
-    //    player = transform.parent.GetComponent<Player>();
-    //}
-
     private void Start() {
         player = transform.parent.GetComponent<Player>();
     }
@@ -105,7 +130,14 @@ public class CardArranger : MonoBehaviour {
     private void Update() {
         if (!player.PV.IsMine) return;
         CheckHoveredCards();
-        if(!allUnavailable) SetAvailabilityOfCards(); //TODO: Remove this and make it check when your turn comes
+        //if(!allUnavailable) SetAvailabilityOfCards(); //TODO: Remove this and make it check when your turn comes
+
+        List<Transform> cards = new List<Transform>();
+        foreach(Transform child in transform) {
+            cards.Add(child);
+        }
+
+        ArrangeOpponentCards(cards, transform, baseRadius);
     }
 
     public void EnableCards() {
