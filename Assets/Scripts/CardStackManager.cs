@@ -43,7 +43,7 @@ public class CardStackManager : MonoBehaviour {
             UIManager.instance.replenishCardStack.gameObject.SetActive(true);
         }
         card.transform.position = transform.position;
-        card.transform.eulerAngles = Vector3.right * -90f;
+        card.transform.localEulerAngles = new Vector3(-90f, 180f, 0f);
 
         SetCardCubeTransform(UndealtCards.Count);
     }

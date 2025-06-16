@@ -109,7 +109,7 @@ public class CardArranger : MonoBehaviour {
             return;
         }
         CheckHoveredCards();
-        if(!allUnavailable) SetAvailabilityOfCards(); //TODO: Remove this and make it check when your turn comes
+        if(!allUnavailable && GameManager.CurrentCard != null) SetAvailabilityOfCards(); //TODO: Remove this and make it check when your turn comes
     }
 
     public void EnableCards() {
@@ -149,6 +149,15 @@ public class CardArranger : MonoBehaviour {
 
     public void ArrangeOpponentCards(List<GameObject> cards, Transform centerPoint, float radius) {
         int count = cards.Count;
+        if (count == 0) return;
+        if(count == 1) {
+            Vector3 currPosition = cards[0].transform.localPosition;
+            Vector3 targetPosition = Vector3.forward * baseRadius;
+            cards[0].transform.localPosition = Vector3.Lerp(currPosition, targetPosition, 10 * Time.deltaTime);
+            cards[0].transform.localRotation = Quaternion.Lerp(cards[0].transform.localRotation, Quaternion.identity, 10 * Time.deltaTime);
+            return;
+        }
+
         float spacing = Mathf.Min(spaceBetweenCards, maxWidth / (count - 1));
         float targetWidth = Mathf.Min(spacing * (count - 1), maxWidth);
         float halfChord = targetWidth / 2f;
@@ -168,11 +177,19 @@ public class CardArranger : MonoBehaviour {
             Quaternion rotation = Quaternion.AngleAxis(angle, arcAxis.normalized);
             Vector3 offsetDirection = rotation * centerPoint.forward;
 
-            Vector3 currPosition = cards[i].transform.position;
-            Vector3 targetPosition = centerPoint.position + offsetDirection.normalized * radius;
-            cards[i].transform.position = Vector3.Lerp(currPosition, targetPosition, 10 * Time.deltaTime);
-            cards[i].transform.LookAt(centerPoint.position);
-            cards[i].transform.Rotate(0f, 180f, 0f);
+            //Vector3 currPosition = cards[i].transform.position;
+            //Vector3 targetPosition = centerPoint.position + offsetDirection.normalized * radius;
+            //cards[i].transform.position = Vector3.Lerp(currPosition, targetPosition, 10 * Time.deltaTime);
+            //cards[i].transform.LookAt(centerPoint.position);
+            //cards[i].transform.Rotate(0f, 180f, 0f);
+            // World-space calculations for uniformity
+
+            Vector3 targetPos = centerPoint.position + offsetDirection * radius;
+            Quaternion targetRot = Quaternion.LookRotation(centerPoint.position - targetPos) * Quaternion.Euler(0, 180, 0);
+
+            // Smooth motion
+            cards[i].transform.position = Vector3.Lerp(cards[i].transform.position, targetPos, 10f * Time.deltaTime);
+            cards[i].transform.rotation = Quaternion.Lerp(cards[i].transform.rotation, targetRot, 10f * Time.deltaTime);
         }
     }
 

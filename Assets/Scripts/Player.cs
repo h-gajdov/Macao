@@ -41,7 +41,6 @@ public class Player : MonoBehaviour {
     [PunRPC]
     private void RPC_Throw(int cardIndex) {
         Card card = cardArranger.cardsInHand[cardIndex];
-        //card.Throw(this);
         card.StartCoroutine(card.Throw(this));
     }
 }

@@ -77,6 +77,21 @@ public class GameManager : MonoBehaviour {
         if (PlayerOnTurn.PV.IsMine) UIManager.instance.replenishCardStack.interactable = true;
     }
 
+    private static void HandleTurnTransition(bool toggleButtons) {
+        CanPickUpCard = true;
+        if (PlayerOnTurn.PV.IsMine && toggleButtons) {
+            PlayerOnTurn.cardArranger.DisableAllCards();
+            UIManager.instance.DisableButtons();
+        }
+
+        playerTurnIndex = (playerTurnIndex + 1) % Players.Count;
+        PlayerOnTurn = Players[playerTurnIndex];
+
+        if(toggleButtons) PlayerOnTurn.cardArranger.EnableCards();
+
+        if (PlayerOnTurn.PV.IsMine) UIManager.instance.replenishCardStack.interactable = true;
+    }
+
     public static void ChangeTurn() {
         HandleTurnTransition();
         ForcePickUp();
@@ -85,6 +100,11 @@ public class GameManager : MonoBehaviour {
     public static void ChangeTurn(bool forcePickUp) {
         HandleTurnTransition();
         if(forcePickUp) ForcePickUp();
+    }
+
+    public static void ChangeTurn(bool forcePickUp, bool toggleButtons) {
+        HandleTurnTransition(toggleButtons);
+        if (forcePickUp) ForcePickUp();
     }
 
     public static void SetPendingCard(Card card) {
@@ -204,6 +224,20 @@ public class GameManager : MonoBehaviour {
         return shuffeledDeck;
     }
 
+    private IEnumerator DealingAnimation(string last) {
+        int rrIndex = 0;
+        int count = 0;
+
+        while (count != 7) {
+            PV.RPC("RPC_PickUpCard", RpcTarget.AllBuffered);
+            yield return new WaitForSecondsRealtime(0.2f);
+            PV.RPC("RPC_ChangeTurn", RpcTarget.AllBuffered, false, false);
+            rrIndex = (rrIndex + 1) % Players.Count;
+            if (rrIndex == 0) count++;
+        }
+        PV.RPC("RPC_SetFirstCard", RpcTarget.AllBuffered, last);
+    }
+
     public void DealCards() {
         List<string> deck = ShuffleCards();
         List<string> toRemove = new List<string>();
@@ -213,32 +247,36 @@ public class GameManager : MonoBehaviour {
             map.Add(p, new List<CardData>());
         }
 
-        int rrIndex = 0;
-        int count = 0;
-
-        while (count != 7) {
-            int idx = rrIndex + count * Players.Count;
-            map[Players[rrIndex]].Add(CardData.ConvertValueStringToCardData(deck[idx]));
-            toRemove.Add(deck[idx]);
-            rrIndex = (rrIndex + 1) % Players.Count;
-            if (rrIndex == 0) count++;
-        }
-
-        SetFirstCard(deck.Last());
-        toRemove.Add(deck.Last());
-
-        deck.RemoveAll((card) => toRemove.Contains(card));
-        CardStackManager.SetUndealtCards(deck);
-
         int playerOnTurnIdx = Random.Range(0, Players.Count);
         PV.RPC("RPC_SetPlayerOnTurn", RpcTarget.AllBuffered, playerOnTurnIdx);
+        PV.RPC("RPC_SetUndealtCards", RpcTarget.AllBuffered, deck.ToArray());
+        //PV.RPC("RPC_StartDealingAnimation", RpcTarget.AllBuffered);
+        StartCoroutine(DealingAnimation(deck.Last()));
+        //int rrIndex = 0;
+        //int count = 0;
 
-        foreach(Player player in Players) {
-            PhotonView pv = player.PV;
-            CardDataArrayWrapper cardDatas = new CardDataArrayWrapper(map[player].ToArray());
-            string cardDatasJson = JsonUtility.ToJson(cardDatas);
-            player.PV.RPC("RPC_SyncDealtCards", player.PV.Owner, cardDatasJson, CurrentCard.GetValueString(), deck.ToArray());
-        }
+        //while (count != 7) {
+        //    int idx = rrIndex + count * Players.Count;
+        //    map[Players[rrIndex]].Add(CardData.ConvertValueStringToCardData(deck[idx]));
+        //    toRemove.Add(deck[idx]);
+        //    rrIndex = (rrIndex + 1) % Players.Count;
+        //    if (rrIndex == 0) count++;
+        //}
+
+        //SetFirstCard(deck.Last());
+        //toRemove.Add(deck.Last());
+
+        //deck.RemoveAll((card) => toRemove.Contains(card));
+
+        //int playerOnTurnIdx = Random.Range(0, Players.Count);
+        //PV.RPC("RPC_SetPlayerOnTurn", RpcTarget.AllBuffered, playerOnTurnIdx);
+
+        //foreach(Player player in Players) {
+        //    PhotonView pv = player.PV;
+        //    CardDataArrayWrapper cardDatas = new CardDataArrayWrapper(map[player].ToArray());
+        //    string cardDatasJson = JsonUtility.ToJson(cardDatas);
+        //    player.PV.RPC("RPC_SyncDealtCards", player.PV.Owner, cardDatasJson, CurrentCard.GetValueString(), deck.ToArray());
+        //}
     }
 
     public static void SetFirstCard(string value) {
@@ -314,8 +352,28 @@ public class GameManager : MonoBehaviour {
     }
 
     [PunRPC]
+    private void RPC_ChangeTurn(bool forcePickUp) {
+        ChangeTurn(forcePickUp);
+    }
+
+    [PunRPC]
+    private void RPC_ChangeTurn(bool forcePickUp, bool toggleButtons) {
+        ChangeTurn(forcePickUp, toggleButtons);
+    }
+
+    [PunRPC]
     private void RPC_UnlockPlayers() {
         Locked = false;
+    }
+
+    [PunRPC]
+    private void RPC_SetUndealtCards(string[] deck) {
+        CardStackManager.SetUndealtCards(new List<string>(deck));
+    }
+
+    [PunRPC]
+    private void RPC_SetFirstCard(string value) {
+        SetFirstCard(value);
     }
 
     private static IEnumerator WaitBeforeChangeOfTurn() {
