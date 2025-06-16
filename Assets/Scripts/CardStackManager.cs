@@ -9,9 +9,7 @@ public class CardStackManager : MonoBehaviour {
     public static Stack<string> UndealtCards = new Stack<string>();
     public static int PoolOfForcedPickup = 0;
 
-    public SpriteRenderer spriteRenderer;
-    public Color selectedColor;
-    public float smoothness = 5f;
+    public Transform cardStackCube;
 
     public static CardStackManager instance;
 
@@ -21,22 +19,6 @@ public class CardStackManager : MonoBehaviour {
             Destroy(gameObject);
             return;
         }
-    }
-
-    private void OnMouseEnter() {
-        StopAllCoroutines();
-        StartCoroutine(LerpToColor(selectedColor));
-    }
-
-    private void OnMouseOver() {
-        if(Input.GetMouseButtonDown(0) && UndealtCards.Count > 0 && GameManager.PlayerOnTurn == GameManager.LocalPlayer) {
-            GameManager.PV.RPC("RPC_PickUpCard", RpcTarget.AllBuffered);
-        }
-    }
-
-    private void OnMouseExit() {
-        StopAllCoroutines();
-        StartCoroutine(LerpToColor(Color.white));
     }
 
     public void PickUpCard() {
@@ -51,11 +33,17 @@ public class CardStackManager : MonoBehaviour {
 
         Card card = GameManager.PlayerOnTurn.cardArranger.SpawnCard(UndealtCards.Pop());
         if (UndealtCards.Count == 0) {
-            spriteRenderer.gameObject.SetActive(false);
+            cardStackCube.gameObject.SetActive(false);
             UIManager.instance.replenishCardStack.gameObject.SetActive(true);
         }
         card.transform.position = transform.position;
         card.transform.eulerAngles = Vector3.right * -90f;
+
+        float factor = UndealtCards.Count / 54f;
+        cardStackCube.localScale = new Vector3(2.5f, factor, 3.65f);
+        Vector3 stackPosition = cardStackCube.position;
+        stackPosition.y = factor / 2f;
+        cardStackCube.position = stackPosition;
     }
     
     public void ReplenishCardStack() {
@@ -67,17 +55,9 @@ public class CardStackManager : MonoBehaviour {
         }
 
         UIManager.instance.replenishCardStack.gameObject.SetActive(false);
-        spriteRenderer.gameObject.SetActive(true);
+        cardStackCube.gameObject.SetActive(true);
         GameManager.CardPoolList.Clear();
         GameManager.CardPoolList.Add(lastCard);
-    }
-
-    private IEnumerator LerpToColor(Color target) {
-        while(spriteRenderer.color != target) {
-            Color currentColor = spriteRenderer.color;
-            spriteRenderer.color = Color.Lerp(currentColor, target, smoothness * Time.deltaTime);
-            yield return null;
-        }
     }
 
     public static void SetUndealtCards(List<string> listOfUndealtCards) {
