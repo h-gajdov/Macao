@@ -10,6 +10,7 @@ public class CardStackManager : MonoBehaviour {
     public static int PoolOfForcedPickup = 0;
 
     public Transform cardStackCube;
+    private float initialYCoordForStackCube;
 
     public static CardStackManager instance;
 
@@ -19,6 +20,11 @@ public class CardStackManager : MonoBehaviour {
             Destroy(gameObject);
             return;
         }
+
+        initialYCoordForStackCube = transform.position.y;
+
+        int dealtCards = GameManager.Players.Count * 7 + 1;
+        SetCardCubeTransform(54 - dealtCards);
     }
 
     public void PickUpCard() {
@@ -39,13 +45,18 @@ public class CardStackManager : MonoBehaviour {
         card.transform.position = transform.position;
         card.transform.eulerAngles = Vector3.right * -90f;
 
-        float factor = UndealtCards.Count / 54f;
-        cardStackCube.localScale = new Vector3(2.5f, factor, 3.65f);
-        Vector3 stackPosition = cardStackCube.position;
-        stackPosition.y = factor / 2f;
-        cardStackCube.position = stackPosition;
+        SetCardCubeTransform(UndealtCards.Count);
     }
     
+    private void SetCardCubeTransform(int count) {
+        float factor = count / 54f;
+        cardStackCube.localScale = new Vector3(2.5f, factor, 3.65f);
+
+        Vector3 stackPosition = cardStackCube.position;
+        stackPosition.y = initialYCoordForStackCube + factor / 2f;
+        cardStackCube.position = stackPosition;
+    }
+
     public void ReplenishCardStack() {
         Card lastCard = GameManager.CardPoolList.Last();
         GameManager.CardPoolList.Remove(lastCard);
@@ -63,6 +74,7 @@ public class CardStackManager : MonoBehaviour {
     public static void SetUndealtCards(List<string> listOfUndealtCards) {
         UndealtCards.Clear();
         SetUndealtCards(listOfUndealtCards.ToArray());
+        instance.SetCardCubeTransform(UndealtCards.Count);
     }
 
     public static void SetUndealtCards(string[] listOfUndealtCards) {

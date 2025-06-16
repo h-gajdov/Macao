@@ -3,6 +3,7 @@ using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using static UnityEngine.Rendering.DebugUI;
 
@@ -18,7 +19,7 @@ public class GameManager : MonoBehaviour {
     public static Player LocalPlayer { get; set; }
 
     public GameObject playerPrefab;
-    public GameObject debugPosition; //TODO: delete this line
+    public Transform pivot;
     public Transform cardsPool;
     public float boundSlider = 0.1f;
 
@@ -28,6 +29,7 @@ public class GameManager : MonoBehaviour {
 
     public static Vector3[][] PlayerPositions = new Vector3[4][];
     public static Vector3[][] PlayerRotations = new Vector3[4][];
+    public static Vector3[][] PivotRotations = new Vector3[4][];
 
     public static GameManager instance;
     public static bool Locked = false;
@@ -142,6 +144,28 @@ public class GameManager : MonoBehaviour {
             Vector3.up * 180,
             -Vector3.up * 120,
         };
+
+        PivotRotations[0] = new Vector3[] {
+            Vector3.zero
+        };
+
+        PivotRotations[1] = new Vector3[] {
+            Vector3.zero,
+            Vector3.up * 180f
+        };
+
+        PivotRotations[2] = new Vector3[] {
+            Vector3.zero,
+            Vector3.up * 90f,
+            Vector3.up * 180f
+        };
+
+        PivotRotations[3] = new Vector3[] {
+            Vector3.zero,
+            Vector3.up * 90f,
+            Vector3.up * 180f,
+            Vector3.up * 270f
+        };
     }
 
     private void Awake() {
@@ -226,23 +250,26 @@ public class GameManager : MonoBehaviour {
     }
 
     public static void AssignPositions() {
-        if (Players.Count == 0) return;
+        int count = Players.Count;
+        if (count == 0) return;
 
         int startIdx = 0;
-        for(int i = 0; i < Players.Count; i++) {
+        for(int i = 0; i < count; i++) {
             if (!Players[i].PV.IsMine) continue;
             startIdx = i;
             break;
         }
 
-        Vector3[] positions = PlayerPositions[Players.Count - 1];
-        Vector3[] rotations = PlayerRotations[Players.Count - 1];
+        Vector3[] positions = PlayerPositions[count - 1];
+        Vector3[] rotations = PlayerRotations[count - 1];
 
-        for (int i = 1; i < Players.Count; i++) {
-            int playerIdx = (startIdx + i) % Players.Count;
-            Players[playerIdx].transform.position = positions[i];
-            Players[playerIdx].transform.eulerAngles = rotations[i];
+        for (int i = 1; i < count; i++) {
+            int playerIdx = (startIdx + i) % count;
+            Players[playerIdx].transform.localPosition = positions[i];
+            Players[playerIdx].transform.localEulerAngles = rotations[i];
         }
+
+        instance.pivot.eulerAngles = PivotRotations[count - 1][startIdx];
     }
 
     public void SpawnPlayer() {

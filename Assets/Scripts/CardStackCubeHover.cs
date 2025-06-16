@@ -32,7 +32,6 @@ public class CardStackCubeHover : MonoBehaviour {
     private IEnumerator LerpToValue(float target) {
         Material material = renderer.sharedMaterial;
         float colorStrength = material.GetFloat("_ColorStrength");
-        Debug.Log(colorStrength);
         while (colorStrength != target) {
             colorStrength = Mathf.Lerp(colorStrength, target, smoothness * Time.deltaTime);
             material.SetFloat("_ColorStrength", colorStrength);
