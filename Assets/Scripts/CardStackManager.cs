@@ -63,12 +63,14 @@ public class CardStackManager : MonoBehaviour {
         GameManager.CardPoolList.Reverse();
         foreach (Card card in GameManager.CardPoolList) {
             UndealtCards.Push(card.GetValueString());
+            Destroy(card.gameObject);
         }
 
         UIManager.instance.replenishCardStack.gameObject.SetActive(false);
         cardStackCube.gameObject.SetActive(true);
         GameManager.CardPoolList.Clear();
         GameManager.CardPoolList.Add(lastCard);
+        SetCardCubeTransform(UndealtCards.Count);
     }
 
     public static void SetUndealtCards(List<string> listOfUndealtCards) {

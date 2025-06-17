@@ -247,36 +247,13 @@ public class GameManager : MonoBehaviour {
             map.Add(p, new List<CardData>());
         }
 
+        string last = deck.Last();
+        deck.Remove(last);
+
         int playerOnTurnIdx = Random.Range(0, Players.Count);
         PV.RPC("RPC_SetPlayerOnTurn", RpcTarget.AllBuffered, playerOnTurnIdx);
         PV.RPC("RPC_SetUndealtCards", RpcTarget.AllBuffered, deck.ToArray());
-        //PV.RPC("RPC_StartDealingAnimation", RpcTarget.AllBuffered);
-        StartCoroutine(DealingAnimation(deck.Last()));
-        //int rrIndex = 0;
-        //int count = 0;
-
-        //while (count != 7) {
-        //    int idx = rrIndex + count * Players.Count;
-        //    map[Players[rrIndex]].Add(CardData.ConvertValueStringToCardData(deck[idx]));
-        //    toRemove.Add(deck[idx]);
-        //    rrIndex = (rrIndex + 1) % Players.Count;
-        //    if (rrIndex == 0) count++;
-        //}
-
-        //SetFirstCard(deck.Last());
-        //toRemove.Add(deck.Last());
-
-        //deck.RemoveAll((card) => toRemove.Contains(card));
-
-        //int playerOnTurnIdx = Random.Range(0, Players.Count);
-        //PV.RPC("RPC_SetPlayerOnTurn", RpcTarget.AllBuffered, playerOnTurnIdx);
-
-        //foreach(Player player in Players) {
-        //    PhotonView pv = player.PV;
-        //    CardDataArrayWrapper cardDatas = new CardDataArrayWrapper(map[player].ToArray());
-        //    string cardDatasJson = JsonUtility.ToJson(cardDatas);
-        //    player.PV.RPC("RPC_SyncDealtCards", player.PV.Owner, cardDatasJson, CurrentCard.GetValueString(), deck.ToArray());
-        //}
+        StartCoroutine(DealingAnimation(last));
     }
 
     public static void SetFirstCard(string value) {

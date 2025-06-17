@@ -99,15 +99,9 @@ public class CardArranger : MonoBehaviour {
     
     private void Update() {
         if (!player.PV.IsMine) {
-            List<GameObject> cards = new List<GameObject>();
-            foreach(Transform card in transform) {
-                cards.Add(card.gameObject);
-            }
-
-            //ArrangeOpponentCards(cardsInHand, transform, baseRadius);
-            ArrangeOpponentCards(cards, transform, baseRadius);
-            return;
+            ArrangeOpponentCards(cardsInHand, transform, baseRadius);
         }
+
         CheckHoveredCards();
         if(!allUnavailable && GameManager.CurrentCard != null) SetAvailabilityOfCards(); //TODO: Remove this and make it check when your turn comes
     }
@@ -147,7 +141,7 @@ public class CardArranger : MonoBehaviour {
         }
     }
 
-    public void ArrangeOpponentCards(List<GameObject> cards, Transform centerPoint, float radius) {
+    public void ArrangeOpponentCards(List<Card> cards, Transform centerPoint, float radius) {
         int count = cards.Count;
         if (count == 0) return;
         if(count == 1) {
