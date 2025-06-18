@@ -239,8 +239,8 @@ public class GameManager : MonoBehaviour {
 
     public List<string> ShuffleCards() {
         //return GameMath.ShuffleList(Global.AllCardStrings);
-        //return GameMath.ShuffleListDebug(Global.AllCardStrings, 0);
-        return GameMath.ShuffleList(Global.AllCardStrings, 0);
+        return GameMath.ShuffleListDebug(Global.AllCardStrings, 0);
+        //return GameMath.ShuffleList(Global.AllCardStrings, 0);
     }
 
     private IEnumerator DealingAnimation(string last) {
@@ -258,6 +258,7 @@ public class GameManager : MonoBehaviour {
         PV.RPC("RPC_SetFirstCard", RpcTarget.AllBuffered, last);
         PV.RPC("RPC_GameHasStarted", RpcTarget.AllBuffered);
         PV.RPC("RPC_InitializeAvailabilityOfCards", RpcTarget.AllBuffered);
+        PV.RPC("RPC_ForcePickUp", RpcTarget.AllBuffered);
     }
 
     public void DealCards() {
@@ -272,7 +273,7 @@ public class GameManager : MonoBehaviour {
         string last = deck.Last();
         deck.Remove(last);
 
-        int playerOnTurnIdx = Random.Range(0, Players.Count);
+        int playerOnTurnIdx = 0; //Random.Range(0, Players.Count);
         PV.RPC("RPC_SetPlayerOnTurn", RpcTarget.AllBuffered, playerOnTurnIdx);
         PV.RPC("RPC_SetUndealtCards", RpcTarget.AllBuffered, deck.ToArray());
         StartCoroutine(DealingAnimation(last));
@@ -404,6 +405,11 @@ public class GameManager : MonoBehaviour {
     [PunRPC]
     private void RPC_GameHasStarted() {
         GameHasStarted = true;
+    }
+
+    [PunRPC]
+    private void RPC_ForcePickUp() {
+        ForcePickUp();
     }
 
     private static IEnumerator WaitBeforeChangeOfTurn() {
