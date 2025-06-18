@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public enum Suit { 
     Hearts,
@@ -113,13 +114,16 @@ public class Card : MonoBehaviour {
     public IEnumerator Throw(Player player) {
         thrownByPlayer = player;
         transform.parent = GameManager.instance.cardsPool;
-        thrown = true;
         CanBeThrown = false;
+        thrown = true;
         hidden = false;
         spriteRenderer.sortingOrder = 10 + transform.GetSiblingIndex();
 
         initialRotation = Vector3.right * 90f;
+        initialRotation.z = Random.Range(0, 360f);
         GameManager.CardPoolList.Add(this);
+
+        //yield return StartCoroutine(RandomSpinWhenThrowing());
 
         if (cardArranger != null && cardArranger.cardsInHand.Contains(this)) {
             cardArranger.cardsInHand.Remove(this);
@@ -150,6 +154,36 @@ public class Card : MonoBehaviour {
         GameManager.SetCurrentCard(this);
     }
 
+    private IEnumerator RandomSpinWhenThrowing() {
+        float throwDuration = 0.25f;
+        float elapsed = 0f;
+
+        Vector3 startPos = transform.localPosition;
+        Vector3 targetPos = Vector3.zero;
+
+        float spinSpeed = 720f;
+
+        float startX = transform.localEulerAngles.x;
+        float targetX = 90f;
+        float currentZRotation = transform.localEulerAngles.z;
+
+        while (elapsed < throwDuration) {
+            elapsed += Time.deltaTime;
+            float t = elapsed / throwDuration;
+
+            // Smoothly move position
+            transform.localPosition = Vector3.Lerp(startPos, targetPos, t);
+
+            // Rotate as before
+            float currentX = Mathf.LerpAngle(startX, targetX, t * selectSpeed / 4);
+            currentZRotation += spinSpeed * Time.deltaTime;
+
+            transform.localRotation = Quaternion.Euler(currentX, 0f, currentZRotation);
+
+            yield return null;
+        }
+    }
+
     private void SevensAndJokersLogic(int amount) {
         CardStackManager.PoolOfForcedPickup += amount;
         if (!GameManager.PlayerOnTurn.cardArranger.Contains(7) &&
@@ -169,6 +203,7 @@ public class Card : MonoBehaviour {
         } else {
             Hover(0, transform.GetSiblingIndex());
         }
+
         transform.localRotation = Quaternion.Lerp(transform.localRotation, Quaternion.Euler(initialRotation), selectSpeed * Time.deltaTime);
     }
 
