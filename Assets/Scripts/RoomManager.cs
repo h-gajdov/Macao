@@ -1,7 +1,8 @@
+using Photon.Pun;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Photon.Pun;
 
 public class RoomManager : MonoBehaviourPunCallbacks {
     private void Start() {
@@ -29,7 +30,10 @@ public class RoomManager : MonoBehaviourPunCallbacks {
     public override void OnJoinedRoom() {
         base.OnJoinedRoom();
 
-        GameManager gameManager = FindObjectOfType<GameManager>();
-        gameManager.SpawnPlayer();
+        if (PhotonNetwork.IsMasterClient) {
+            int seed = (int)DateTime.UtcNow.Ticks;
+            GameManager.PV.RPC("RPC_ShuffleCharacterMaterialIndices", RpcTarget.AllBuffered, seed);
+        }
+        GameManager.SpawnPlayer();
     }
 }

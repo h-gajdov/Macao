@@ -100,6 +100,7 @@ public class CardArranger : MonoBehaviour {
     private void Update() {
         if (!player.PV.IsMine) {
             ArrangeOpponentCards(cardsInHand, transform, baseRadius);
+            return;
         }
 
         CheckHoveredCards();

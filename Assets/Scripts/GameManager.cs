@@ -1,11 +1,8 @@
 using Photon.Pun;
-using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI;
 
 public class GameManager : MonoBehaviour {
     public static List<Player> Players = new List<Player>();
@@ -20,6 +17,7 @@ public class GameManager : MonoBehaviour {
 
     public GameObject playerPrefab;
     public Transform pivot;
+    public Transform characterTransform;
     public Transform cardsPool;
     public float boundSlider = 0.1f;
 
@@ -30,10 +28,16 @@ public class GameManager : MonoBehaviour {
     public static Vector3[][] PlayerPositions = new Vector3[4][];
     public static Vector3[][] PlayerRotations = new Vector3[4][];
     public static Vector3[][] PivotRotations = new Vector3[4][];
+    public static int[][] ActiveCharacterObjectsIndex = new int[4][];
 
     public static GameManager instance;
     public static bool Locked = false;
     public static bool CanPickUpCard = true;
+
+    private static List<int> characterMaterialIndices = new List<int>(4) {
+        0,1,2,3
+    };
+    private static bool materialIndicesShuffled = false;
 
     private void OnValidate() {
         Global.Initialize();
@@ -186,6 +190,11 @@ public class GameManager : MonoBehaviour {
             Vector3.up * 180f,
             Vector3.up * 270f
         };
+
+        ActiveCharacterObjectsIndex[0] = new int[] {0};
+        ActiveCharacterObjectsIndex[1] = new int[] {0, 2};
+        ActiveCharacterObjectsIndex[2] = new int[] {0, 1, 2};
+        ActiveCharacterObjectsIndex[3] = new int[] {0, 1, 2, 3};
     }
 
     private void Awake() {
@@ -218,10 +227,8 @@ public class GameManager : MonoBehaviour {
     }
 
     public List<string> ShuffleCards() {
-        System.Random prng = new System.Random(0);
-        //List<string> shuffeledDeck = Global.AllCardStrings.OrderBy(i => System.Guid.NewGuid()).ToList();
-        List<string> shuffeledDeck = Global.AllCardStrings.OrderBy(i => prng.Next()).ToList();
-        return shuffeledDeck;
+        //return GameMath.ShuffleList(Global.AllCardStrings);
+        return GameMath.ShuffleList(Global.AllCardStrings, 0);
     }
 
     private IEnumerator DealingAnimation(string last) {
@@ -269,7 +276,7 @@ public class GameManager : MonoBehaviour {
         if (count == 0) return;
 
         int startIdx = 0;
-        for(int i = 0; i < count; i++) {
+        for (int i = 0; i < count; i++) {
             if (!Players[i].PV.IsMine) continue;
             startIdx = i;
             break;
@@ -277,22 +284,33 @@ public class GameManager : MonoBehaviour {
 
         Vector3[] positions = PlayerPositions[count - 1];
         Vector3[] rotations = PlayerRotations[count - 1];
+        int[] characterIndicies = ActiveCharacterObjectsIndex[count - 1];
 
-        for (int i = 1; i < count; i++) {
+        for (int i = 0; i < count; i++) {
+            Transform characterTransform = instance.characterTransform.GetChild(characterIndicies[i]);
+            int characterMaterialIndex = characterMaterialIndices[i];
+            characterTransform.gameObject.SetActive(i != startIdx);
+            characterTransform.GetComponentInChildren<Renderer>().material = Global.CharacterMaterials[characterMaterialIndex];
+
+            if (i == 0) continue;
             int playerIdx = (startIdx + i) % count;
             Players[playerIdx].transform.localPosition = positions[i];
             Players[playerIdx].transform.localEulerAngles = rotations[i];
         }
 
+        for (int i = 0; i < count; i++) {
+            int playerIdx = (startIdx + i) % count;
+        }
+
         instance.pivot.eulerAngles = PivotRotations[count - 1][startIdx];
     }
 
-    public void SpawnPlayer() {
-        Player player = PhotonNetwork.Instantiate("Prefabs/" + playerPrefab.name, Vector3.zero, Quaternion.identity).GetComponent<Player>();
+    public static void SpawnPlayer() {
+        Player player = PhotonNetwork.Instantiate("Prefabs/" + instance.playerPrefab.name, Vector3.zero, Quaternion.identity).GetComponent<Player>();
         Transform cam = MainCamera.transform;
 
         if (player.PV.IsMine) {
-            Vector3 viewportBottom = new Vector3(0.5f, boundSlider, 10f);
+            Vector3 viewportBottom = new Vector3(0.5f, instance.boundSlider, 10f);
             Vector3 worldPosition = Camera.main.ViewportToWorldPoint(viewportBottom);
 
             player.transform.position = worldPosition;
@@ -351,6 +369,13 @@ public class GameManager : MonoBehaviour {
     [PunRPC]
     private void RPC_SetFirstCard(string value) {
         SetFirstCard(value);
+    }
+
+    [PunRPC]
+    private void RPC_ShuffleCharacterMaterialIndices(int seed) {
+        if (materialIndicesShuffled) return;
+        characterMaterialIndices = GameMath.ShuffleList(characterMaterialIndices, seed);
+        materialIndicesShuffled = true;
     }
 
     private static IEnumerator WaitBeforeChangeOfTurn() {

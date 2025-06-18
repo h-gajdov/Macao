@@ -98,6 +98,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PV: {fileID: 4190466380377814925}
   cardArranger: {fileID: 4493684548071765861}
+  characterMaterialIndex: -1
 --- !u!114 &4190466380377814925
 MonoBehaviour:
   m_ObjectHideFlags: 0
