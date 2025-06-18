@@ -7,13 +7,13 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Card
-  m_Shader: {fileID: -6465566751694194690, guid: e273fd7700184c24d843ff53b7aa6d9c, type: 3}
+  m_Name: DynamicResolutionMaterial
+  m_Shader: {fileID: 4800000, guid: 57294b416fef8444989592b31d9c5be8, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3100
+  m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
   m_SavedProperties:
@@ -23,16 +23,8 @@ Material:
         m_Texture: {fileID: 2800000, guid: 6647c1ac33e007f44abf21023e43adfe, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - Texture2D_543027cb9bb147a3804587c30a5bda77:
-        m_Texture: {fileID: 2800000, guid: e52587cd5589dd44fb354ee9eeea3b24, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _FrontTexture:
-        m_Texture: {fileID: 2800000, guid: 2ab1766db73ed1141a32d9eec310a253, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: ec4a47e151ed40b4fb0ec15bb1d2c32d, type: 3}
+        m_Texture: {fileID: 2800000, guid: 4ccdcc0c5a80e4c4a9634f24f75d0a0f, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -48,9 +40,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - Vector1_9c24d9f8c62d40f7a3381b4649e9b75e: 0.01
-    - Vector1_f783d8cd08c74e249003c22968443537: 0.5
     - _ColorStrength: 0
     m_Colors:
-    - Color_487283ce288549d7a1cf50e6b01402a0: {r: 0.2735849, g: 0.2735849, b: 0.2735849, a: 0.35686275}
+    - Color_487283ce288549d7a1cf50e6b01402a0: {r: 0.27450982, g: 0.27450982, b: 0.27450982, a: 0.36078432}
   m_BuildTextureStacks: []
