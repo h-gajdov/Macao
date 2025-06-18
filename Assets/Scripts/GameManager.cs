@@ -247,8 +247,10 @@ public class GameManager : MonoBehaviour {
             rrIndex = (rrIndex + 1) % Players.Count;
             if (rrIndex == 0) count++;
         }
+
         PV.RPC("RPC_SetFirstCard", RpcTarget.AllBuffered, last);
         PV.RPC("RPC_GameHasStarted", RpcTarget.AllBuffered);
+        PV.RPC("RPC_InitializeAvailabilityOfCards", RpcTarget.AllBuffered);
     }
 
     public void DealCards() {
@@ -330,11 +332,19 @@ public class GameManager : MonoBehaviour {
         playerTurnIndex = value;
         PlayerOnTurn = Players[playerTurnIndex];
 
-        //TODO: Make this code better. REFACTOR IT!
-        foreach (Player player in Players) {
-            player.cardArranger.DisableAllCards();
-            if (player == PlayerOnTurn) player.cardArranger.EnableCards();
+        PlayerOnTurn.cardArranger.EnableCards();
+
+        if (PlayerOnTurn.PV.IsMine) UIManager.instance.replenishCardStack.interactable = true;
+    }
+
+    [PunRPC]
+    private void RPC_InitializeAvailabilityOfCards() {
+        foreach(Player p in Players) {
+            if (!p.PV.IsMine) continue;
+            p.cardArranger.DisableAllCards();
         }
+
+        PlayerOnTurn.cardArranger.EnableCards();
     }
 
     [PunRPC]
