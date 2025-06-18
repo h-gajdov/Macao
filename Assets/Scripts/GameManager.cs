@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour {
     public static GameManager instance;
     public static bool Locked = false;
     public static bool CanPickUpCard = true;
+    public static bool GameHasStarted = false;
 
     private static List<int> characterMaterialIndices = new List<int>(4) {
         0,1,2,3
@@ -224,6 +225,12 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+    public static void DisableCharacters() {
+        foreach (Transform character in instance.characterTransform) {
+            character.gameObject.SetActive(false);
+        }
+    }
+
     public List<string> ShuffleCards() {
         //return GameMath.ShuffleList(Global.AllCardStrings);
         return GameMath.ShuffleList(Global.AllCardStrings, 0);
@@ -241,6 +248,7 @@ public class GameManager : MonoBehaviour {
             if (rrIndex == 0) count++;
         }
         PV.RPC("RPC_SetFirstCard", RpcTarget.AllBuffered, last);
+        PV.RPC("RPC_GameHasStarted", RpcTarget.AllBuffered);
     }
 
     public void DealCards() {
@@ -374,6 +382,11 @@ public class GameManager : MonoBehaviour {
         if (materialIndicesShuffled) return;
         characterMaterialIndices = GameMath.ShuffleList(characterMaterialIndices, seed);
         materialIndicesShuffled = true;
+    }
+
+    [PunRPC]
+    private void RPC_GameHasStarted() {
+        GameHasStarted = true;
     }
 
     private static IEnumerator WaitBeforeChangeOfTurn() {

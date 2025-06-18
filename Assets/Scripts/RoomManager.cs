@@ -1,11 +1,16 @@
+using ExitGames.Client.Photon.StructWrapping;
 using Photon.Pun;
+using Photon.Realtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class RoomManager : MonoBehaviourPunCallbacks {
+    public static RoomOptions options;
+
     private void Start() {
+        options = new RoomOptions();
         Debug.Log("Connecting...");
 
         PhotonNetwork.ConnectUsingSettings();
@@ -38,12 +43,21 @@ public class RoomManager : MonoBehaviourPunCallbacks {
     }
 
     public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer) {
-        Debug.Log("Player has disconnected!");
+        Debug.Log("Player has disconnected: " + otherPlayer.NickName);
         int index = GameManager.Players.FindIndex(p => p != null && p.PV.OwnerActorNr == otherPlayer.ActorNumber);
         //GameManager.Players.RemoveAll(p => p.PV.OwnerActorNr == otherPlayer.ActorNumber);
         if (index == -1) return;
 
-        GameManager.instance.characterTransform.GetChild(index).gameObject.SetActive(false);
+        GameManager.DisableCharacters();
         GameManager.Players[index] = null;
+
+        if(!GameManager.GameHasStarted) {
+            GameManager.Players.RemoveAt(index);
+            GameManager.AssignPositions();
+        }
+    }
+
+    public override void OnLeftRoom() {
+        PhotonNetwork.Disconnect();
     }
 }

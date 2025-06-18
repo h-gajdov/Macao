@@ -7,27 +7,23 @@ using UnityEngine;
 public class Player : MonoBehaviour {
     public PhotonView PV;
     public CardArranger cardArranger;
-    [HideInInspector] public int characterMaterialIndex = -1;
-
-    private static List<int> takenCharacterIndexes = new List<int>();
 
     private void Start() {
+        if (GameManager.GameHasStarted) {
+            PhotonNetwork.LeaveRoom();
+            return;
+        }
+
         cardArranger = GetComponentInChildren<CardArranger>();
         if (PV.IsMine) {
-            do { //TODO: Refactor this
-                characterMaterialIndex = Random.Range(0, 4);
-            } while (takenCharacterIndexes.Contains(characterMaterialIndex));
-            PV.RPC("RPC_SpawnPlayer", RpcTarget.AllBuffered, characterMaterialIndex);
+            PV.RPC("RPC_SpawnPlayer", RpcTarget.AllBuffered);
             GameManager.LocalPlayer = this;
         }
     }
 
     [PunRPC]
-    private void RPC_SpawnPlayer(int characterMaterialIndex) {
+    private void RPC_SpawnPlayer() {
         if(!GameManager.Players.Contains(this)) GameManager.Players.Add(this);
-
-        this.characterMaterialIndex = characterMaterialIndex;
-        takenCharacterIndexes.Add(characterMaterialIndex);
 
         transform.parent = GameManager.instance.pivot;
         GameManager.AssignPositions();
