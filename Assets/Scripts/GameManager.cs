@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour {
     public Transform cardsPool;
     public float boundSlider = 0.1f;
 
-    public List<Card> debug;
+    public List<Player> debug;
 
     public static Camera MainCamera;
 
@@ -213,13 +213,11 @@ public class GameManager : MonoBehaviour {
     }
 
     private void Update() {
-        debug = CardPoolList;
+        debug = Players;
 
         if(Input.GetKeyDown(KeyCode.G)) {
             SpawnPlayer();
         }
-
-        AssignPositions();
 
         if (Input.GetKeyDown(KeyCode.K)) {
             DealCards();

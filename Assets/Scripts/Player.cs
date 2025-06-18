@@ -30,7 +30,7 @@ public class Player : MonoBehaviour {
         takenCharacterIndexes.Add(characterMaterialIndex);
 
         transform.parent = GameManager.instance.pivot;
-        //GameManager.AssignPositions();
+        GameManager.AssignPositions();
     }
 
     [PunRPC]

@@ -36,4 +36,14 @@ public class RoomManager : MonoBehaviourPunCallbacks {
         }
         GameManager.SpawnPlayer();
     }
+
+    public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer) {
+        Debug.Log("Player has disconnected!");
+        int index = GameManager.Players.FindIndex(p => p != null && p.PV.OwnerActorNr == otherPlayer.ActorNumber);
+        //GameManager.Players.RemoveAll(p => p.PV.OwnerActorNr == otherPlayer.ActorNumber);
+        if (index == -1) return;
+
+        GameManager.instance.characterTransform.GetChild(index).gameObject.SetActive(false);
+        GameManager.Players[index] = null;
+    }
 }
