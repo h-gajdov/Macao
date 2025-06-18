@@ -59,6 +59,7 @@ MonoBehaviour:
   - RPC_ShuffleCharacterMaterialIndices
   - RPC_GameHasStarted
   - RPC_InitializeAvailabilityOfCards
+  - RPC_ForcePickUp
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

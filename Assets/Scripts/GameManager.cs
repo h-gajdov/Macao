@@ -239,8 +239,8 @@ public class GameManager : MonoBehaviour {
 
     public List<string> ShuffleCards() {
         //return GameMath.ShuffleList(Global.AllCardStrings);
-        return GameMath.ShuffleListDebug(Global.AllCardStrings, 0);
-        //return GameMath.ShuffleList(Global.AllCardStrings, 0);
+        //return GameMath.ShuffleListDebug(Global.AllCardStrings, 0);
+        return GameMath.ShuffleList(Global.AllCardStrings, 0);
     }
 
     private IEnumerator DealingAnimation(string last) {
