@@ -17,4 +17,22 @@ public static class GameMath
         System.Random prng = new System.Random(seed);
         return list.OrderBy(i => prng.Next()).ToList();
     }
+
+    //public static List<string> ShuffleListDebug(List<string> list, int seed) {
+    //    List<string> debug = new List<string>() { "7D", "7H", "7S" };
+    //    list.RemoveAll(p => debug.Contains(p));
+    //    list = ShuffleList(list, seed);
+    //    debug.AddRange(list);
+
+    //    int idx7D = debug.IndexOf("7C");
+    //    int idxBJ = debug.IndexOf("BJ");
+    //    int idxRJ = debug.IndexOf("RJ");
+    //    debug[idx7D] = debug[28];
+    //    debug[28] = "7D";
+    //    debug[idxBJ] = debug[52];
+    //    debug[52] = "BJ";
+    //    debug[idxRJ] = debug[51];
+    //    debug[51] = "RJ";
+    //    return debug;
+    //}
 }

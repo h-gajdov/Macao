@@ -47,10 +47,16 @@ public class GameManager : MonoBehaviour {
 
     private static void ForcePickUp() {
         if (!CanThrow()) {
-            CardStackManager.instance.PickUpCard();
+            if (CardStackManager.PoolOfForcedPickup != 0) {
+                CardStackManager.PickUpCardsFromPoolOfForcedPickup();
+                if(!CanThrow()) {
+                    CardStackManager.instance.PickUpCard();
+                }
+            } else 
+                CardStackManager.instance.PickUpCard();
         }
 
-        if (!CanThrow()) {
+        if (!CanThrow()) { //This is if can't throw after pick up change turn
             instance.StartCoroutine(WaitBeforeChangeOfTurn());
         }
     }
@@ -233,6 +239,7 @@ public class GameManager : MonoBehaviour {
 
     public List<string> ShuffleCards() {
         //return GameMath.ShuffleList(Global.AllCardStrings);
+        //return GameMath.ShuffleListDebug(Global.AllCardStrings, 0);
         return GameMath.ShuffleList(Global.AllCardStrings, 0);
     }
 
