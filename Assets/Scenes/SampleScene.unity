@@ -2315,6 +2315,7 @@ GameObject:
   - component: {fileID: 822452578}
   - component: {fileID: 822452577}
   - component: {fileID: 822452581}
+  - component: {fileID: 822452582}
   - component: {fileID: 822452579}
   - component: {fileID: 822452580}
   m_Layer: 0
@@ -2336,11 +2337,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7a9ceb6137fcef4d84f1f94fcad4f01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 4493684548790912109, guid: 3eb090641031b6f4c9230214077877a9, type: 3}
-  pivot: {fileID: 1903925171}
-  characterTransform: {fileID: 80088331}
   cardsPool: {fileID: 628322505}
-  boundSlider: 0.05
   debug: []
 --- !u!4 &822452578
 Transform:
@@ -2402,6 +2399,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2f97bcaf024f464681961bc33f8c36a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &822452582
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 822452576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f18991124b0cfbf44b159d7de3ad99a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerPrefab: {fileID: 4493684548790912109, guid: 3eb090641031b6f4c9230214077877a9, type: 3}
+  characterTransform: {fileID: 80088331}
+  pivot: {fileID: 1903925171}
+  boundSlider: 0.1
 --- !u!1 &894235340
 GameObject:
   m_ObjectHideFlags: 0
@@ -4525,7 +4538,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2670504978827762092, guid: 443c19f2f76df804787d9608146bcae1, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2670504978827762094, guid: 443c19f2f76df804787d9608146bcae1, type: 3}
       propertyPath: m_RootOrder
@@ -4579,10 +4592,14 @@ PrefabInstance:
       propertyPath: value
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 2670504978827762095, guid: 443c19f2f76df804787d9608146bcae1, type: 3}
+      propertyPath: data.value
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 2670504979619125472, guid: 443c19f2f76df804787d9608146bcae1, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 0812276a8beae134880fbf70545814bc, type: 3}
+      objectReference: {fileID: 21300000, guid: ec4a47e151ed40b4fb0ec15bb1d2c32d, type: 3}
     - target: {fileID: 2670504979619125472, guid: 443c19f2f76df804787d9608146bcae1, type: 3}
       propertyPath: m_SortingOrder
       value: 0

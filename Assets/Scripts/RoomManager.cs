@@ -45,7 +45,6 @@ public class RoomManager : MonoBehaviourPunCallbacks {
     public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer) {
         Debug.Log("Player has disconnected: " + otherPlayer.NickName);
         int index = PlayerManager.Players.FindIndex(p => p != null && p.PV.OwnerActorNr == otherPlayer.ActorNumber);
-        //GameManager.Players.RemoveAll(p => p.PV.OwnerActorNr == otherPlayer.ActorNumber);
         if (index == -1) return;
 
         PlayerManager.DisableCharacters();
