@@ -17,16 +17,16 @@ public class Player : MonoBehaviour {
         cardArranger = GetComponentInChildren<CardArranger>();
         if (PV.IsMine) {
             PV.RPC("RPC_SpawnPlayer", RpcTarget.AllBuffered);
-            GameManager.LocalPlayer = this;
+            PlayerManager.LocalPlayer = this;
         }
     }
 
     [PunRPC]
     private void RPC_SpawnPlayer() {
-        if(!GameManager.Players.Contains(this)) GameManager.Players.Add(this);
+        if(!PlayerManager.Players.Contains(this)) PlayerManager.Players.Add(this);
 
-        transform.parent = GameManager.instance.pivot;
-        GameManager.AssignPositions();
+        transform.parent = PlayerManager.instance.pivot;
+        PlayerManager.AssignPositions();
     }
 
     [PunRPC]

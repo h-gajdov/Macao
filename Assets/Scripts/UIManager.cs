@@ -51,7 +51,7 @@ public class UIManager : MonoBehaviour {
     }
 
     public void SkipTurn() {
-        GameManager.PV.RPC("RPC_ChangeTurn", RpcTarget.AllBuffered);
+        RPCManager.RPC("RPC_ChangeTurn", RpcTarget.AllBuffered);
     }
 
     public void DisableButtons() {
@@ -63,7 +63,7 @@ public class UIManager : MonoBehaviour {
     }
 
     public void TakeCardsFromPoolOfForcedPickup() {
-        GameManager.PV.RPC("RPC_PickUpCardsFromPoolOfForcedPickup", RpcTarget.AllBuffered);
+        RPCManager.RPC("RPC_PickUpCardsFromPoolOfForcedPickup", RpcTarget.AllBuffered);
         takeCards.gameObject.SetActive(false);
     }
 
@@ -88,11 +88,11 @@ public class UIManager : MonoBehaviour {
         lastCard.interactable = true;
         yield return new WaitForSeconds(2f);
         if(!pressed) {
-            GameManager.PV.RPC("RPC_PickUpCard", RpcTarget.AllBuffered);
+            RPCManager.RPC("RPC_PickUpCard", RpcTarget.AllBuffered);
         }
         lastCard.interactable = false;
         pressed = false;
-        GameManager.PV.RPC("RPC_UnlockPlayers", RpcTarget.OthersBuffered);
+        RPCManager.RPC("RPC_UnlockPlayers", RpcTarget.OthersBuffered);
         yield return null;
     }
 }

@@ -23,7 +23,7 @@ public class CardStackManager : MonoBehaviour {
 
         initialYCoordForStackCube = transform.position.y;
 
-        int dealtCards = GameManager.Players.Count * 7 + 1;
+        int dealtCards = PlayerManager.Players.Count * 7 + 1;
         SetCardCubeTransform(54 - dealtCards);
     }
 

@@ -37,23 +37,23 @@ public class RoomManager : MonoBehaviourPunCallbacks {
 
         if (PhotonNetwork.IsMasterClient) {
             int seed = (int)DateTime.UtcNow.Ticks;
-            GameManager.PV.RPC("RPC_ShuffleCharacterMaterialIndices", RpcTarget.AllBuffered, seed);
+            RPCManager.RPC("RPC_ShuffleCharacterMaterialIndices", RpcTarget.AllBuffered, seed);
         }
-        GameManager.SpawnPlayer();
+        PlayerManager.SpawnPlayer();
     }
 
     public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer) {
         Debug.Log("Player has disconnected: " + otherPlayer.NickName);
-        int index = GameManager.Players.FindIndex(p => p != null && p.PV.OwnerActorNr == otherPlayer.ActorNumber);
+        int index = PlayerManager.Players.FindIndex(p => p != null && p.PV.OwnerActorNr == otherPlayer.ActorNumber);
         //GameManager.Players.RemoveAll(p => p.PV.OwnerActorNr == otherPlayer.ActorNumber);
         if (index == -1) return;
 
-        GameManager.DisableCharacters();
-        GameManager.Players[index] = null;
+        PlayerManager.DisableCharacters();
+        PlayerManager.Players[index] = null;
 
         if(!GameManager.GameHasStarted) {
-            GameManager.Players.RemoveAt(index);
-            GameManager.AssignPositions();
+            PlayerManager.Players.RemoveAt(index);
+            PlayerManager.AssignPositions();
         }
     }
 

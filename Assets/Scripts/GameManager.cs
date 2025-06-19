@@ -5,47 +5,35 @@ using System.Linq;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour {
-    public static List<Player> Players = new List<Player>();
     public static List<Card> CardPoolList = new List<Card>();
-    public static PhotonView PV;
-    public static Player PlayerOnTurn { get; private set; }
-    private static int playerTurnIndex = 0;
+    public static Player PlayerOnTurn { get; set; }
+    public static int playerTurnIndex = 0;
 
     public static Card CurrentCard;
     public static Card pendingCard;
-    public static Player LocalPlayer { get; set; }
 
-    public GameObject playerPrefab;
-    public Transform pivot;
-    public Transform characterTransform;
     public Transform cardsPool;
-    public float boundSlider = 0.1f;
 
     public List<Player> debug;
 
     public static Camera MainCamera;
-
-    public static Vector3[][] PlayerPositions = new Vector3[4][];
-    public static Vector3[][] PlayerRotations = new Vector3[4][];
-    public static Vector3[][] PivotRotations = new Vector3[4][];
-    public static int[][] ActiveCharacterObjectsIndex = new int[4][];
 
     public static GameManager instance;
     public static bool Locked = false;
     public static bool CanPickUpCard = true;
     public static bool GameHasStarted = false;
 
-    private static List<int> characterMaterialIndices = new List<int>(4) {
-        0,1,2,3
-    };
-    private static bool materialIndicesShuffled = false;
+    private static List<Player> Players {
+        get {
+            return PlayerManager.Players;
+        }
+    }
 
     private void OnValidate() {
         Global.Initialize();
-        PV = GetComponent<PhotonView>();
     }
 
-    private static void ForcePickUp() {
+    public static void ForcePickUp() {
         if (!CanThrow()) {
             if (CardStackManager.PoolOfForcedPickup != 0) {
                 CardStackManager.PickUpCardsFromPoolOfForcedPickup();
@@ -128,112 +116,29 @@ public class GameManager : MonoBehaviour {
         UIManager.instance.ChangeSuit(card.data.suit.ToString());
     }
 
-    private void InitializePositions() {
-        float distanceCameraToOrigin = Vector3.Distance(MainCamera.transform.position, Vector3.zero);
-        float halfWidth = Screen.width / 2;
-        float halfHeight = Screen.height / 2;
-        PlayerPositions[0] = new Vector3[] {
-            Vector3.zero
-        };
-
-        PlayerPositions[1] = new Vector3[] {
-            Vector3.zero,
-            new Vector3(0, 0, 24f)
-        };
-
-        PlayerPositions[2] = new Vector3[] {
-            Vector3.zero,
-            new Vector3(-20f, 0, 10f),
-            new Vector3(0, 0, 24f)
-        };
-
-        PlayerPositions[3] = new Vector3[] {
-            Vector3.zero,
-            new Vector3(-20f, 0, 10f),
-            new Vector3(0, 0, 24f),
-            new Vector3(20f, 0, 10f)
-        };
-
-        PlayerRotations[0] = new Vector3[] {
-            Vector3.zero,
-        };
-
-        PlayerRotations[1] = new Vector3[] {
-            Vector3.zero,
-            Vector3.up * 180,
-        };
-
-        PlayerRotations[2] = new Vector3[] {
-            Vector3.zero,
-            Vector3.up * 120,
-            Vector3.up * 180,
-        };
-
-        PlayerRotations[3] = new Vector3[] {
-            Vector3.zero,
-            Vector3.up * 120,
-            Vector3.up * 180,
-            -Vector3.up * 120,
-        };
-
-        PivotRotations[0] = new Vector3[] {
-            Vector3.zero
-        };
-
-        PivotRotations[1] = new Vector3[] {
-            Vector3.zero,
-            Vector3.up * 180f
-        };
-
-        PivotRotations[2] = new Vector3[] {
-            Vector3.zero,
-            Vector3.up * 90f,
-            Vector3.up * 180f
-        };
-
-        PivotRotations[3] = new Vector3[] {
-            Vector3.zero,
-            Vector3.up * 90f,
-            Vector3.up * 180f,
-            Vector3.up * 270f
-        };
-
-        ActiveCharacterObjectsIndex[0] = new int[] {0};
-        ActiveCharacterObjectsIndex[1] = new int[] {0, 2};
-        ActiveCharacterObjectsIndex[2] = new int[] {0, 1, 2};
-        ActiveCharacterObjectsIndex[3] = new int[] {0, 1, 2, 3};
-    }
+    
 
     private void Awake() {
         Global.Initialize();
 
         MainCamera = Camera.main;
-        InitializePositions();
 
         if (instance == null) instance = this;
         else {
             Destroy(gameObject);
             return;
         }
-
-        PV = GetComponent<PhotonView>();
     }
 
     private void Update() {
         debug = Players;
 
         if(Input.GetKeyDown(KeyCode.G)) {
-            SpawnPlayer();
+            PlayerManager.SpawnPlayer();
         }
 
         if (Input.GetKeyDown(KeyCode.K)) {
             DealCards();
-        }
-    }
-
-    public static void DisableCharacters() {
-        foreach (Transform character in instance.characterTransform) {
-            character.gameObject.SetActive(false);
         }
     }
 
@@ -248,17 +153,17 @@ public class GameManager : MonoBehaviour {
         int count = 0;
 
         while (count != 7) {
-            PV.RPC("RPC_PickUpCard", RpcTarget.AllBuffered);
+            RPCManager.RPC("RPC_PickUpCard", RpcTarget.AllBuffered);
             yield return new WaitForSecondsRealtime(0.2f);
-            PV.RPC("RPC_ChangeTurn", RpcTarget.AllBuffered, false, false);
+            RPCManager.RPC("RPC_ChangeTurn", RpcTarget.AllBuffered, false, false);
             rrIndex = (rrIndex + 1) % Players.Count;
             if (rrIndex == 0) count++;
         }
 
-        PV.RPC("RPC_SetFirstCard", RpcTarget.AllBuffered, last);
-        PV.RPC("RPC_GameHasStarted", RpcTarget.AllBuffered);
-        PV.RPC("RPC_InitializeAvailabilityOfCards", RpcTarget.AllBuffered);
-        PV.RPC("RPC_ForcePickUp", RpcTarget.AllBuffered);
+        RPCManager.PV.RPC("RPC_SetFirstCard", RpcTarget.AllBuffered, last);
+        RPCManager.RPC("RPC_GameHasStarted", RpcTarget.AllBuffered);
+        RPCManager.RPC("RPC_InitializeAvailabilityOfCards", RpcTarget.AllBuffered);
+        RPCManager.RPC("RPC_ForcePickUp", RpcTarget.AllBuffered);
     }
 
     public void DealCards() {
@@ -274,8 +179,8 @@ public class GameManager : MonoBehaviour {
         deck.Remove(last);
 
         int playerOnTurnIdx = 0; //Random.Range(0, Players.Count);
-        PV.RPC("RPC_SetPlayerOnTurn", RpcTarget.AllBuffered, playerOnTurnIdx);
-        PV.RPC("RPC_SetUndealtCards", RpcTarget.AllBuffered, deck.ToArray());
+        RPCManager.RPC("RPC_SetPlayerOnTurn", RpcTarget.AllBuffered, playerOnTurnIdx);
+        RPCManager.RPC("RPC_SetUndealtCards", RpcTarget.AllBuffered, deck.ToArray());
         StartCoroutine(DealingAnimation(last));
     }
 
@@ -285,131 +190,6 @@ public class GameManager : MonoBehaviour {
         UIManager.instance.currentSuit.sprite = Global.SuitSprites[CurrentCard.data.suit];
         firstCardInPool.StartCoroutine(firstCardInPool.Throw(null));
         firstCardInPool.transform.position = Vector3.zero;
-    }
-
-    public static void AssignPositions() {
-        int count = Players.Count;
-        if (count == 0) return;
-
-        int startIdx = 0;
-        for (int i = 0; i < count; i++) {
-            if (!Players[i].PV.IsMine) continue;
-            startIdx = i;
-            break;
-        }
-
-        Vector3[] positions = PlayerPositions[count - 1];
-        Vector3[] rotations = PlayerRotations[count - 1];
-        int[] characterIndicies = ActiveCharacterObjectsIndex[count - 1];
-
-        for (int i = 0; i < count; i++) {
-            Transform characterTransform = instance.characterTransform.GetChild(characterIndicies[i]);
-            int characterMaterialIndex = characterMaterialIndices[i];
-            characterTransform.gameObject.SetActive(i != startIdx);
-            characterTransform.GetComponentInChildren<Renderer>().material = Global.CharacterMaterials[characterMaterialIndex];
-
-            if (i == 0) continue;
-            int playerIdx = (startIdx + i) % count;
-            Players[playerIdx].transform.localPosition = positions[i];
-            Players[playerIdx].transform.localEulerAngles = rotations[i];
-        }
-
-        for (int i = 0; i < count; i++) {
-            int playerIdx = (startIdx + i) % count;
-        }
-
-        instance.pivot.eulerAngles = PivotRotations[count - 1][startIdx];
-    }
-
-    public static void SpawnPlayer() {
-        Player player = PhotonNetwork.Instantiate("Prefabs/" + instance.playerPrefab.name, Vector3.zero, Quaternion.identity).GetComponent<Player>();
-        Transform cam = MainCamera.transform;
-
-        if (player.PV.IsMine) {
-            Vector3 viewportBottom = new Vector3(0.5f, instance.boundSlider, 10f);
-            Vector3 worldPosition = Camera.main.ViewportToWorldPoint(viewportBottom);
-
-            player.transform.position = worldPosition;
-            player.transform.LookAt(cam.position, Vector3.up);
-            player.transform.eulerAngles = Vector3.right * player.transform.eulerAngles.x;
-        }
-    }
-
-    [PunRPC]
-    private void RPC_SetPlayerOnTurn(int value) {
-        playerTurnIndex = value;
-        PlayerOnTurn = Players[playerTurnIndex];
-
-        PlayerOnTurn.cardArranger.EnableCards();
-
-        if (PlayerOnTurn.PV.IsMine) UIManager.instance.replenishCardStack.interactable = true;
-    }
-
-    [PunRPC]
-    private void RPC_InitializeAvailabilityOfCards() {
-        foreach(Player p in Players) {
-            if (!p.PV.IsMine) continue;
-            p.cardArranger.DisableAllCards();
-        }
-
-        PlayerOnTurn.cardArranger.EnableCards();
-    }
-
-    [PunRPC]
-    private void RPC_PickUpCard() {
-        CardStackManager.instance.PickUpCard();
-    }
-
-    [PunRPC]
-    private void RPC_PickUpCardsFromPoolOfForcedPickup() {
-        CardStackManager.PickUpCardsFromPoolOfForcedPickup();
-    }
-
-    [PunRPC]
-    private void RPC_ChangeTurn() {
-        ChangeTurn();
-    }
-
-    [PunRPC]
-    private void RPC_ChangeTurn(bool forcePickUp) {
-        ChangeTurn(forcePickUp);
-    }
-
-    [PunRPC]
-    private void RPC_ChangeTurn(bool forcePickUp, bool toggleButtons) {
-        ChangeTurn(forcePickUp, toggleButtons);
-    }
-
-    [PunRPC]
-    private void RPC_UnlockPlayers() {
-        Locked = false;
-    }
-
-    [PunRPC]
-    private void RPC_SetUndealtCards(string[] deck) {
-        CardStackManager.SetUndealtCards(new List<string>(deck));
-    }
-
-    [PunRPC]
-    private void RPC_SetFirstCard(string value) {
-        SetFirstCard(value);
-    }
-
-    [PunRPC]
-    private void RPC_ShuffleCharacterMaterialIndices(int seed) {
-        if (materialIndicesShuffled) return;
-        characterMaterialIndices = GameMath.ShuffleList(characterMaterialIndices, seed);
-        materialIndicesShuffled = true;
-    }
-
-    [PunRPC]
-    private void RPC_GameHasStarted() {
-        GameHasStarted = true;
-    }
-
-    [PunRPC]
-    private void RPC_ForcePickUp() {
-        ForcePickUp();
     }
 
     private static IEnumerator WaitBeforeChangeOfTurn() {

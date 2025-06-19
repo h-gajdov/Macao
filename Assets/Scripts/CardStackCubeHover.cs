@@ -24,8 +24,8 @@ public class CardStackCubeHover : MonoBehaviour {
     }
 
     private void OnMouseOver() {
-        if (Input.GetMouseButtonDown(0) && CardStackManager.UndealtCards.Count > 0 && GameManager.PlayerOnTurn == GameManager.LocalPlayer) {
-            GameManager.PV.RPC("RPC_PickUpCard", RpcTarget.AllBuffered);
+        if (Input.GetMouseButtonDown(0) && CardStackManager.UndealtCards.Count > 0 && GameManager.PlayerOnTurn == PlayerManager.LocalPlayer) {
+            RPCManager.RPC("RPC_PickUpCard", RpcTarget.AllBuffered);
         }
     }
 
