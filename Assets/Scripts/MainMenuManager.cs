@@ -17,4 +17,8 @@ public class MainMenuManager : MonoBehaviour {
     public void Options() {
         optionsPanel.SetActive(true);
     }
+
+    public void Close(GameObject panel) {
+        panel.SetActive(false);
+    }
 }
