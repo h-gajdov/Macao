@@ -6,6 +6,7 @@ public class MainMenuManager : MonoBehaviour {
     public GameObject optionsPanel;
 
     private void Start() {
+        Global.Initialize();
         optionsPanel.SetActive(false);
     }
 

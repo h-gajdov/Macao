@@ -16,10 +16,15 @@ public class Face {
 
 public static class Global {
     public static Dictionary<string, Face> CardFaces = new Dictionary<string, Face>();
+    public static Dictionary<string, Sprite> CountryFlags = new Dictionary<string, Sprite>();
     public static Dictionary<Suit, Sprite> SuitSprites = new Dictionary<Suit, Sprite>();
     public static List<string> AllCardStrings = new List<string>();
     public static Material[] CharacterMaterials = new Material[4];
     public static Texture BackFace;
+
+    public static string[] AvailableLanguages = {
+        "Macedonian", "English"
+    };
 
     public static void Initialize() {
         CardFaces.Clear();
@@ -71,6 +76,12 @@ public static class Global {
 
         for(int i = 0; i < 4; i++) {
             CharacterMaterials[i] = Resources.Load<Material>($"Prefabs/Character/Materials/Character_{i + 1}");
+        }
+
+        CountryFlags.Clear();
+        foreach(string language in AvailableLanguages) {
+            Sprite sprite = Resources.Load<Sprite>($"Sprites/Flags/{language}");
+            CountryFlags.Add(language, sprite);
         }
     }
 }
