@@ -19,6 +19,7 @@ public static class Global {
     public static Dictionary<string, Sprite> CountryFlags = new Dictionary<string, Sprite>();
     public static Dictionary<Suit, Sprite> SuitSprites = new Dictionary<Suit, Sprite>();
     public static List<string> AllCardStrings = new List<string>();
+    public static List<Sprite> AvatarSprites = new List<Sprite>();
     public static Material[] CharacterMaterials = new Material[4];
     public static Texture BackFace;
 
@@ -82,6 +83,12 @@ public static class Global {
         foreach(string language in AvailableLanguages) {
             Sprite sprite = Resources.Load<Sprite>($"Sprites/Flags/{language}");
             CountryFlags.Add(language, sprite);
+        }
+
+        AvatarSprites.Clear();
+        for(int i = 0; i < 16; i++) {
+            Sprite sprite = Resources.Load<Sprite>($"Sprites/Avatars/Avatar{i}");
+            AvatarSprites.Add(sprite);
         }
     }
 }
