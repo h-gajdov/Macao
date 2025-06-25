@@ -1,16 +1,15 @@
 using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.MPE;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using static UnityEngine.GraphicsBuffer;
+using TMPro;
 
 public class ProfileCustomizationManager : MonoBehaviour {
     public Image arrowImage;
     public Image buttonImage;
     public Image avatar;
     public RectTransform profileCustomizationPanel;
+    public TMP_InputField usernameInput;
     public GameObject avatarsScrollView;
     public float smoothness = 10f;
 
@@ -22,6 +21,8 @@ public class ProfileCustomizationManager : MonoBehaviour {
         localRect = GetComponent<RectTransform>();
         transparentButton = GetComponentInChildren<MainMenuTransparentButton>();
         avatarsScrollView.SetActive(false);
+
+        InitializeValues();
 
         localRect.anchoredPosition = Vector2.up * profileCustomizationPanel.rect.height;
         isOpen = false;
@@ -40,7 +41,7 @@ public class ProfileCustomizationManager : MonoBehaviour {
     public void SelectAvatar() {
         GameObject clickedButton = EventSystem.current.currentSelectedGameObject;
         Image selectedAvatar = clickedButton.GetComponent<Image>();
-        avatar.sprite = selectedAvatar.sprite;
+        SetAvatarImage(Global.AvatarSprites.IndexOf(selectedAvatar.sprite));
         avatarsScrollView.SetActive(false);
     }
 
@@ -62,5 +63,31 @@ public class ProfileCustomizationManager : MonoBehaviour {
             localRect.anchoredPosition = Vector3.Lerp(localRect.anchoredPosition, target, smoothness * Time.deltaTime);
             yield return null;
         }
+    }
+
+    private void InitializeValues() {
+        if (!PlayerPrefs.HasKey("Username"))
+            SetUsername(UsernameGenerator.GenerateUsername());
+        else SetUsername(PlayerPrefs.GetString("Username"));
+
+        if (!PlayerPrefs.HasKey("AvatarIndex"))
+            SetAvatarImage(Random.Range(0, Global.AvatarSprites.Count));
+        else SetAvatarImage(PlayerPrefs.GetInt("AvatarIndex"));
+    }
+
+    private void SetAvatarImage(int index) {
+        avatar.sprite = Global.AvatarSprites[index];
+        PlayerPrefs.SetInt("AvatarIndex", index);
+        PlayerPrefs.Save();
+    }
+
+    public void SetUsername() {
+        SetUsername(usernameInput.text);
+    }
+
+    private void SetUsername(string username) {
+        usernameInput.text = username;
+        PlayerPrefs.SetString("Username", username);
+        PlayerPrefs.Save();
     }
 }
