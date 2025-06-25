@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Photon.Pun;
 
 public class UIManager : MonoBehaviour {
+    public Image frameOfCurrentSuit;
     public Image currentSuit;
     public GameObject selectSuitButtons;
     public Button skipTurnButton;
@@ -34,6 +35,7 @@ public class UIManager : MonoBehaviour {
         Suit toSuit = Card.StringToSuit(suit);
         if(toSuit != Suit.All) {
             currentSuit.sprite = Global.SuitSprites[toSuit];
+            frameOfCurrentSuit.color = (toSuit == Suit.Diamonds || toSuit == Suit.Hearts) ? Color.red : Color.black;
         }
         selectSuitButtons.SetActive(false);
 
