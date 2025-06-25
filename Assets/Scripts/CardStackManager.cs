@@ -14,10 +14,17 @@ public class CardStackManager : MonoBehaviour {
 
     public static CardStackManager instance;
 
+    public void ResetValues() {
+        UndealtCards = new Stack<string>();
+        PoolOfForcedPickup = 0;
+    }
+
     private void Awake() {
+        ResetValues();
+
         if (instance == null) instance = this;
         else {
-            Destroy(gameObject);
+            Destroy(this);
             return;
         }
 

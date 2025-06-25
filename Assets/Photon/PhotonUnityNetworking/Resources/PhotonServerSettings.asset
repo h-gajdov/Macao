@@ -60,6 +60,10 @@ MonoBehaviour:
   - RPC_GameHasStarted
   - RPC_InitializeAvailabilityOfCards
   - RPC_ForcePickUp
+  - RPC_SpawnPlayerInLobby
+  - RPC_Ready
+  - RPC_ReadyToggle
+  - RPC_DisableLobbyPanel
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

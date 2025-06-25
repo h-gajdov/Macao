@@ -2,9 +2,15 @@ using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class Player : MonoBehaviour {
+    public string username;
+    public bool ready = false;
+    [HideInInspector] public int avatarIdx;
+    [HideInInspector] public PlayerInLobby playerInLobbyPanel;
+
     public PhotonView PV;
     public CardArranger cardArranger;
 
@@ -16,17 +22,25 @@ public class Player : MonoBehaviour {
 
         cardArranger = GetComponentInChildren<CardArranger>();
         if (PV.IsMine) {
-            PV.RPC("RPC_SpawnPlayer", RpcTarget.AllBuffered);
+            PV.RPC("RPC_SpawnPlayer", RpcTarget.AllBuffered, PlayerPrefs.GetString("Username"), PlayerPrefs.GetInt("AvatarIndex"));
             PlayerManager.LocalPlayer = this;
+            LobbyManager.CheckIfLocalMine(this);
         }
     }
 
     [PunRPC]
-    private void RPC_SpawnPlayer() {
-        if(!PlayerManager.Players.Contains(this)) PlayerManager.Players.Add(this);
+    private void RPC_SpawnPlayer(string username, int avatarIdx) {
+        this.username = username;
+        this.avatarIdx = avatarIdx;
+
+        if (!PlayerManager.Players.Contains(this)) {
+            PlayerManager.Players.Add(this);
+            UIManager.UpdatePlayersInLobby();
+        }
 
         transform.parent = PlayerManager.instance.pivot;
         PlayerManager.AssignPositions();
+
     }
 
     [PunRPC]
@@ -49,5 +63,11 @@ public class Player : MonoBehaviour {
     private void RPC_Throw(int cardIndex) {
         Card card = cardArranger.cardsInHand[cardIndex];
         card.StartCoroutine(card.Throw(this));
+    }
+
+    [PunRPC]
+    private void RPC_ReadyToggle() {
+        ready = !ready;
+        playerInLobbyPanel.readyTick.SetActive(ready);
     }
 }

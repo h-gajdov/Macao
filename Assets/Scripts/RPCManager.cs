@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Photon.Pun;
+using TMPro;
 
 public class RPCManager : MonoBehaviour {
     public static PhotonView PV;
@@ -87,7 +89,21 @@ public class RPCManager : MonoBehaviour {
     }
 
     [PunRPC]
+    private void RPC_DisableLobbyPanel() {
+        LobbyManager.instance.gameObject.SetActive(false);
+    }
+
+    [PunRPC]
     private void RPC_ForcePickUp() {
         GameManager.ForcePickUp();
+    }
+
+    [PunRPC]
+    private void RPC_SpawnPlayerInLobby(string username, int avatarIdx) {
+        GameObject pLobby = Instantiate(UIManager.instance.playerInLobbyPrefab, UIManager.instance.lobbyContent);
+        TextMeshProUGUI usernameTMP = pLobby.GetComponentInChildren<TextMeshProUGUI>();
+        Image avatarImage = pLobby.GetComponentInChildren<Image>();
+        usernameTMP.text = username;
+        avatarImage.sprite = Global.AvatarSprites[avatarIdx];
     }
 }

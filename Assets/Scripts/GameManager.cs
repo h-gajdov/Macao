@@ -23,6 +23,17 @@ public class GameManager : MonoBehaviour {
     public static bool CanPickUpCard = true;
     public static bool GameHasStarted = false;
 
+    private void ResetValues() {
+        CardPoolList = new List<Card>();
+        PlayerOnTurn = null;
+        playerTurnIndex = 0;
+        CurrentCard = null;
+        pendingCard = null;
+        Locked = false;
+        GameHasStarted = false;
+        CanPickUpCard = true;
+    }
+
     private static List<Player> Players {
         get {
             return PlayerManager.Players;
@@ -120,12 +131,13 @@ public class GameManager : MonoBehaviour {
 
     private void Awake() {
         Global.Initialize();
+        ResetValues();
 
         MainCamera = Camera.main;
 
         if (instance == null) instance = this;
         else {
-            Destroy(gameObject);
+            Destroy(this);
             return;
         }
     }
@@ -137,9 +149,9 @@ public class GameManager : MonoBehaviour {
             PlayerManager.SpawnPlayer();
         }
 
-        if (Input.GetKeyDown(KeyCode.K)) {
-            DealCards();
-        }
+        //if (Input.GetKeyDown(KeyCode.K)) {
+        //    DealCards();
+        //}
     }
 
     public List<string> ShuffleCards() {
@@ -160,7 +172,7 @@ public class GameManager : MonoBehaviour {
             if (rrIndex == 0) count++;
         }
 
-        RPCManager.PV.RPC("RPC_SetFirstCard", RpcTarget.AllBuffered, last);
+        RPCManager.RPC("RPC_SetFirstCard", RpcTarget.AllBuffered, last);
         RPCManager.RPC("RPC_GameHasStarted", RpcTarget.AllBuffered);
         RPCManager.RPC("RPC_InitializeAvailabilityOfCards", RpcTarget.AllBuffered);
         RPCManager.RPC("RPC_ForcePickUp", RpcTarget.AllBuffered);
@@ -178,7 +190,7 @@ public class GameManager : MonoBehaviour {
         string last = deck.Last();
         deck.Remove(last);
 
-        int playerOnTurnIdx = 0; //Random.Range(0, Players.Count);
+        int playerOnTurnIdx = Random.Range(0, Players.Count);
         RPCManager.RPC("RPC_SetPlayerOnTurn", RpcTarget.AllBuffered, playerOnTurnIdx);
         RPCManager.RPC("RPC_SetUndealtCards", RpcTarget.AllBuffered, deck.ToArray());
         StartCoroutine(DealingAnimation(last));

@@ -96,6 +96,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c18f3151966f684abcbcde602418e14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  username: 
+  ready: 0
+  avatarIdx: 0
+  playerInLobbyPanel: {fileID: 0}
   PV: {fileID: 4190466380377814925}
   cardArranger: {fileID: 4493684548071765861}
 --- !u!114 &4190466380377814925

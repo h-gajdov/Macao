@@ -5,15 +5,25 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class RoomManager : MonoBehaviourPunCallbacks {
-    public static RoomOptions options;
+    public static RoomManager instance;
+
+    private void Awake() {
+        if(instance == null) {
+            instance = this;
+        } else {
+            Destroy(this);
+            return;
+        }
+    }
 
     private void Start() {
-        options = new RoomOptions();
         Debug.Log("Connecting...");
 
         PhotonNetwork.ConnectUsingSettings();
+        DontDestroyOnLoad(this);
     }
 
     public override void OnConnectedToMaster() {
@@ -27,18 +37,32 @@ public class RoomManager : MonoBehaviourPunCallbacks {
     public override void OnJoinedLobby() {
         base.OnJoinedLobby();
 
-        PhotonNetwork.JoinOrCreateRoom("test", null, null);
-
-        Debug.Log("We are connected to a room!");
+        Debug.Log("We are connected to a lobby!");
     }
 
     public override void OnJoinedRoom() {
         base.OnJoinedRoom();
 
+        Debug.Log($"We have joined the room {PhotonNetwork.CurrentRoom.Name}");
+        StartCoroutine(LoadSceneAsync(1));
+    }
+
+    private IEnumerator LoadSceneAsync(int index) {
+        PhotonNetwork.IsMessageQueueRunning = false;
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(index);
+
+        while (!asyncLoad.isDone) yield return null;
+
+        PhotonNetwork.IsMessageQueueRunning = true;
+
+        yield return new WaitWhile(() => PlayerManager.Players.Count < PhotonNetwork.CurrentRoom.Players.Count - 1);
+
+        UIManager.SetRoomCode(PhotonNetwork.CurrentRoom.Name);
         if (PhotonNetwork.IsMasterClient) {
             int seed = (int)DateTime.UtcNow.Ticks;
             RPCManager.RPC("RPC_ShuffleCharacterMaterialIndices", RpcTarget.AllBuffered, seed);
         }
+
         PlayerManager.SpawnPlayer();
     }
 
@@ -48,6 +72,7 @@ public class RoomManager : MonoBehaviourPunCallbacks {
         if (index == -1) return;
 
         PlayerManager.DisableCharacters();
+        Destroy(PlayerManager.Players[index].playerInLobbyPanel.gameObject);
         PlayerManager.Players[index] = null;
 
         if(!GameManager.GameHasStarted) {
@@ -57,6 +82,6 @@ public class RoomManager : MonoBehaviourPunCallbacks {
     }
 
     public override void OnLeftRoom() {
-        PhotonNetwork.Disconnect();
+        SceneManager.LoadScene(0);
     }
 }

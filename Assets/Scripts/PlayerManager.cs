@@ -27,10 +27,17 @@ public class PlayerManager : MonoBehaviour
     };
     public static bool materialIndicesShuffled = false;
 
+    private void ResetValues() {
+        Players = new List<Player>();
+        LocalPlayer = null;
+        materialIndicesShuffled = false;
+    }
+
     private void Start() {
+        ResetValues();
         if (instance == null) instance = this;
         else {
-            Destroy(gameObject);
+            Destroy(this);
             return;
         }
 
@@ -139,10 +146,6 @@ public class PlayerManager : MonoBehaviour
             int playerIdx = (startIdx + i) % count;
             Players[playerIdx].transform.localPosition = positions[i];
             Players[playerIdx].transform.localEulerAngles = rotations[i];
-        }
-
-        for (int i = 0; i < count; i++) {
-            int playerIdx = (startIdx + i) % count;
         }
 
         instance.pivot.eulerAngles = PivotRotations[count - 1][startIdx];
