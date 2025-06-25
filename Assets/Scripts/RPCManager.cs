@@ -91,6 +91,7 @@ public class RPCManager : MonoBehaviour {
     [PunRPC]
     private void RPC_DisableLobbyPanel() {
         LobbyManager.instance.gameObject.SetActive(false);
+        UIManager.instance.localPlayerPanel.gameObject.SetActive(true);
     }
 
     [PunRPC]

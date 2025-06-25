@@ -8,6 +8,8 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour {
     public Image frameOfCurrentSuit;
     public Image currentSuit;
+    public PlayerPanel localPlayerPanel;
+    public Gradient timeFrameGradient;
 
     public GameObject selectSuitButtons;
     public GameObject playerInLobbyPrefab;
@@ -24,7 +26,7 @@ public class UIManager : MonoBehaviour {
 
     bool pressed = false;
 
-    private void Start() {
+    private void Awake() {
         if (instance == null) instance = this;
         else {
             Destroy(this);

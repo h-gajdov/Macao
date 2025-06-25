@@ -2,6 +2,8 @@ using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -10,6 +12,7 @@ public class PlayerManager : MonoBehaviour
 
     public GameObject playerPrefab;
     public Transform characterTransform;
+    public Transform playerPanelsTransform;
     public Transform pivot;
     public float boundSlider = 0.05f;
 
@@ -136,6 +139,9 @@ public class PlayerManager : MonoBehaviour
         Vector3[] rotations = PlayerRotations[count - 1];
         int[] characterIndicies = ActiveCharacterObjectsIndex[count - 1];
 
+        for (int i = 0; i < instance.playerPanelsTransform.childCount; i++)
+            instance.playerPanelsTransform.GetChild(i).gameObject.SetActive(false);
+
         for (int i = 0; i < count; i++) {
             Transform characterTransform = instance.characterTransform.GetChild(characterIndicies[i]);
             int characterMaterialIndex = characterMaterialIndices[i];
@@ -146,6 +152,10 @@ public class PlayerManager : MonoBehaviour
             int playerIdx = (startIdx + i) % count;
             Players[playerIdx].transform.localPosition = positions[i];
             Players[playerIdx].transform.localEulerAngles = rotations[i];
+
+            PlayerPanel playerPanel = instance.playerPanelsTransform.GetChild(characterIndicies[i]).GetComponent<PlayerPanel>();
+            playerPanel.SetValues(Players[playerIdx]);
+            playerPanel.gameObject.SetActive(true);
         }
 
         instance.pivot.eulerAngles = PivotRotations[count - 1][startIdx];

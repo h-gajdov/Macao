@@ -10,6 +10,7 @@ public class Player : MonoBehaviour {
     public bool ready = false;
     [HideInInspector] public int avatarIdx;
     [HideInInspector] public PlayerInLobby playerInLobbyPanel;
+    [HideInInspector] public PlayerPanel playerPanel;
 
     public PhotonView PV;
     public CardArranger cardArranger;
@@ -32,6 +33,8 @@ public class Player : MonoBehaviour {
     private void RPC_SpawnPlayer(string username, int avatarIdx) {
         this.username = username;
         this.avatarIdx = avatarIdx;
+        if(PV.IsMine)
+            UIManager.instance.localPlayerPanel.SetValues(this);
 
         if (!PlayerManager.Players.Contains(this)) {
             PlayerManager.Players.Add(this);
