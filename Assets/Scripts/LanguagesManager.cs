@@ -11,11 +11,19 @@ public class LanguagesManager : MonoBehaviour
     public Transform languagesLayout;
     public static string SelectedLanguage = "English";
 
+    private bool languagesOpen = false;
+
     private void Start() {
         languagesPanel.SetActive(false);
     }
 
     public void OpenLanguages() {
+        languagesOpen = !languagesOpen;
+        if(!languagesOpen) {
+            languagesPanel.SetActive(false);
+            return;
+        }
+
         languagesPanel.SetActive(true);
         Transform selected = null;
         foreach(Transform child in languagesLayout) {
@@ -30,5 +38,6 @@ public class LanguagesManager : MonoBehaviour
         SelectedLanguage = text.text;
         languagesPanel.SetActive(false);
         selectedLanguageImage.sprite = Global.CountryFlags[SelectedLanguage];
+        languagesOpen = false;
     }
 }
