@@ -8,6 +8,7 @@ using TMPro;
 public class MainMenuManager : MonoBehaviour {
     public GameObject optionsPanel;
     public GameObject playPanel;
+    public GameObject howToPlayPanel;
     public TMP_InputField joinRoomField;
 
     private void Start() {
@@ -44,6 +45,11 @@ public class MainMenuManager : MonoBehaviour {
         PhotonNetwork.JoinRoom(joinRoomField.text);
     }
 
+    public void HowToPlay() {
+        DisableAllPanels();
+        howToPlayPanel.SetActive(true);
+    }
+
     private static string GenerateRoomNumber() {
         string characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         string code = "";
@@ -58,5 +64,6 @@ public class MainMenuManager : MonoBehaviour {
     public void DisableAllPanels() {
         optionsPanel.SetActive(false);
         playPanel.SetActive(false);
+        howToPlayPanel.SetActive(false);
     }
 }
