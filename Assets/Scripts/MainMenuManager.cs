@@ -33,16 +33,28 @@ public class MainMenuManager : MonoBehaviour {
     }
 
     public void HostGame() {
+        if (!PhotonNetwork.InLobby) {
+            Debug.LogError("Not in a lobby!"); //TODO: Error validation show it to the player
+            return;
+        }
+
         string roomCode = GenerateRoomNumber();
 
         RoomOptions roomOptions = new RoomOptions();
         roomOptions.MaxPlayers = 4;
 
         PhotonNetwork.CreateRoom(roomCode, roomOptions, null);
+        LoadingScreenManager.instance.StartLoading(true);
     }
 
     public void JoinGame() {
+        if (!PhotonNetwork.InLobby) {
+            Debug.LogError("Not in a lobby!"); //TODO: Error validation show it to the player
+            return;
+        }
+
         Debug.Log("Joining room...");
+        LoadingScreenManager.instance.StartLoading();
         PhotonNetwork.JoinRoom(joinRoomField.text);
     }
 

@@ -51,7 +51,14 @@ public class RoomManager : MonoBehaviourPunCallbacks {
         PhotonNetwork.IsMessageQueueRunning = false;
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(index);
 
-        while (!asyncLoad.isDone) yield return null;
+        LoadingScreenManager.instance.loadingBar.SetActive(true);
+        LoadingScreenManager.instance.joiningRoomText.SetActive(false);
+
+        while (!asyncLoad.isDone) {
+            float progress = Mathf.Clamp01(asyncLoad.progress / 0.9f);
+            LoadingScreenManager.instance.SetProgress(progress);
+            yield return null;
+        }
 
         PhotonNetwork.IsMessageQueueRunning = true;
 
