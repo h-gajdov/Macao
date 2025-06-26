@@ -4,16 +4,18 @@ using System.Threading;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
 
 public class PlayerPanel : MonoBehaviour {
     public TextMeshProUGUI username;
     public Image avatarImage;
     public Image timeFrame;
 
-    public static int TimeOfTurn = 20; //in seconds
+    public static int TimeOfTurn = 5; //in seconds
 
     private void Start() {
-        StartCoroutine(StartCountingTime());
+        timeFrame.fillAmount = 0f;
+        //StartCoroutine(StartCountingTime());
     }
 
     public void SetValues(Player player) {
@@ -22,7 +24,11 @@ public class PlayerPanel : MonoBehaviour {
         player.playerPanel = this;
     }
 
-    private IEnumerator StartCountingTime() {
+    public void StartCountingTime() {
+        StartCoroutine(StartCountingTime_Coroutine());
+    }
+
+    private IEnumerator StartCountingTime_Coroutine() {
         float timeLeft = TimeOfTurn;
         timeFrame.fillAmount = 1f;
 
@@ -35,5 +41,11 @@ public class PlayerPanel : MonoBehaviour {
         }
 
         timeFrame.fillAmount = 0f;
+        if (GameManager.PlayerOnTurn.PV.IsMine) {
+            if(GameManager.CanPickUpCard) {
+                RPCManager.RPC("RPC_PickUpCard", RpcTarget.All);
+            }
+            RPCManager.RPC("RPC_ChangeTurn", RpcTarget.All);
+        }
     }
 }

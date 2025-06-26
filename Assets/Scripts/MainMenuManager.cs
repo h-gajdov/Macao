@@ -40,6 +40,7 @@ public class MainMenuManager : MonoBehaviour {
     }
 
     public void JoinGame() {
+        Debug.Log("Joining room...");
         PhotonNetwork.JoinRoom(joinRoomField.text);
     }
 

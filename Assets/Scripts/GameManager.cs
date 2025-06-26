@@ -80,7 +80,11 @@ public class GameManager : MonoBehaviour {
         }
 
         playerTurnIndex = (playerTurnIndex + 1) % Players.Count;
+
+        PlayerOnTurn.playerPanel.timeFrame.fillAmount = 0;
+        PlayerOnTurn.playerPanel.StopAllCoroutines();
         PlayerOnTurn = Players[playerTurnIndex];
+        PlayerOnTurn.playerPanel.StartCountingTime();
 
         PlayerOnTurn.cardArranger.EnableCards();
 
@@ -126,8 +130,6 @@ public class GameManager : MonoBehaviour {
         CurrentCard = card;
         UIManager.instance.ChangeSuit(card.data.suit.ToString());
     }
-
-    
 
     private void Awake() {
         Global.Initialize();
@@ -176,6 +178,7 @@ public class GameManager : MonoBehaviour {
         RPCManager.RPC("RPC_GameHasStarted", RpcTarget.AllBuffered);
         RPCManager.RPC("RPC_InitializeAvailabilityOfCards", RpcTarget.AllBuffered);
         RPCManager.RPC("RPC_ForcePickUp", RpcTarget.AllBuffered);
+        RPCManager.RPC("RPC_StartCountingTime", RpcTarget.AllBuffered);
     }
 
     public void DealCards() {

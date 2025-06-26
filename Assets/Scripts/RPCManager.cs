@@ -27,6 +27,11 @@ public class RPCManager : MonoBehaviour {
     }
 
     [PunRPC]
+    private void RPC_StartCountingTime() {
+        GameManager.PlayerOnTurn.playerPanel.StartCountingTime();
+    }
+
+    [PunRPC]
     private void RPC_InitializeAvailabilityOfCards() {
         foreach (Player p in PlayerManager.Players) {
             if (!p.PV.IsMine) continue;
