@@ -9,6 +9,7 @@ public class MainMenuManager : MonoBehaviour {
     public GameObject optionsPanel;
     public GameObject playPanel;
     public GameObject howToPlayPanel;
+    public GameObject aboutPanel;
     public TMP_InputField joinRoomField;
 
     private void Start() {
@@ -50,6 +51,11 @@ public class MainMenuManager : MonoBehaviour {
         howToPlayPanel.SetActive(true);
     }
 
+    public void About() {
+        DisableAllPanels();
+        aboutPanel.SetActive(true);
+    }
+
     private static string GenerateRoomNumber() {
         string characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         string code = "";
@@ -65,5 +71,6 @@ public class MainMenuManager : MonoBehaviour {
         optionsPanel.SetActive(false);
         playPanel.SetActive(false);
         howToPlayPanel.SetActive(false);
+        aboutPanel.SetActive(false);
     }
 }
