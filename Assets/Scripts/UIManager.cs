@@ -13,6 +13,7 @@ public class UIManager : MonoBehaviour {
 
     public GameObject selectSuitButtons;
     public GameObject playerInLobbyPrefab;
+    public GameObject winningPanel;
     public Transform lobbyContent;
 
     public Button skipTurnButton;

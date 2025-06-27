@@ -98,6 +98,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   username: 
   ready: 0
+  finished: 0
   avatarIdx: 0
   playerInLobbyPanel: {fileID: 0}
   playerPanel: {fileID: 0}

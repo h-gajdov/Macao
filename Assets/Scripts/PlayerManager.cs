@@ -187,4 +187,10 @@ public class PlayerManager : MonoBehaviour
             player.transform.eulerAngles = Vector3.right * player.transform.eulerAngles.x;
         }
     }
+
+    public static int GetNumberOfUniquePlayers() {
+        int count = 0;
+        foreach (Player p in Players) if(p != null) count++;
+        return count;
+    }
 }

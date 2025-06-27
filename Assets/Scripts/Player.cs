@@ -8,6 +8,7 @@ using UnityEngine;
 public class Player : MonoBehaviour {
     public string username;
     public bool ready = false;
+    public bool finished = false;
     [HideInInspector] public int avatarIdx;
     [HideInInspector] public PlayerInLobby playerInLobbyPanel;
     public PlayerPanel playerPanel;
@@ -27,6 +28,14 @@ public class Player : MonoBehaviour {
             PV.RPC("RPC_SpawnPlayer", RpcTarget.AllBuffered, PlayerPrefs.GetString("Username"), PlayerPrefs.GetInt("AvatarIndex"));
             LobbyManager.CheckIfLocalMine(this);
         }
+    }
+
+    public void Finish() {
+        GameManager.FinishedPlayers.Add(this);
+        finished = true;
+
+        PlayerManager.Players.Remove(this);
+        if (PlayerManager.Players.Count <= 1) GameManager.FinishGame();
     }
 
     [PunRPC]

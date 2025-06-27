@@ -122,8 +122,6 @@ public class Card : MonoBehaviour {
         initialRotation.z = Random.Range(0, 360f);
         GameManager.CardPoolList.Add(this);
 
-        //yield return StartCoroutine(RandomSpinWhenThrowing());
-
         if (cardArranger != null && cardArranger.cardsInHand.Contains(this)) {
             cardArranger.cardsInHand.Remove(this);
             if (cardArranger.cardsInHand.Count == 1) {
@@ -140,6 +138,8 @@ public class Card : MonoBehaviour {
                 GameManager.ChangeTurn(false);
             }
 
+            if(cardArranger.cardsInHand.Count == 0) player.Finish();
+
             GameManager.SetCurrentCard(this);
             GameManager.ChangeTurn();
 
@@ -151,6 +151,7 @@ public class Card : MonoBehaviour {
         }
 
         GameManager.SetCurrentCard(this);
+
     }
 
     private IEnumerator RandomSpinWhenThrowing() {
@@ -170,10 +171,8 @@ public class Card : MonoBehaviour {
             elapsed += Time.deltaTime;
             float t = elapsed / throwDuration;
 
-            // Smoothly move position
             transform.localPosition = Vector3.Lerp(startPos, targetPos, t);
 
-            // Rotate as before
             float currentX = Mathf.LerpAngle(startX, targetX, t * selectSpeed / 4);
             currentZRotation += spinSpeed * Time.deltaTime;
 

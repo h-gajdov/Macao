@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour {
     public static List<Card> CardPoolList = new List<Card>();
+    public static List<Player> FinishedPlayers = new List<Player>();
+
     public static Player PlayerOnTurn { get; set; }
     public static int playerTurnIndex = 0;
 
@@ -22,6 +24,7 @@ public class GameManager : MonoBehaviour {
     public static bool Locked = false;
     public static bool CanPickUpCard = true;
     public static bool GameHasStarted = false;
+    public static bool GameHasFinished = false;
 
     private void ResetValues() {
         CardPoolList = new List<Card>();
@@ -81,7 +84,8 @@ public class GameManager : MonoBehaviour {
 
         do {
             playerTurnIndex = (playerTurnIndex + 1) % Players.Count;
-        } while (Players[playerTurnIndex] == null);
+            if (GameHasFinished) return;
+        } while (Players[playerTurnIndex] == null || Players[playerTurnIndex].finished == true);
 
         PlayerOnTurn.playerPanel.timeFrame.fillAmount = 0;
         PlayerOnTurn.playerPanel.StopAllCoroutines();
@@ -100,10 +104,17 @@ public class GameManager : MonoBehaviour {
             UIManager.instance.DisableButtons();
         }
 
-        playerTurnIndex = (playerTurnIndex + 1) % Players.Count;
-        PlayerOnTurn = Players[playerTurnIndex];
+        do {
+            playerTurnIndex = (playerTurnIndex + 1) % Players.Count;
+            if (GameHasFinished) return;
+        } while (Players[playerTurnIndex] == null || Players[playerTurnIndex].finished == true);
 
-        if(toggleButtons) PlayerOnTurn.cardArranger.EnableCards();
+        PlayerOnTurn.playerPanel.timeFrame.fillAmount = 0;
+        PlayerOnTurn.playerPanel.StopAllCoroutines();
+        PlayerOnTurn = Players[playerTurnIndex];
+        PlayerOnTurn.playerPanel.StartCountingTime();
+
+        PlayerOnTurn.cardArranger.EnableCards();
 
         if (PlayerOnTurn.PV.IsMine) UIManager.instance.replenishCardStack.interactable = true;
     }
@@ -133,6 +144,15 @@ public class GameManager : MonoBehaviour {
         UIManager.instance.ChangeSuit(card.data.suit.ToString());
     }
 
+    public static void FinishGame() {
+        Debug.Log("GAME FINISHED");
+        GameHasFinished = true;
+
+        UIManager.instance.winningPanel.SetActive(true);
+
+        foreach (Player p in FinishedPlayers) Debug.Log(p.username);
+    }
+
     private void Awake() {
         Global.Initialize();
         ResetValues();
@@ -147,7 +167,7 @@ public class GameManager : MonoBehaviour {
     }
 
     private void Update() {
-        debug = Players;
+        debug = FinishedPlayers;
 
         if(Input.GetKeyDown(KeyCode.G)) {
             PlayerManager.SpawnPlayer();
