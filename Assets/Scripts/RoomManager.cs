@@ -78,7 +78,7 @@ public class RoomManager : MonoBehaviourPunCallbacks {
         int index = PlayerManager.Players.FindIndex(p => p != null && p.PV.OwnerActorNr == otherPlayer.ActorNumber);
         if (index == -1) return;
 
-        PlayerManager.DisableCharacters();
+        PlayerManager.instance.characterTransform.GetChild(index).gameObject.SetActive(false);
         Destroy(PlayerManager.Players[index].playerInLobbyPanel.gameObject);
         Player leftPlayer = PlayerManager.Players[index];
         PlayerManager.Players[index] = null;

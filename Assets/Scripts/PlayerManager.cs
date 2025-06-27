@@ -1,9 +1,10 @@
 using Photon.Pun;
+using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -53,25 +54,25 @@ public class PlayerManager : MonoBehaviour
         float halfWidth = Screen.width / 2;
         float halfHeight = Screen.height / 2;
         PlayerPositions[0] = new Vector3[] {
-            Vector3.zero
+            new Vector3(0, 0, -24f),
         };
 
         PlayerPositions[1] = new Vector3[] {
-            Vector3.zero,
+            new Vector3(0, 0, -24f),
             new Vector3(0, 0, 24f)
         };
 
         PlayerPositions[2] = new Vector3[] {
-            Vector3.zero,
-            new Vector3(-20f, 0, 10f),
+            new Vector3(0, 0, -24f),
+            new Vector3(-24f, 0, 0),
             new Vector3(0, 0, 24f)
         };
 
         PlayerPositions[3] = new Vector3[] {
-            Vector3.zero,
-            new Vector3(-20f, 0, 10f),
+            new Vector3(0, 0, -24f),
+            new Vector3(-24f, 0, 0),
             new Vector3(0, 0, 24f),
-            new Vector3(20f, 0, 10f)
+            new Vector3(24f, 0, 0)
         };
 
         PlayerRotations[0] = new Vector3[] {
@@ -85,15 +86,15 @@ public class PlayerManager : MonoBehaviour
 
         PlayerRotations[2] = new Vector3[] {
             Vector3.zero,
-            Vector3.up * 120,
+            Vector3.up * 90,
             Vector3.up * 180,
         };
 
         PlayerRotations[3] = new Vector3[] {
             Vector3.zero,
-            Vector3.up * 120,
+            Vector3.up * 90,
             Vector3.up * 180,
-            -Vector3.up * 120,
+            -Vector3.up * 90,
         };
 
         PivotRotations[0] = new Vector3[] {
@@ -127,13 +128,9 @@ public class PlayerManager : MonoBehaviour
     public static void AssignPositions() {
         int count = Players.Count;
         if (count == 0) return;
+        if (LocalPlayer == null) return;
 
-        int startIdx = 0;
-        for (int i = 0; i < count; i++) {
-            if (!Players[i].PV.IsMine) continue;
-            startIdx = i;
-            break;
-        }
+        int startIdx = Players.IndexOf(LocalPlayer);
 
         Vector3[] positions = PlayerPositions[count - 1];
         Vector3[] rotations = PlayerRotations[count - 1];
@@ -143,20 +140,30 @@ public class PlayerManager : MonoBehaviour
             instance.playerPanelsTransform.GetChild(i).gameObject.SetActive(false);
 
         for (int i = 0; i < count; i++) {
+            int playerIdx = (startIdx + i) % count;
             Transform characterTransform = instance.characterTransform.GetChild(characterIndicies[i]);
             int characterMaterialIndex = characterMaterialIndices[i];
             characterTransform.gameObject.SetActive(i != startIdx);
             characterTransform.GetComponentInChildren<Renderer>().material = Global.CharacterMaterials[characterMaterialIndex];
 
             if (i == 0) continue;
-            int playerIdx = (startIdx + i) % count;
-            Players[playerIdx].transform.localPosition = positions[i];
-            Players[playerIdx].transform.localEulerAngles = rotations[i];
 
-            PlayerPanel playerPanel = instance.playerPanelsTransform.GetChild(characterIndicies[i]).GetComponent<PlayerPanel>();
-            playerPanel.SetValues(Players[playerIdx]);
-            playerPanel.gameObject.SetActive(true);
+            Players[playerIdx].transform.position = positions[playerIdx];
+            Players[playerIdx].transform.localEulerAngles = rotations[playerIdx];
+
+            Vector3 startPlayer = positions[startIdx];
+            Vector3 nowPlayer = positions[playerIdx];
+            if (startPlayer.x != nowPlayer.x && startPlayer.z != nowPlayer.z) {
+                float mult = (i == 1) ? -1 : 1;
+                Debug.Log($"Multiplier: {mult}");
+                Debug.Log($"Sub: {i - startIdx}");
+                Players[playerIdx].transform.position += Players[playerIdx].transform.forward * 4f;
+                Players[playerIdx].transform.position += mult * Players[playerIdx].transform.right * 10f;
+                Players[playerIdx].transform.eulerAngles += -mult * Vector3.up * 30f;
+            }
         }
+
+        PlayersPanelManager.SetValues(startIdx);
 
         instance.pivot.eulerAngles = PivotRotations[count - 1][startIdx];
     }

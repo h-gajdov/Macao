@@ -10,7 +10,7 @@ public class Player : MonoBehaviour {
     public bool ready = false;
     [HideInInspector] public int avatarIdx;
     [HideInInspector] public PlayerInLobby playerInLobbyPanel;
-    [HideInInspector] public PlayerPanel playerPanel;
+    public PlayerPanel playerPanel;
 
     public PhotonView PV;
     public CardArranger cardArranger;
@@ -23,8 +23,8 @@ public class Player : MonoBehaviour {
 
         cardArranger = GetComponentInChildren<CardArranger>();
         if (PV.IsMine) {
-            PV.RPC("RPC_SpawnPlayer", RpcTarget.AllBuffered, PlayerPrefs.GetString("Username"), PlayerPrefs.GetInt("AvatarIndex"));
             PlayerManager.LocalPlayer = this;
+            PV.RPC("RPC_SpawnPlayer", RpcTarget.AllBuffered, PlayerPrefs.GetString("Username"), PlayerPrefs.GetInt("AvatarIndex"));
             LobbyManager.CheckIfLocalMine(this);
         }
     }
@@ -33,17 +33,17 @@ public class Player : MonoBehaviour {
     private void RPC_SpawnPlayer(string username, int avatarIdx) {
         this.username = username;
         this.avatarIdx = avatarIdx;
-        if(PV.IsMine)
+        if(PV.IsMine) {
             UIManager.instance.localPlayerPanel.SetValues(this);
+            transform.parent = PlayerManager.instance.pivot;
+        }
 
         if (!PlayerManager.Players.Contains(this)) {
             PlayerManager.Players.Add(this);
             UIManager.UpdatePlayersInLobby();
         }
 
-        transform.parent = PlayerManager.instance.pivot;
         PlayerManager.AssignPositions();
-
     }
 
     [PunRPC]

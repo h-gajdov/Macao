@@ -245,8 +245,6 @@ public class CardArranger : MonoBehaviour {
     public void ReturnCards() {
         List<string> tmp = new List<string>();
 
-        CardStackManager.PrintStack();
-
         while (CardStackManager.UndealtCards.Count > 0) {
             tmp.Add(CardStackManager.UndealtCards.Pop());
         }
@@ -258,7 +256,6 @@ public class CardArranger : MonoBehaviour {
         for (int i = tmp.Count - 1; i >= 0; i--) {
             CardStackManager.UndealtCards.Push(tmp[i]);
         }
-        CardStackManager.PrintStack();
     }
 
     public bool Contains(int value) {
