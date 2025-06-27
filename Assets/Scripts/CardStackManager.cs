@@ -34,9 +34,9 @@ public class CardStackManager : MonoBehaviour {
         SetCardCubeTransform(54 - dealtCards);
     }
 
-    public void PickUpCard() {
-        if (!GameManager.CanPickUpCard) return;
-        GameManager.CanPickUpCard = false;
+    public void PickUpCard(bool forced = false) {
+        if (!forced && !GameManager.CanPickUpCard) return;
+        if(!forced) GameManager.CanPickUpCard = false;
 
         if(UndealtCards.Count == 0) {
             ReplenishCardStack();
@@ -100,7 +100,7 @@ public class CardStackManager : MonoBehaviour {
 
     private static void PickUpNCards(int n) {
         while(n-- > 0) {
-            instance.PickUpCard();
+            instance.PickUpCard(true);
         }
     }
 
