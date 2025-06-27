@@ -80,11 +80,26 @@ public class RoomManager : MonoBehaviourPunCallbacks {
 
         PlayerManager.DisableCharacters();
         Destroy(PlayerManager.Players[index].playerInLobbyPanel.gameObject);
+        Player leftPlayer = PlayerManager.Players[index];
         PlayerManager.Players[index] = null;
 
         if(!GameManager.GameHasStarted) {
             PlayerManager.Players.RemoveAt(index);
             PlayerManager.AssignPositions();
+        } else {
+            if (GameManager.PlayerOnTurn == leftPlayer) RPCManager.RPC("RPC_ChangeTurn", RpcTarget.All);
+
+            leftPlayer.cardArranger.ReturnCards();
+
+            int count = 0;
+            foreach (Player p in PlayerManager.Players) {
+                if (p == null) continue;
+                count++;
+            }
+
+            if (count == 1) {
+                PhotonNetwork.LeaveRoom();
+            }
         }
     }
 

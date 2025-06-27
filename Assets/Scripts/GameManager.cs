@@ -79,7 +79,9 @@ public class GameManager : MonoBehaviour {
             UIManager.instance.DisableButtons();
         }
 
-        playerTurnIndex = (playerTurnIndex + 1) % Players.Count;
+        do {
+            playerTurnIndex = (playerTurnIndex + 1) % Players.Count;
+        } while (Players[playerTurnIndex] == null);
 
         PlayerOnTurn.playerPanel.timeFrame.fillAmount = 0;
         PlayerOnTurn.playerPanel.StopAllCoroutines();
@@ -150,10 +152,6 @@ public class GameManager : MonoBehaviour {
         if(Input.GetKeyDown(KeyCode.G)) {
             PlayerManager.SpawnPlayer();
         }
-
-        //if (Input.GetKeyDown(KeyCode.K)) {
-        //    DealCards();
-        //}
     }
 
     public List<string> ShuffleCards() {

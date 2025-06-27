@@ -103,4 +103,10 @@ public class CardStackManager : MonoBehaviour {
             instance.PickUpCard();
         }
     }
+
+    public static void PrintStack() {
+        foreach(string card in UndealtCards) {
+            Debug.Log(card);
+        }
+    }
 }

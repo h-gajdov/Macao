@@ -1,6 +1,7 @@
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CardArranger : MonoBehaviour {
@@ -239,6 +240,25 @@ public class CardArranger : MonoBehaviour {
             if (selectedCard.spriteRenderer.sortingOrder < card.spriteRenderer.sortingOrder) selectedCard = card;
         }
         return selectedCard;
+    }
+
+    public void ReturnCards() {
+        List<string> tmp = new List<string>();
+
+        CardStackManager.PrintStack();
+
+        while (CardStackManager.UndealtCards.Count > 0) {
+            tmp.Add(CardStackManager.UndealtCards.Pop());
+        }
+
+        for (int i = cardsInHand.Count - 1; i >= 0; i--) {
+            CardStackManager.UndealtCards.Push(cardsInHand[i].GetValueString());
+        }
+
+        for (int i = tmp.Count - 1; i >= 0; i--) {
+            CardStackManager.UndealtCards.Push(tmp[i]);
+        }
+        CardStackManager.PrintStack();
     }
 
     public bool Contains(int value) {
