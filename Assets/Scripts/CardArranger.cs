@@ -42,7 +42,7 @@ public class CardArranger : MonoBehaviour {
         card.localPosition = Vector3.zero;
 
         Card cl = card.GetComponent<Card>();
-        cl.spriteRenderer.sortingOrder = card.GetSiblingIndex();
+        cl.spriteRenderer.sortingOrder = 10 + card.GetSiblingIndex();
         if(card.IsChildOf(transform)) cardsInHand.Add(cl);
 
         cl.hidden = !player.PV.IsMine;

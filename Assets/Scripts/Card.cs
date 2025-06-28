@@ -116,7 +116,7 @@ public class Card : MonoBehaviour {
         CanBeThrown = false;
         thrown = true;
         hidden = false;
-        spriteRenderer.sortingOrder = 10 + transform.GetSiblingIndex();
+        spriteRenderer.sortingOrder = transform.GetSiblingIndex();
 
         initialRotation = Vector3.right * 90f;
         initialRotation.z = Random.Range(0, 360f);
@@ -193,8 +193,12 @@ public class Card : MonoBehaviour {
     }
 
     private void Update() {
-        if (!thrown && (cardArranger == null || !cardArranger.player.PV.IsMine)) return;
-        initialPosition = (!thrown) ? cardArranger.GetTargetPosition(transform) : Vector3.zero;
+        if (!thrown) {
+            spriteRenderer.sortingOrder = 10 + transform.GetSiblingIndex();
+            if (cardArranger == null || !cardArranger.player.PV.IsMine) return;
+        } else spriteRenderer.sortingOrder = transform.GetSiblingIndex();
+
+            initialPosition = (!thrown) ? cardArranger.GetTargetPosition(transform) : Vector3.zero;
 
         if (hovered) {
             Hover(1.5f, 999);
