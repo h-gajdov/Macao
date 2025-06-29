@@ -1,9 +1,10 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Photon.Pun;
-using TMPro;
 
 public class RPCManager : MonoBehaviour {
     public static PhotonView PV;
@@ -24,6 +25,13 @@ public class RPCManager : MonoBehaviour {
         GameManager.PlayerOnTurn.cardArranger.EnableCards();
 
         if (GameManager.PlayerOnTurn.PV.IsMine) UIManager.instance.replenishCardStack.interactable = true;
+    }
+
+    [PunRPC]
+    private void DebugPrint(string[] deck) {
+        Debug.LogError("Number of cards: " + deck.Length);
+
+        foreach (var str in deck) Debug.LogError(str);
     }
 
     [PunRPC]
@@ -139,5 +147,15 @@ public class RPCManager : MonoBehaviour {
 
         CardStackManager.instance.ResetValues();
         GameManager.instance.ResetValues();
+    }
+
+    [PunRPC]
+    private void RPC_SetDeckAndTimerSettings(int numberOfDecks, int timePerTurn) {
+        GameManager.NumberOfDecks = numberOfDecks;
+        PlayerPanel.TimeOfTurn = timePerTurn;
+
+        Debug.Log(numberOfDecks);
+        Debug.Log("Decks: " + GameManager.NumberOfDecks);
+        Debug.Log("Time per turn: " + PlayerPanel.TimeOfTurn);
     }
 }

@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour {
 
     public static Player PlayerOnTurn { get; set; }
     public static int playerTurnIndex = 0;
+    public static int NumberOfDecks = 1;
 
     public static Card CurrentCard;
     public static Card pendingCard;
@@ -32,6 +33,7 @@ public class GameManager : MonoBehaviour {
         CardPoolList = new List<Card>();
         PlayerOnTurn = null;
         playerTurnIndex = 0;
+        NumberOfDecks = 1;
         CurrentCard = null;
         pendingCard = null;
         Locked = false;
@@ -211,9 +213,13 @@ public class GameManager : MonoBehaviour {
     }
 
     public void DealCards() {
-        List<string> deck = ShuffleCards();
+        List<string> deck = new List<string>();
         List<string> toRemove = new List<string>();
         Dictionary<Player, List<CardData>> map = new Dictionary<Player, List<CardData>>();
+
+        for (int i = 0; i < NumberOfDecks; i++) deck.AddRange(ShuffleCards());
+
+        RPCManager.RPC("DebugPrint", RpcTarget.All, deck.ToArray());
 
         foreach (Player p in Players) {
             map.Add(p, new List<CardData>());

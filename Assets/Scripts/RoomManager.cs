@@ -10,6 +10,8 @@ using UnityEngine.SceneManagement;
 public class RoomManager : MonoBehaviourPunCallbacks {
     public static RoomManager instance;
 
+    public static int NumberOfDecks = 1, TimePerTurn = 20;
+
     private void Awake() {
         if(instance == null) {
             instance = this;
@@ -69,6 +71,9 @@ public class RoomManager : MonoBehaviourPunCallbacks {
             int seed = (int)DateTime.UtcNow.Ticks;
             RPCManager.RPC("RPC_ShuffleCharacterMaterialIndices", RpcTarget.AllBuffered, seed);
         }
+
+        if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
+            RPCManager.RPC("RPC_SetDeckAndTimerSettings", RpcTarget.AllBuffered, RoomManager.NumberOfDecks, RoomManager.TimePerTurn);
 
         PlayerManager.SpawnPlayer();
     }

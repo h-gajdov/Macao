@@ -14,6 +14,9 @@ public class MainMenuManager : MonoBehaviour {
     public TextMeshProUGUI errorText;
     public TMP_InputField joinRoomField;
 
+    public TMP_Dropdown numberOfDecksDropdown;
+    public TMP_Dropdown timePerTurnDropdown;
+
     public static MainMenuManager instance;
 
     private void Awake() {
@@ -57,6 +60,18 @@ public class MainMenuManager : MonoBehaviour {
 
         PhotonNetwork.CreateRoom(roomCode, roomOptions, null);
         LoadingScreenManager.instance.StartLoading(true);
+    }
+
+    public void ChangeNumberOfDecks() {
+        string text = numberOfDecksDropdown.options[numberOfDecksDropdown.value].text;
+        int value = int.Parse(text);
+        RoomManager.NumberOfDecks = value;
+    }
+    
+    public void ChangeTimePerTurn() {
+        string text = timePerTurnDropdown.options[timePerTurnDropdown.value].text;
+        int value = int.Parse(text);
+        RoomManager.TimePerTurn = value;
     }
 
     public void SetError(string msg) {

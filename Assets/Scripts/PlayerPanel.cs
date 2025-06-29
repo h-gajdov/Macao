@@ -12,7 +12,7 @@ public class PlayerPanel : MonoBehaviour {
     public Image timeFrame;
     public Image medal;
 
-    public static int TimeOfTurn = 5; //in seconds
+    public static int TimeOfTurn = 20; //in seconds
 
     private void Start() {
         medal.enabled = false;

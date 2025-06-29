@@ -57,7 +57,7 @@ public class CardStackManager : MonoBehaviour {
     }
     
     private void SetCardCubeTransform(int count) {
-        float factor = count / 54f;
+        float factor = count / (GameManager.NumberOfDecks * 54f);
         cardStackCube.localScale = new Vector3(2.5f, factor, 3.65f);
 
         Vector3 stackPosition = cardStackCube.position;
