@@ -2638,7 +2638,19 @@ MonoBehaviour:
   m_Group: {fileID: 0}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 389481053}
+        m_TargetAssemblyTypeName: OptionsManager, Assembly-CSharp
+        m_MethodName: ToggleFullscreen
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_IsOn: 1
 --- !u!1 &164579064
 GameObject:
@@ -2652,7 +2664,7 @@ GameObject:
   - component: {fileID: 164579067}
   - component: {fileID: 164579066}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Music
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4918,6 +4930,7 @@ GameObject:
   - component: {fileID: 389481050}
   - component: {fileID: 389481051}
   - component: {fileID: 389481052}
+  - component: {fileID: 389481053}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -5073,6 +5086,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pingText: {fileID: 513237532}
   regionsDropdown: {fileID: 961942824}
+--- !u!114 &389481053
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 389481044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8e5dbe6199590d46b91a2dc8e68bfd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  musicSlider: {fileID: 1851920125}
+  sfxSlider: {fileID: 1522964156}
+  musicImage: {fileID: 164579066}
+  sfxImage: {fileID: 2077344473}
+  resolutionsDropdown: {fileID: 1294719212}
+  fullscreenToggle: {fileID: 159835230}
+  applyButton: {fileID: 1086598964}
+  fullscreenToggleImages:
+  - {fileID: 21300000, guid: 6f26dea637bfa984593926daabc27548, type: 3}
+  - {fileID: 21300000, guid: a9a646cc8935a4c4aad17ba39691316b, type: 3}
+  musicEnabledImages:
+  - {fileID: 21300000, guid: 3710ab32e0ef20248831ec042f19915e, type: 3}
+  - {fileID: 21300000, guid: bf4f1f0ebbd2d7e4ba8b2ddde413688f, type: 3}
+  sfxEnabledImages:
+  - {fileID: 21300000, guid: c70910ada8adde342ae62a20821c864b, type: 3}
+  - {fileID: 21300000, guid: ee912b3c71cc0014085c5ced7cf72162, type: 3}
 --- !u!1 &405815023
 GameObject:
   m_ObjectHideFlags: 0
@@ -5976,12 +6017,14 @@ MonoBehaviour:
     volume: 0.75
     pitch: 1
     loop: 0
+    isSFX: 1
     source: {fileID: 0}
   - name: ButtonClickSound
     clip: {fileID: 8300000, guid: 2dcfcc6a1f82b574b977897478eeb78b, type: 3}
     volume: 1
     pitch: 1
     loop: 0
+    isSFX: 1
     source: {fileID: 0}
 --- !u!1 &481727402
 GameObject:
@@ -6894,8 +6937,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 32
-  m_fontSizeBase: 32
+  m_fontSize: 24
+  m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -6960,7 +7003,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 730, y: 90}
+  m_AnchoredPosition: {x: 747, y: 35}
   m_SizeDelta: {x: 265.75, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &515336201
@@ -8756,7 +8799,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 780843341}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 389481053}
+        m_TargetAssemblyTypeName: OptionsManager, Assembly-CSharp
+        m_MethodName: SetDefaultSettings
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &780843341
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10105,7 +10160,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -127.2, y: -225}
+  m_AnchoredPosition: {x: -229, y: -280}
   m_SizeDelta: {x: 107.9, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &961942824
@@ -10158,9 +10213,9 @@ MonoBehaviour:
   m_Value: 0
   m_Options:
     m_Options:
-    - m_Text: US
-      m_Image: {fileID: 0}
     - m_Text: EU
+      m_Image: {fileID: 0}
+    - m_Text: US
       m_Image: {fileID: 0}
     - m_Text: ASIA
       m_Image: {fileID: 0}
@@ -10170,7 +10225,7 @@ MonoBehaviour:
       - m_Target: {fileID: 389481052}
         m_TargetAssemblyTypeName: RegionManager, Assembly-CSharp
         m_MethodName: ChangeRegion
-        m_Mode: 3
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -11544,7 +11599,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1086598965}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 389481053}
+        m_TargetAssemblyTypeName: OptionsManager, Assembly-CSharp
+        m_MethodName: SaveSettings
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1086598965
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13218,7 +13285,19 @@ MonoBehaviour:
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 389481053}
+        m_TargetAssemblyTypeName: OptionsManager, Assembly-CSharp
+        m_MethodName: ChangeResolution
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_AlphaFadeSpeed: 0.15
 --- !u!114 &1294719213
 MonoBehaviour:
@@ -15964,7 +16043,19 @@ MonoBehaviour:
   m_Value: 0.521
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 389481053}
+        m_TargetAssemblyTypeName: OptionsManager, Assembly-CSharp
+        m_MethodName: ChangeSFXVolume
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1537336471
 GameObject:
   m_ObjectHideFlags: 0
@@ -16585,7 +16676,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 170, y: 90}
+  m_AnchoredPosition: {x: 149, y: 35}
   m_SizeDelta: {x: 265.75, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1577197606
@@ -16635,8 +16726,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 32
-  m_fontSizeBase: 32
+  m_fontSize: 24
+  m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -18729,7 +18820,19 @@ MonoBehaviour:
   m_Value: 0.521
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 389481053}
+        m_TargetAssemblyTypeName: OptionsManager, Assembly-CSharp
+        m_MethodName: ChangeMusicVolume
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1861241787
 GameObject:
   m_ObjectHideFlags: 0
@@ -19519,7 +19622,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: US
+  m_text: EU
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -19546,8 +19649,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 32
-  m_fontSizeBase: 32
+  m_fontSize: 24
+  m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -20855,7 +20958,7 @@ GameObject:
   - component: {fileID: 2077344474}
   - component: {fileID: 2077344473}
   m_Layer: 5
-  m_Name: Image
+  m_Name: SFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

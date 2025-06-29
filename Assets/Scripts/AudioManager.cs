@@ -8,6 +8,9 @@ public class AudioManager : MonoBehaviour {
 
     public static AudioManager instance;
 
+    public static float musicVolume;
+    public static float sfxVolume;
+
     private void Awake() {
         if (instance == null) instance = this;
         else {
@@ -23,6 +26,13 @@ public class AudioManager : MonoBehaviour {
             s.source.volume = s.volume;
             s.source.pitch = s.pitch;
             s.source.loop = s.loop;
+        }
+    }
+
+    public static void UpdateVolumes() {
+        foreach(Sound s in instance.sounds) {
+            float multiplier = (s.isSFX) ? sfxVolume : musicVolume;
+            s.source.volume = s.volume * multiplier;
         }
     }
 
