@@ -44,6 +44,8 @@ public class Player : MonoBehaviour {
         GameManager.FinishedPlayers.Add(this);
         finished = true;
 
+        playerPanel.ActivateMedal(this, GameManager.FinishedPlayers.Count - 1);
+
         PlayerManager.Players.Remove(this);
         if (PlayerManager.Players.Count <= 1) GameManager.FinishGame();
     }

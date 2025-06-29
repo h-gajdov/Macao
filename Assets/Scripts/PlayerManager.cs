@@ -155,8 +155,6 @@ public class PlayerManager : MonoBehaviour
             Vector3 nowPlayer = positions[playerIdx];
             if (startPlayer.x != nowPlayer.x && startPlayer.z != nowPlayer.z) {
                 float mult = (i == 1) ? -1 : 1;
-                Debug.Log($"Multiplier: {mult}");
-                Debug.Log($"Sub: {i - startIdx}");
                 Players[playerIdx].transform.position += Players[playerIdx].transform.forward * 4f;
                 Players[playerIdx].transform.position += mult * Players[playerIdx].transform.right * 10f;
                 Players[playerIdx].transform.eulerAngles += -mult * Vector3.up * 30f;

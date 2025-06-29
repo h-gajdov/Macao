@@ -20,9 +20,10 @@ public class UIManager : MonoBehaviour {
     public Button takeCards;
     public Button lastCard;
     public Button replenishCardStack;
-    public Button playAgain;
     public TextMeshProUGUI roomCodeText;
     public PhotonView PV;
+
+    public Sprite[] medals;
 
     public static UIManager instance;
 

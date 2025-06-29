@@ -10,10 +10,12 @@ public class PlayerPanel : MonoBehaviour {
     public TextMeshProUGUI username;
     public Image avatarImage;
     public Image timeFrame;
+    public Image medal;
 
     public static int TimeOfTurn = 5; //in seconds
 
     private void Start() {
+        medal.enabled = false;
         timeFrame.fillAmount = 0f;
         //StartCoroutine(StartCountingTime());
     }
@@ -26,6 +28,11 @@ public class PlayerPanel : MonoBehaviour {
 
     public void StartCountingTime() {
         StartCoroutine(StartCountingTime_Coroutine());
+    }
+
+    public void ActivateMedal(Player player, int medalIndex) {
+        medal.enabled = true;
+        medal.sprite = UIManager.instance.medals[medalIndex];
     }
 
     private IEnumerator StartCountingTime_Coroutine() {

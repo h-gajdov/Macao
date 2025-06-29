@@ -39,16 +39,6 @@ public class LobbyManager : MonoBehaviour {
         playButtonText.color = textColor;
     }
 
-    //public static void CheckIfLocalMine(Player p) {
-    //    if(p.PV.Owner == PhotonNetwork.MasterClient) {
-    //        instance.readyButton.gameObject.SetActive(false);
-    //        instance.playButton.gameObject.SetActive(true);
-    //    } else {
-    //        instance.readyButton.gameObject.SetActive(true);
-    //        instance.playButton.gameObject.SetActive(false);
-    //    }
-    //}
-
     public void ReadyToggle() {
         PlayerManager.LocalPlayer.PV.RPC("RPC_ReadyToggle", RpcTarget.AllBuffered);
         readyButton.GetComponentInChildren<TextMeshProUGUI>().text = (PlayerManager.LocalPlayer.ready) ? "Unready" : "Ready";
