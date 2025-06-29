@@ -42,7 +42,7 @@ public class PlayerPanel : MonoBehaviour {
 
         timeFrame.fillAmount = 0f;
         if (GameManager.PlayerOnTurn.PV.IsMine) {
-            if(GameManager.CanPickUpCard) {
+            if (GameManager.CanPickUpCard) {
                 RPCManager.RPC("RPC_PickUpCard", RpcTarget.All);
             }
             RPCManager.RPC("RPC_ChangeTurn", RpcTarget.All);

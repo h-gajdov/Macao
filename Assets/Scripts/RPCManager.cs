@@ -19,8 +19,8 @@ public class RPCManager : MonoBehaviour {
     [PunRPC]
     private void RPC_SetPlayerOnTurn(int value) {
         GameManager.playerTurnIndex = value;
-        GameManager.PlayerOnTurn = PlayerManager.Players[value];
 
+        GameManager.PlayerOnTurn = PlayerManager.Players[value];
         GameManager.PlayerOnTurn.cardArranger.EnableCards();
 
         if (GameManager.PlayerOnTurn.PV.IsMine) UIManager.instance.replenishCardStack.interactable = true;
@@ -100,6 +100,11 @@ public class RPCManager : MonoBehaviour {
     }
 
     [PunRPC]
+    private void RPC_DisableWinningPanel() {
+        UIManager.instance.winningPanel.SetActive(false);
+    }
+
+    [PunRPC]
     private void RPC_ForcePickUp() {
         GameManager.ForcePickUp();
     }
@@ -111,5 +116,28 @@ public class RPCManager : MonoBehaviour {
         Image avatarImage = pLobby.GetComponentInChildren<Image>();
         usernameTMP.text = username;
         avatarImage.sprite = Global.AvatarSprites[avatarIdx];
+    }
+
+    [PunRPC]
+    private void RPC_SyncInitialPlayerList() {
+        GameManager.InitialPlayerList = new List<Player>(PlayerManager.Players);
+    }
+
+    [PunRPC]
+    private void RPC_ResetPlayers() {
+        PlayerManager.Players = GameManager.InitialPlayerList;
+        GameManager.FinishedPlayers.Clear();
+        foreach (Player p in PlayerManager.Players) {
+            p.ResetSettings();
+        }
+
+        foreach(Transform panel in WinningPanelManager.instance.content) {
+            Destroy(panel.gameObject);
+        }
+
+        foreach (Transform card in GameManager.instance.cardsPool) Destroy(card.gameObject);
+
+        CardStackManager.instance.ResetValues();
+        GameManager.instance.ResetValues();
     }
 }

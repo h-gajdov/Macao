@@ -86,6 +86,7 @@ public class RoomManager : MonoBehaviourPunCallbacks {
         if(!GameManager.GameHasStarted) {
             PlayerManager.Players.RemoveAt(index);
             PlayerManager.AssignPositions();
+            UIManager.UpdatePlayersInLobby();
         } else {
             if (GameManager.PlayerOnTurn == leftPlayer) RPCManager.RPC("RPC_ChangeTurn", RpcTarget.All);
 

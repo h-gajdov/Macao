@@ -101,6 +101,7 @@ MonoBehaviour:
   finished: 0
   avatarIdx: 0
   playerInLobbyPanel: {fileID: 0}
+  playerInLeaderboard: {fileID: 0}
   playerPanel: {fileID: 0}
   PV: {fileID: 4190466380377814925}
   cardArranger: {fileID: 4493684548071765861}

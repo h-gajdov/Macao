@@ -3,10 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static UnityEngine.UI.Image;
 
 public class GameManager : MonoBehaviour {
     public static List<Card> CardPoolList = new List<Card>();
     public static List<Player> FinishedPlayers = new List<Player>();
+    public static List<Player> InitialPlayerList = new List<Player>();
 
     public static Player PlayerOnTurn { get; set; }
     public static int playerTurnIndex = 0;
@@ -26,7 +28,7 @@ public class GameManager : MonoBehaviour {
     public static bool GameHasStarted = false;
     public static bool GameHasFinished = false;
 
-    private void ResetValues() {
+    public void ResetValues() {
         CardPoolList = new List<Card>();
         PlayerOnTurn = null;
         playerTurnIndex = 0;
@@ -35,6 +37,7 @@ public class GameManager : MonoBehaviour {
         Locked = false;
         GameHasStarted = false;
         CanPickUpCard = true;
+        GameHasFinished = false;
     }
 
     private static List<Player> Players {
@@ -145,12 +148,19 @@ public class GameManager : MonoBehaviour {
     }
 
     public static void FinishGame() {
-        Debug.Log("GAME FINISHED");
         GameHasFinished = true;
 
+        LobbyManager.ReadyCount = 0;
         UIManager.instance.winningPanel.SetActive(true);
 
-        foreach (Player p in FinishedPlayers) Debug.Log(p.username);
+        foreach (Player p in FinishedPlayers) {
+            p.playerPanel.StopAllCoroutines();
+            p.ready = false;
+        }
+        foreach (Player p in Players) {
+            p.playerPanel.StopAllCoroutines();
+            p.ready = false;
+        }
     }
 
     private void Awake() {
@@ -167,7 +177,7 @@ public class GameManager : MonoBehaviour {
     }
 
     private void Update() {
-        debug = FinishedPlayers;
+        debug = Players;
 
         if(Input.GetKeyDown(KeyCode.G)) {
             PlayerManager.SpawnPlayer();
@@ -197,6 +207,7 @@ public class GameManager : MonoBehaviour {
         RPCManager.RPC("RPC_InitializeAvailabilityOfCards", RpcTarget.AllBuffered);
         RPCManager.RPC("RPC_ForcePickUp", RpcTarget.AllBuffered);
         RPCManager.RPC("RPC_StartCountingTime", RpcTarget.AllBuffered);
+        RPCManager.RPC("RPC_SyncInitialPlayerList", RpcTarget.AllBuffered);
     }
 
     public void DealCards() {
@@ -212,7 +223,7 @@ public class GameManager : MonoBehaviour {
         deck.Remove(last);
 
         int playerOnTurnIdx = Random.Range(0, Players.Count);
-        RPCManager.RPC("RPC_SetPlayerOnTurn", RpcTarget.AllBuffered, playerOnTurnIdx);
+        RPCManager.RPC("RPC_SetPlayerOnTurn", RpcTarget.AllBuffered, 0);
         RPCManager.RPC("RPC_SetUndealtCards", RpcTarget.AllBuffered, deck.ToArray());
         StartCoroutine(DealingAnimation(last));
     }

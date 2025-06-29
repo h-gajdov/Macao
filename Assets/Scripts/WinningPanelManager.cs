@@ -8,6 +8,14 @@ public class WinningPanelManager : MonoBehaviour {
 
     public static WinningPanelManager instance;
 
+    private void Awake() {
+        if (instance == null) instance = this;
+        else {
+            Destroy(this);
+            return;
+        }
+    }
+
     private void OnEnable() {
         int place = 1;
         foreach(Player player in GameManager.FinishedPlayers) {

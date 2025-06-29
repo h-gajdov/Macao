@@ -9,6 +9,7 @@ public class PlayerInLeaderboard : MonoBehaviour
     public TextMeshProUGUI username;
     public Image avatarImage;
     public Image medal;
+    public GameObject readyTick;
 
     public Sprite[] medals;
 
@@ -18,5 +19,6 @@ public class PlayerInLeaderboard : MonoBehaviour
         if (place <= 3) {
             medal.sprite = medals[place - 1];
         } else medal.enabled = false;
+        player.playerInLeaderboard = this;
     }
 }

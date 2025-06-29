@@ -126,23 +126,6 @@ public class CardArranger : MonoBehaviour {
         }
     }
 
-    private void SpaceCards() {
-        int count = transform.childCount;
-        float spacing = Mathf.Min(spaceBetweenCards, maxWidth / (count - 1));
-        float startX = -(spacing * (count - 1)) / 2f;
-
-        int i = 0;
-        foreach(Card cl in cardsInHand) {
-            Transform card = cl.transform;
-            Vector3 currLocalPosition = card.localPosition;
-            Vector3 targetPosition = new Vector3(startX + i++ * spacing, currLocalPosition.y, currLocalPosition.z);
-
-            if (GameMath.SqrDistance(currLocalPosition, targetPosition) > 0.05f * 0.05f)
-                card.localPosition = Vector3.Lerp(currLocalPosition, targetPosition, smoothness * Time.deltaTime);
-            else card.localPosition = targetPosition;
-        }
-    }
-
     public void ArrangeOpponentCards(List<Card> cards, Transform centerPoint, float radius) {
         int count = cards.Count;
         if (count == 0) return;
@@ -173,17 +156,9 @@ public class CardArranger : MonoBehaviour {
             Quaternion rotation = Quaternion.AngleAxis(angle, arcAxis.normalized);
             Vector3 offsetDirection = rotation * centerPoint.forward;
 
-            //Vector3 currPosition = cards[i].transform.position;
-            //Vector3 targetPosition = centerPoint.position + offsetDirection.normalized * radius;
-            //cards[i].transform.position = Vector3.Lerp(currPosition, targetPosition, 10 * Time.deltaTime);
-            //cards[i].transform.LookAt(centerPoint.position);
-            //cards[i].transform.Rotate(0f, 180f, 0f);
-            // World-space calculations for uniformity
-
             Vector3 targetPos = centerPoint.position + offsetDirection * radius;
             Quaternion targetRot = Quaternion.LookRotation(centerPoint.position - targetPos) * Quaternion.Euler(0, 180, 0);
 
-            // Smooth motion
             cards[i].transform.position = Vector3.Lerp(cards[i].transform.position, targetPos, 10f * Time.deltaTime);
             cards[i].transform.rotation = Quaternion.Lerp(cards[i].transform.rotation, targetRot, 10f * Time.deltaTime);
         }

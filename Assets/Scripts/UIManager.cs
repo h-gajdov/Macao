@@ -20,6 +20,7 @@ public class UIManager : MonoBehaviour {
     public Button takeCards;
     public Button lastCard;
     public Button replenishCardStack;
+    public Button playAgain;
     public TextMeshProUGUI roomCodeText;
     public PhotonView PV;
 
@@ -91,9 +92,30 @@ public class UIManager : MonoBehaviour {
         GUIUtility.systemCopyBuffer = roomCodeText.text.Split(' ')[1];
     }
 
+    public void PlayAgain() {
+        PlayerManager.LocalPlayer.PV.RPC("RPC_TogglePlayAgain", RpcTarget.All);
+        bool allReady = true;
+        foreach(Player p in PlayerManager.Players) {
+            if (p.ready) continue;
+            allReady = false;
+            break;
+        }
+        if (!allReady) return;
+
+        RPCManager.RPC("RPC_DisableWinningPanel", RpcTarget.All);
+        RPCManager.RPC("RPC_ResetPlayers", RpcTarget.All);
+        StartCoroutine(WaitTilAllAreReset());
+    }
+
+    private IEnumerator WaitTilAllAreReset() {
+        yield return new WaitForSecondsRealtime(2f);
+        GameManager.instance.DealCards();
+    }
+
     public static void UpdatePlayersInLobby() {
         foreach (Transform child in instance.lobbyContent) Destroy(child.gameObject);
 
+        bool first = true;
         foreach(Player player in PlayerManager.Players) {
             GameObject pLobby = Instantiate(instance.playerInLobbyPrefab, instance.lobbyContent, false);
             PlayerInLobby lobbyObject = pLobby.GetComponent<PlayerInLobby>();
@@ -101,9 +123,17 @@ public class UIManager : MonoBehaviour {
             lobbyObject.username.text = player.username;
             lobbyObject.avatarImage.sprite = Global.AvatarSprites[player.avatarIdx];
 
-            if(player.PV.Owner == PhotonNetwork.MasterClient) {
+            if (first) {
+                if(player.PV.IsMine) {
+                    LobbyManager.instance.readyButton.gameObject.SetActive(false);
+                    LobbyManager.instance.playButton.gameObject.SetActive(true);
+                }
                 lobbyObject.hostText.SetActive(true);
                 player.ready = true;
+                first = false;
+            } else if (player.PV.IsMine) { 
+                LobbyManager.instance.readyButton.gameObject.SetActive(true);
+                LobbyManager.instance.playButton.gameObject.SetActive(false);
             }
             lobbyObject.readyTick.SetActive(player.ready);
         }

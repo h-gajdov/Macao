@@ -11,7 +11,7 @@ public class LobbyManager : MonoBehaviour {
     public Button playButton;
     private TextMeshProUGUI playButtonText;
 
-    public static int ReadyCount { get; private set; }
+    public static int ReadyCount { get; set; }
     public static LobbyManager instance;
 
     private void Awake() {
@@ -39,15 +39,15 @@ public class LobbyManager : MonoBehaviour {
         playButtonText.color = textColor;
     }
 
-    public static void CheckIfLocalMine(Player p) {
-        if(p.PV.Owner == PhotonNetwork.MasterClient) {
-            instance.readyButton.gameObject.SetActive(false);
-            instance.playButton.gameObject.SetActive(true);
-        } else {
-            instance.readyButton.gameObject.SetActive(true);
-            instance.playButton.gameObject.SetActive(false);
-        }
-    }
+    //public static void CheckIfLocalMine(Player p) {
+    //    if(p.PV.Owner == PhotonNetwork.MasterClient) {
+    //        instance.readyButton.gameObject.SetActive(false);
+    //        instance.playButton.gameObject.SetActive(true);
+    //    } else {
+    //        instance.readyButton.gameObject.SetActive(true);
+    //        instance.playButton.gameObject.SetActive(false);
+    //    }
+    //}
 
     public void ReadyToggle() {
         PlayerManager.LocalPlayer.PV.RPC("RPC_ReadyToggle", RpcTarget.AllBuffered);

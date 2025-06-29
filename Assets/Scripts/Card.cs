@@ -111,6 +111,8 @@ public class Card : MonoBehaviour {
     }
 
     public IEnumerator Throw(Player player) {
+        if (GameManager.GameHasFinished) yield break;
+
         thrownByPlayer = player;
         transform.parent = GameManager.instance.cardsPool;
         CanBeThrown = false;
@@ -138,20 +140,20 @@ public class Card : MonoBehaviour {
                 GameManager.ChangeTurn(false);
             }
 
-            if(cardArranger.cardsInHand.Count == 0) player.Finish();
-
             GameManager.SetCurrentCard(this);
             GameManager.ChangeTurn();
+
 
             if (data.value == 7) {
                 SevensAndJokersLogic(2);
             } else if (data.value == 14 || data.value == 15) {
                 SevensAndJokersLogic(4);
             }
+
+            if (cardArranger.cardsInHand.Count == 0) player.Finish();
         }
 
         GameManager.SetCurrentCard(this);
-
     }
 
     private IEnumerator RandomSpinWhenThrowing() {
@@ -194,19 +196,20 @@ public class Card : MonoBehaviour {
 
     private void Update() {
         if (!thrown) {
-            spriteRenderer.sortingOrder = 10 + transform.GetSiblingIndex();
+            spriteRenderer.sortingOrder = 100 + transform.GetSiblingIndex();
             if (cardArranger == null || !cardArranger.player.PV.IsMine) return;
-        } else spriteRenderer.sortingOrder = transform.GetSiblingIndex();
+        }
 
-            initialPosition = (!thrown) ? cardArranger.GetTargetPosition(transform) : Vector3.zero;
+        initialPosition = (!thrown) ? cardArranger.GetTargetPosition(transform) : Vector3.zero;
 
         if (hovered) {
-            Hover(1.5f, 999);
+            Hover(1.5f);
         } else {
-            Hover(0, transform.GetSiblingIndex());
+            Hover(0);
         }
 
         transform.localRotation = Quaternion.Lerp(transform.localRotation, Quaternion.Euler(initialRotation), selectSpeed * Time.deltaTime);
+        if(thrown) spriteRenderer.sortingOrder = transform.GetSiblingIndex();
     }
 
     public void Initialize() {
@@ -248,11 +251,11 @@ public class Card : MonoBehaviour {
         return first + data.suit.ToString()[0];
     }
 
-    private void Hover(float target, int sortLevel) {
+    private void Hover(float target) {
         Vector3 currPosition = transform.localPosition;
         Vector3 targetPosition = new Vector3(initialPosition.x, initialPosition.y, target);
         transform.localPosition = Vector3.Lerp(currPosition, targetPosition, selectSpeed * Time.deltaTime);
-        spriteRenderer.sortingOrder = transform.GetSiblingIndex();
+        spriteRenderer.sortingOrder = 100 + transform.GetSiblingIndex();
     }
 
     public static Suit StringToSuit(string suit) {

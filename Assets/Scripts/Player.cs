@@ -11,6 +11,7 @@ public class Player : MonoBehaviour {
     public bool finished = false;
     [HideInInspector] public int avatarIdx;
     [HideInInspector] public PlayerInLobby playerInLobbyPanel;
+    [HideInInspector] public PlayerInLeaderboard playerInLeaderboard;
     public PlayerPanel playerPanel;
 
     public PhotonView PV;
@@ -26,8 +27,17 @@ public class Player : MonoBehaviour {
         if (PV.IsMine) {
             PlayerManager.LocalPlayer = this;
             PV.RPC("RPC_SpawnPlayer", RpcTarget.AllBuffered, PlayerPrefs.GetString("Username"), PlayerPrefs.GetInt("AvatarIndex"));
-            LobbyManager.CheckIfLocalMine(this);
         }
+    }
+
+    public void ResetSettings() {
+        finished = false;
+        ready = false;
+        foreach (Transform card in cardArranger.transform)
+            Destroy(card.gameObject);
+
+        playerPanel.StopAllCoroutines();
+        cardArranger.cardsInHand.Clear();
     }
 
     public void Finish() {
@@ -81,5 +91,11 @@ public class Player : MonoBehaviour {
     private void RPC_ReadyToggle() {
         ready = !ready;
         playerInLobbyPanel.readyTick.SetActive(ready);
+    }
+
+    [PunRPC]
+    private void RPC_TogglePlayAgain() {
+        ready = !ready;
+        playerInLeaderboard.readyTick.SetActive(ready);
     }
 }

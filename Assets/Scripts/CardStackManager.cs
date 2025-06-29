@@ -35,6 +35,7 @@ public class CardStackManager : MonoBehaviour {
     }
 
     public void PickUpCard(bool forced = false) {
+        if (GameManager.GameHasFinished) return;
         if (!forced && !GameManager.CanPickUpCard) return;
         if(!forced) GameManager.CanPickUpCard = false;
 
