@@ -10,7 +10,19 @@ public class MainMenuManager : MonoBehaviour {
     public GameObject playPanel;
     public GameObject howToPlayPanel;
     public GameObject aboutPanel;
+    public GameObject errorPanel;
+    public TextMeshProUGUI errorText;
     public TMP_InputField joinRoomField;
+
+    public static MainMenuManager instance;
+
+    private void Awake() {
+        if (instance == null) instance = this;
+        else {
+            Destroy(this);
+            return;
+        }
+    }
 
     private void Start() {
         Global.Initialize();
@@ -34,7 +46,7 @@ public class MainMenuManager : MonoBehaviour {
 
     public void HostGame() {
         if (!PhotonNetwork.InLobby) {
-            Debug.LogError("Not in a lobby!"); //TODO: Error validation show it to the player
+            SetError("You still haven't connected to a lobby! Wait or check your internet connection!");
             return;
         }
 
@@ -47,9 +59,19 @@ public class MainMenuManager : MonoBehaviour {
         LoadingScreenManager.instance.StartLoading(true);
     }
 
+    public void SetError(string msg) {
+        errorPanel.SetActive(true);
+        errorText.text = msg;
+    }
+
     public void JoinGame() {
         if (!PhotonNetwork.InLobby) {
-            Debug.LogError("Not in a lobby!"); //TODO: Error validation show it to the player
+            SetError("You still haven't connected to a lobby! Wait or check your internet connection!");
+            return;
+        }
+
+        if(joinRoomField.text.Length == 0) {
+            SetError("Enter code of room!");
             return;
         }
 

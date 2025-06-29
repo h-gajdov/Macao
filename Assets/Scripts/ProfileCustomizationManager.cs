@@ -86,6 +86,12 @@ public class ProfileCustomizationManager : MonoBehaviour {
     }
 
     private void SetUsername(string username) {
+        if(username.Length < 3) {
+            MainMenuManager.instance.SetError("Your username should containt at least 3 and a maximum of 23 characters");
+            usernameInput.text = PlayerPrefs.GetString("Username");
+            return;
+        }
+
         usernameInput.text = username;
         PlayerPrefs.SetString("Username", username);
         PlayerPrefs.Save();

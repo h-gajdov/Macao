@@ -1,3 +1,5 @@
+using Photon.Chat.Demo;
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -43,6 +45,8 @@ public class LoadingScreenManager : MonoBehaviour
         mainMenuContent.SetActive(false);
         loadingScreen.SetActive(true);
 
+        StartCoroutine(WaitForTimeout());
+
         if (hostingGame) joiningRoomTMPBase = "Hosting Room";
         joiningRoomTMP.text = joiningRoomTMPBase;
     }
@@ -58,5 +62,14 @@ public class LoadingScreenManager : MonoBehaviour
         string dots = new string('.', dotCount);
         joiningRoomTMP.text = joiningRoomTMPBase + dots;
         loadingPlaceholderText.text = "Loading" + dots;
+    }
+
+    private IEnumerator WaitForTimeout() {
+        yield return new WaitForSecondsRealtime(30f);
+        MainMenuManager.instance.SetError("Connection time out!");
+        mainMenuContent.SetActive(true);
+        loadingScreen.SetActive(false);
+        PhotonNetwork.Disconnect();
+        PhotonNetwork.ConnectUsingSettings();
     }
 }
