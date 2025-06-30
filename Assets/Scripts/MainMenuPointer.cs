@@ -26,7 +26,8 @@ public class MainMenuPointer : MonoBehaviour {
             GameObject curr = result.gameObject;
             if (prevHoveredObject == curr) break;
 
-            if (curr.GetComponent<Button>() != null && prevHoveredObject != curr) {
+            Button btn = curr.GetComponent<Button>();
+            if (btn != null && btn.interactable && prevHoveredObject != curr) {
                 AudioManager.Play("ButtonHoverSound");
                 prevHoveredObject = curr;
                 break;

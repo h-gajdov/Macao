@@ -31,6 +31,9 @@ public class MainMenuManager : MonoBehaviour {
     private void Start() {
         Global.Initialize();
         DisableAllPanels();
+
+        AudioManager.Play("MainSong");
+        AudioManager.ChangeVolume("MainSong", 1f);
     }
 
     public void Quit() {

@@ -36,12 +36,26 @@ public class AudioManager : MonoBehaviour {
         }
     }
 
-    public static void Play(string name) {
+    public static Sound FindSound(string name) {
         Sound s = Array.Find(instance.sounds, sound => sound.name == name);
+        if (s == null) {
+            Debug.LogWarning($"Sound: {name} not found!");
+        }
+        return s;
+    }
+
+    public static void Play(string name) {
+        Sound s = FindSound(name);
         if(s == null) {
             Debug.LogWarning($"Sound: {name} not found!");
             return;
         }
         s.source.Play();
+    }
+
+    public static void ChangeVolume(string name, float volume) {
+        Sound s = FindSound(name);
+        s.volume = volume;
+        UpdateVolumes();
     }
 }

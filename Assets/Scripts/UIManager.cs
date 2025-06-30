@@ -38,6 +38,10 @@ public class UIManager : MonoBehaviour {
         }
     }
 
+    private void Start() {
+        AudioManager.ChangeVolume("MainSong", 0.25f);
+    }
+
     public void ChangeSuit(string suit) {
         PV.RPC("RPC_ChangeSuit", RpcTarget.AllBuffered, suit);
     }

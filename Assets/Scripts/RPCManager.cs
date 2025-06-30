@@ -19,6 +19,8 @@ public class RPCManager : MonoBehaviour {
 
     [PunRPC]
     private void RPC_SetPlayerOnTurn(int value) {
+        AudioManager.Play("ShuffelingDeck");
+
         GameManager.playerTurnIndex = value;
 
         GameManager.PlayerOnTurn = PlayerManager.Players[value];

@@ -82,6 +82,7 @@ public class Card : MonoBehaviour {
     CardArranger cardArranger;
     Vector3 initialPosition;
     Vector3 initialRotation;
+    bool soundPlayed = false;
 
     private void OnValidate() {
         if (!Global.CardFaces.ContainsKey(GetValueString())) return;
@@ -112,6 +113,8 @@ public class Card : MonoBehaviour {
 
     public IEnumerator Throw(Player player) {
         if (GameManager.GameHasFinished) yield break;
+
+        AudioManager.Play("ThrowingCard");
 
         thrownByPlayer = player;
         transform.parent = GameManager.instance.cardsPool;
@@ -203,9 +206,12 @@ public class Card : MonoBehaviour {
         initialPosition = (!thrown) ? cardArranger.GetTargetPosition(transform) : Vector3.zero;
 
         if (hovered) {
+            if (!soundPlayed) AudioManager.Play("CardHover");
             Hover(1.5f);
+            soundPlayed = true;
         } else {
             Hover(0);
+            soundPlayed = false;
         }
 
         transform.localRotation = Quaternion.Lerp(transform.localRotation, Quaternion.Euler(initialRotation), selectSpeed * Time.deltaTime);

@@ -7040,6 +7040,34 @@ MonoBehaviour:
     loop: 0
     isSFX: 1
     source: {fileID: 0}
+  - name: MainSong
+    clip: {fileID: 8300000, guid: 014ce3ef375c3994ba1359fdbc1ac2e2, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 1
+    isSFX: 0
+    source: {fileID: 0}
+  - name: CardHover
+    clip: {fileID: 8300000, guid: ffd1a378a6df10a488d575532ce05b21, type: 3}
+    volume: 0.25
+    pitch: 1
+    loop: 0
+    isSFX: 1
+    source: {fileID: 0}
+  - name: ThrowingCard
+    clip: {fileID: 8300000, guid: 2dcfcc6a1f82b574b977897478eeb78b, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    isSFX: 1
+    source: {fileID: 0}
+  - name: ShuffelingDeck
+    clip: {fileID: 8300000, guid: a886993a4faa7b644b1b08a69a8fd579, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    isSFX: 1
+    source: {fileID: 0}
 --- !u!1 &481727402
 GameObject:
   m_ObjectHideFlags: 0
