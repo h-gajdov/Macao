@@ -24,7 +24,7 @@ public static class Global {
     public static Texture BackFace;
 
     public static string[] AvailableLanguages = {
-        "Macedonian", "English"
+        "Македонски", "English"
     };
 
     public static void Initialize() {

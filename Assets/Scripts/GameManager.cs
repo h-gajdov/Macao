@@ -219,8 +219,6 @@ public class GameManager : MonoBehaviour {
 
         for (int i = 0; i < NumberOfDecks; i++) deck.AddRange(ShuffleCards());
 
-        RPCManager.RPC("DebugPrint", RpcTarget.All, deck.ToArray());
-
         foreach (Player p in Players) {
             map.Add(p, new List<CardData>());
         }
@@ -229,7 +227,7 @@ public class GameManager : MonoBehaviour {
         deck.Remove(last);
 
         int playerOnTurnIdx = Random.Range(0, Players.Count);
-        RPCManager.RPC("RPC_SetPlayerOnTurn", RpcTarget.AllBuffered, 0);
+        RPCManager.RPC("RPC_SetPlayerOnTurn", RpcTarget.AllBuffered, playerOnTurnIdx);
         RPCManager.RPC("RPC_SetUndealtCards", RpcTarget.AllBuffered, deck.ToArray());
         StartCoroutine(DealingAnimation(last));
     }

@@ -1,0 +1,135 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: MainMenu Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: MainMenu
+  m_TableCollectionNameGuidString: 0128cf6f30a0c534dbb755d1c0877fc1
+  m_Entries:
+  - m_Id: 31081132032
+    m_Key: Play_Button
+    m_Metadata:
+      m_Items: []
+  - m_Id: 33991979008
+    m_Key: Options_Button
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39733981184
+    m_Key: How_To_Play_Button
+    m_Metadata:
+      m_Items: []
+  - m_Id: 48487493632
+    m_Key: About_Button
+    m_Metadata:
+      m_Items: []
+  - m_Id: 51574501376
+    m_Key: Quit_Button
+    m_Metadata:
+      m_Items: []
+  - m_Id: 185596741185536
+    m_Key: Play_Header
+    m_Metadata:
+      m_Items: []
+  - m_Id: 185625396670464
+    m_Key: Host_Game_Button
+    m_Metadata:
+      m_Items: []
+  - m_Id: 186000434556928
+    m_Key: Join_Game_Button
+    m_Metadata:
+      m_Items: []
+  - m_Id: 186162603126784
+    m_Key: Number_Of_Decks
+    m_Metadata:
+      m_Items: []
+  - m_Id: 186226322993152
+    m_Key: Time_Per_Turn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 186300780277760
+    m_Key: Enter_Code_Placeholder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 186370640605184
+    m_Key: Change_Region_Text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 186432313651200
+    m_Key: Ping
+    m_Metadata:
+      m_Items: []
+  - m_Id: 186505567170560
+    m_Key: Back_Button
+    m_Metadata:
+      m_Items: []
+  - m_Id: 212230709997568
+    m_Key: Profile_Customization_Button
+    m_Metadata:
+      m_Items: []
+  - m_Id: 212577495052288
+    m_Key: Username_Text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 212629101768704
+    m_Key: Enter_Username_Placeholder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 213636338708480
+    m_Key: Avatars_Header
+    m_Metadata:
+      m_Items: []
+  - m_Id: 218258860175360
+    m_Key: Options_Header
+    m_Metadata:
+      m_Items: []
+  - m_Id: 218286680993792
+    m_Key: Resolution_Text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 218363583557632
+    m_Key: Fullscreen_Text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 218421431398400
+    m_Key: Reset_To_Default_Button
+    m_Metadata:
+      m_Items: []
+  - m_Id: 218474652921856
+    m_Key: Apply_Button
+    m_Metadata:
+      m_Items: []
+  - m_Id: 224591185473536
+    m_Key: About_Header
+    m_Metadata:
+      m_Items: []
+  - m_Id: 224680104718336
+    m_Key: About_Text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 239965817827328
+    m_Key: How_To_Play_Header
+    m_Metadata:
+      m_Items: []
+  - m_Id: 240083560329216
+    m_Key: How_To_Play_Text
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    id: 0
+  references:
+    version: 1
+    00000000:
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1751223295878

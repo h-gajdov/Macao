@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.Localization.Settings;
 
 public class LanguagesManager : MonoBehaviour
 {
@@ -15,6 +16,13 @@ public class LanguagesManager : MonoBehaviour
 
     private void Start() {
         languagesPanel.SetActive(false);
+        if (!PlayerPrefs.HasKey("Language"))
+            ChangeLanguage(0);
+        else {
+            SelectedLanguage = PlayerPrefs.GetString("SelectedLanguageHash");
+            selectedLanguageImage.sprite = Global.CountryFlags[SelectedLanguage];
+            ChangeLanguage(PlayerPrefs.GetInt("Language"));
+        }
     }
 
     public void OpenLanguages() {
@@ -39,5 +47,11 @@ public class LanguagesManager : MonoBehaviour
         languagesPanel.SetActive(false);
         selectedLanguageImage.sprite = Global.CountryFlags[SelectedLanguage];
         languagesOpen = false;
+        PlayerPrefs.SetString("SelectedLanguageHash", SelectedLanguage);
+    }
+
+    public void ChangeLanguage(int index) {
+        LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[index];
+        PlayerPrefs.SetInt("Language", index);
     }
 }

@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
 
 public class RegionManager : MonoBehaviour {
     public TextMeshProUGUI pingText;
@@ -25,7 +27,10 @@ public class RegionManager : MonoBehaviour {
     }
 
     private void Update() {
-        pingText.text = $"Ping: {PhotonNetwork.GetPing()}";
+        if (LocalizationSettings.SelectedLocale == LocalizationSettings.AvailableLocales.Locales[0])
+            pingText.text = $"Ping: {PhotonNetwork.GetPing()}";
+        else
+            pingText.text = $"Пинг: {PhotonNetwork.GetPing()}";
     }
 
     public void ChangeRegion() {

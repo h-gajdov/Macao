@@ -1,0 +1,152 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: MainMenu_en
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: 0128cf6f30a0c534dbb755d1c0877fc1, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 31081132032
+    m_Localized: PLAY
+    m_Metadata:
+      m_Items: []
+  - m_Id: 33991979008
+    m_Localized: OPTIONS
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39733981184
+    m_Localized: HOW TO PLAY
+    m_Metadata:
+      m_Items: []
+  - m_Id: 48487493632
+    m_Localized: ABOUT
+    m_Metadata:
+      m_Items: []
+  - m_Id: 51574501376
+    m_Localized: QUIT
+    m_Metadata:
+      m_Items: []
+  - m_Id: 185596741185536
+    m_Localized: Play
+    m_Metadata:
+      m_Items: []
+  - m_Id: 185625396670464
+    m_Localized: Host a Game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 186000434556928
+    m_Localized: Join a Game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 186162603126784
+    m_Localized: Number of decks
+    m_Metadata:
+      m_Items: []
+  - m_Id: 186226322993152
+    m_Localized: 'Time per turn
+
+      (seconds)'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 186300780277760
+    m_Localized: Enter code...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 186370640605184
+    m_Localized: 'Change Region:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 186432313651200
+    m_Localized: 'Ping:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 186505567170560
+    m_Localized: Back
+    m_Metadata:
+      m_Items: []
+  - m_Id: 212230709997568
+    m_Localized: Profile Customization
+    m_Metadata:
+      m_Items: []
+  - m_Id: 212577495052288
+    m_Localized: 'Username:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 212629101768704
+    m_Localized: Enter username...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 213636338708480
+    m_Localized: Avatars
+    m_Metadata:
+      m_Items: []
+  - m_Id: 218258860175360
+    m_Localized: Options
+    m_Metadata:
+      m_Items: []
+  - m_Id: 218286680993792
+    m_Localized: 'Resolution:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 218363583557632
+    m_Localized: 'Fullscreen:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 218421431398400
+    m_Localized: Reset to default
+    m_Metadata:
+      m_Items: []
+  - m_Id: 218474652921856
+    m_Localized: Apply
+    m_Metadata:
+      m_Items: []
+  - m_Id: 224591185473536
+    m_Localized: About
+    m_Metadata:
+      m_Items: []
+  - m_Id: 224680104718336
+    m_Localized: 'Macao is a digital adaptation of the classic card game, developed
+      as a student project at the Faculty of Computer Science and Engineering. Built
+      in Unity, the game features multiplayer functionality using Photon API, allowing
+      players to connect and play together online in real time.
+
+
+      Players can
+      create custom profiles with names and avatars, and the goal is to simulate
+      the experience of the physical card game while making it accessible anytime
+      and from anywhere. The project demonstrates skills in game development, networking,
+      and UI/UX design.
+
+
+      Developed by: Hristijan Gajdov'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 239965817827328
+    m_Localized: How to Play
+    m_Metadata:
+      m_Items: []
+  - m_Id: 240083560329216
+    m_Localized: "Goal of the game:\n\tBe the first to get rid of all cards\n\nStarting
+      the game:\n\tEach player starts with 7 cards\n\tThe last card of the remaining
+      deck is placed as the starting card\n\tThe rest form the draw pile.\n\nTaking
+      turns:\n\tOn your turn play 1 card that matches the suit or the value of the
+      top card\n\tIf you cannot play you must draw one card from the pile\n\nSpecial
+      cards:\n\t7 - Next player draws 2 (stackable unless they play 7 or Joker).\n\n\n\tJoker
+      \u2013 Next player draws 4 (unless they have 7 or Joker).\n\n\n\t8 \u2013 Skips
+      the next player\u2019s turn.\n\n\n\tJacks - allow changing of suit.\n\t"
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 1

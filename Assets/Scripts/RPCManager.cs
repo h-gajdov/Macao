@@ -28,13 +28,6 @@ public class RPCManager : MonoBehaviour {
     }
 
     [PunRPC]
-    private void DebugPrint(string[] deck) {
-        Debug.LogError("Number of cards: " + deck.Length);
-
-        foreach (var str in deck) Debug.LogError(str);
-    }
-
-    [PunRPC]
     private void RPC_StartCountingTime() {
         GameManager.PlayerOnTurn.playerPanel.StartCountingTime();
     }
