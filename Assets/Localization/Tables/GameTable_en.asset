@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
-  m_Name: MainMenu_en
+  m_Name: GameTable_en
   m_EditorClassIdentifier: 
   m_LocaleId:
     m_Code: en
@@ -146,6 +146,70 @@ MonoBehaviour:
       cards:\n\t7 - Next player draws 2 (stackable unless they play 7 or Joker).\n\n\n\tJoker
       \u2013 Next player draws 4 (unless they have 7 or Joker).\n\n\n\t8 \u2013 Skips
       the next player\u2019s turn.\n\n\n\tJacks - allow changing of suit.\n\t"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 268994226712576
+    m_Localized: Lobby
+    m_Metadata:
+      m_Items: []
+  - m_Id: 269040464719872
+    m_Localized: Quit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 269061738229760
+    m_Localized: Ready
+    m_Metadata:
+      m_Items: []
+  - m_Id: 269081904443392
+    m_Localized: 'Code:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 269215652409344
+    m_Localized: Play
+    m_Metadata:
+      m_Items: []
+  - m_Id: 271582179389440
+    m_Localized: PAUSED
+    m_Metadata:
+      m_Items: []
+  - m_Id: 271653918765056
+    m_Localized: RESUME
+    m_Metadata:
+      m_Items: []
+  - m_Id: 271715424038912
+    m_Localized: RETURN TO MENU
+    m_Metadata:
+      m_Items: []
+  - m_Id: 272648409214976
+    m_Localized: Leaderboard
+    m_Metadata:
+      m_Items: []
+  - m_Id: 272694173265920
+    m_Localized: Play Again
+    m_Metadata:
+      m_Items: []
+  - m_Id: 275179948503040
+    m_Localized: Skip Turn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 275226626912256
+    m_Localized: Last Card
+    m_Metadata:
+      m_Items: []
+  - m_Id: 275268771278848
+    m_Localized: Take Cards
+    m_Metadata:
+      m_Items: []
+  - m_Id: 275312425594880
+    m_Localized: Replenish
+    m_Metadata:
+      m_Items: []
+  - m_Id: 277090370088960
+    m_Localized: Host
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280216904953856
+    m_Localized: Error
     m_Metadata:
       m_Items: []
   references:

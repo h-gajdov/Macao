@@ -1,9 +1,10 @@
-using Photon.Pun;
+﻿using Photon.Pun;
 using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
+using UnityEngine.Localization.Settings;
 
 public class MainMenuManager : MonoBehaviour {
     public GameObject optionsPanel;
@@ -49,7 +50,10 @@ public class MainMenuManager : MonoBehaviour {
 
     public void HostGame() {
         if (!PhotonNetwork.InLobby) {
-            SetError("You still haven't connected to a lobby! Wait or check your internet connection!");
+            if ((LocalizationSettings.SelectedLocale == LocalizationSettings.AvailableLocales.Locales[0]))
+                SetError("You still haven't connected to a lobby! Wait or check your internet connection!");
+            else 
+                SetError("Сe уште не сте се поврзале со лоби! Почекајте или проверете ја вашата интернет конекција!");
             return;
         }
 
@@ -81,12 +85,18 @@ public class MainMenuManager : MonoBehaviour {
 
     public void JoinGame() {
         if (!PhotonNetwork.InLobby) {
-            SetError("You still haven't connected to a lobby! Wait or check your internet connection!");
+            if ((LocalizationSettings.SelectedLocale == LocalizationSettings.AvailableLocales.Locales[0]))
+                SetError("You still haven't connected to a lobby! Wait or check your internet connection!");
+            else
+                SetError("Сe уште не сте се поврзале со лоби! Почекајте или проверете ја вашата интернет конекција!");
             return;
         }
 
         if(joinRoomField.text.Length == 0) {
-            SetError("Enter code of room!");
+            if (LocalizationSettings.SelectedLocale == LocalizationSettings.AvailableLocales.Locales[0])
+                SetError("Enter code of room!");
+            else 
+                SetError("Внеси код на соба!");
             return;
         }
 

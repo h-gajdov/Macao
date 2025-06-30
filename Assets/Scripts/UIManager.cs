@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour {
@@ -141,7 +142,9 @@ public class UIManager : MonoBehaviour {
     }
 
     public static void SetRoomCode(string code) {
-        instance.roomCodeText.text = "Code: " + code;
+        if (LocalizationSettings.SelectedLocale == LocalizationSettings.AvailableLocales.Locales[0])
+            instance.roomCodeText.text = "Code: " + code;
+        else instance.roomCodeText.text = "Код: " + code;
     }
 
     public IEnumerator WaitForLastCardButtonPress() {

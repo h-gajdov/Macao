@@ -281,10 +281,6 @@ MonoBehaviour:
   avatarImage: {fileID: 8721955037273587723}
   medal: {fileID: 9094261000949548027}
   readyTick: {fileID: 4214286001843195392}
-  medals:
-  - {fileID: 21300000, guid: 6989ceed86966924a8b8462df46010ba, type: 3}
-  - {fileID: 21300000, guid: f01995576abfa8744a353f26428223ef, type: 3}
-  - {fileID: 21300000, guid: 05c400f295e35d64296ce0368f77bc4f, type: 3}
 --- !u!1 &8721955037461323798
 GameObject:
   m_ObjectHideFlags: 0
@@ -352,8 +348,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: FragileDino514
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: fc756e3ee8250f049a6e92979698da9c, type: 2}
-  m_sharedMaterial: {fileID: -2862214941303641663, guid: fc756e3ee8250f049a6e92979698da9c, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f562d1f33fa4c2c4388907d9e2fbf94b, type: 2}
+  m_sharedMaterial: {fileID: -2371565952024743149, guid: f562d1f33fa4c2c4388907d9e2fbf94b, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

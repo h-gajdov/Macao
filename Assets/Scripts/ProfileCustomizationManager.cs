@@ -1,8 +1,9 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
-using TMPro;
 
 public class ProfileCustomizationManager : MonoBehaviour {
     public Image arrowImage;
@@ -87,7 +88,10 @@ public class ProfileCustomizationManager : MonoBehaviour {
 
     private void SetUsername(string username) {
         if(username.Length < 3) {
-            MainMenuManager.instance.SetError("Your username should containt at least 3 and a maximum of 23 characters");
+            if (LocalizationSettings.SelectedLocale == LocalizationSettings.AvailableLocales.Locales[0])
+                MainMenuManager.instance.SetError("Your username should containt at least 3 and a maximum of 23 characters");
+            else
+                MainMenuManager.instance.SetError("Вашето корисничко име треба да содржи најмалку 3 и максимум 23 знаци");
             usernameInput.text = PlayerPrefs.GetString("Username");
             return;
         }

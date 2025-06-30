@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6840559009240529094}
   - component: {fileID: 4658745236030327472}
   - component: {fileID: 5045435581110733795}
+  - component: {fileID: 6886473375711789866}
   m_Layer: 5
   m_Name: HostText
   m_TagString: Untagged
@@ -67,8 +68,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: (Host)
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: fc756e3ee8250f049a6e92979698da9c, type: 2}
-  m_sharedMaterial: {fileID: -2862214941303641663, guid: fc756e3ee8250f049a6e92979698da9c, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f562d1f33fa4c2c4388907d9e2fbf94b, type: 2}
+  m_sharedMaterial: {fileID: -2371565952024743149, guid: f562d1f33fa4c2c4388907d9e2fbf94b, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -131,9 +132,48 @@ MonoBehaviour:
   m_margin: {x: 10, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &6886473375711789866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6134156266637828263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:0128cf6f30a0c534dbb755d1c0877fc1
+    m_TableEntryReference:
+      m_KeyId: 277090370088960
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5045435581110733795}
+        m_TargetAssemblyTypeName: TMPro.TMP_Text, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  references:
+    version: 1
 --- !u!1 &8239861235741248755
 GameObject:
   m_ObjectHideFlags: 0
@@ -257,8 +297,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: FearsomeBuffalo123
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: fc756e3ee8250f049a6e92979698da9c, type: 2}
-  m_sharedMaterial: {fileID: -2862214941303641663, guid: fc756e3ee8250f049a6e92979698da9c, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f562d1f33fa4c2c4388907d9e2fbf94b, type: 2}
+  m_sharedMaterial: {fileID: -2371565952024743149, guid: f562d1f33fa4c2c4388907d9e2fbf94b, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

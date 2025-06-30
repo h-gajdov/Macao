@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
-  m_Name: MainMenu Shared Data
+  m_Name: GameTable Shared Data
   m_EditorClassIdentifier: 
-  m_TableCollectionName: MainMenu
+  m_TableCollectionName: GameTable
   m_TableCollectionNameGuidString: 0128cf6f30a0c534dbb755d1c0877fc1
   m_Entries:
   - m_Id: 31081132032
@@ -121,6 +121,74 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 240083560329216
     m_Key: How_To_Play_Text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 268994226712576
+    m_Key: Lobby_Header
+    m_Metadata:
+      m_Items: []
+  - m_Id: 269040464719872
+    m_Key: 'Quit_Button
+
+'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 269061738229760
+    m_Key: Ready_Button
+    m_Metadata:
+      m_Items: []
+  - m_Id: 269081904443392
+    m_Key: Code_Text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 269215652409344
+    m_Key: 'Play_Button
+
+'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 271582179389440
+    m_Key: Pause_Header
+    m_Metadata:
+      m_Items: []
+  - m_Id: 271653918765056
+    m_Key: Resume_Button
+    m_Metadata:
+      m_Items: []
+  - m_Id: 271715424038912
+    m_Key: Return_To_Menu_Button
+    m_Metadata:
+      m_Items: []
+  - m_Id: 272648409214976
+    m_Key: Leaderboard_Header
+    m_Metadata:
+      m_Items: []
+  - m_Id: 272694173265920
+    m_Key: Play_Again_Button
+    m_Metadata:
+      m_Items: []
+  - m_Id: 275179948503040
+    m_Key: Skip_Turn_Button
+    m_Metadata:
+      m_Items: []
+  - m_Id: 275226626912256
+    m_Key: Last_Card_Button
+    m_Metadata:
+      m_Items: []
+  - m_Id: 275268771278848
+    m_Key: Take_Cards_Button
+    m_Metadata:
+      m_Items: []
+  - m_Id: 275312425594880
+    m_Key: Replenish_Button
+    m_Metadata:
+      m_Items: []
+  - m_Id: 277090370088960
+    m_Key: Host_Text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280216904953856
+    m_Key: Error_Header
     m_Metadata:
       m_Items: []
   m_Metadata:

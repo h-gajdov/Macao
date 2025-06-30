@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
 
 public class LoadingScreenManager : MonoBehaviour
@@ -22,7 +23,7 @@ public class LoadingScreenManager : MonoBehaviour
 
     public static LoadingScreenManager instance;
 
-    private string joiningRoomTMPBase = "Joining Room";
+    private string joiningRoomTMPBase;
     private int dotCount = 0;
 
     private void Awake() {
@@ -37,6 +38,7 @@ public class LoadingScreenManager : MonoBehaviour
     }
 
     private void Start() {
+        joiningRoomTMPBase = (LocalizationSettings.SelectedLocale == LocalizationSettings.AvailableLocales.Locales[0]) ? "Joining Room" : "Вклучување во Соба";
         mainMenuContent.SetActive(true);
         loadingScreen.SetActive(false);
     }
@@ -47,7 +49,7 @@ public class LoadingScreenManager : MonoBehaviour
 
         StartCoroutine(WaitForTimeout());
 
-        if (hostingGame) joiningRoomTMPBase = "Hosting Room";
+        if (hostingGame) joiningRoomTMPBase = (LocalizationSettings.SelectedLocale == LocalizationSettings.AvailableLocales.Locales[0]) ? "Hosting Room" : "Правење на Соба";
         joiningRoomTMP.text = joiningRoomTMPBase;
     }
 
@@ -61,12 +63,21 @@ public class LoadingScreenManager : MonoBehaviour
         dotCount = (dotCount + 1) % 4;
         string dots = new string('.', dotCount);
         joiningRoomTMP.text = joiningRoomTMPBase + dots;
-        loadingPlaceholderText.text = "Loading" + dots;
+
+        if  (LocalizationSettings.SelectedLocale == LocalizationSettings.AvailableLocales.Locales[0])
+                loadingPlaceholderText.text = "Loading" + dots;
+        else 
+                loadingPlaceholderText.text = "Вчитување" + dots;
     }
 
     private IEnumerator WaitForTimeout() {
         yield return new WaitForSecondsRealtime(30f);
-        MainMenuManager.instance.SetError("Connection time out!");
+
+        if (LocalizationSettings.SelectedLocale == LocalizationSettings.AvailableLocales.Locales[0])
+            MainMenuManager.instance.SetError("Connection time out!");
+        else 
+            MainMenuManager.instance.SetError("Времето за поврзување истече!");
+
         mainMenuContent.SetActive(true);
         loadingScreen.SetActive(false);
         PhotonNetwork.Disconnect();
