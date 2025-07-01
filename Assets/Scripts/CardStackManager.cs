@@ -36,14 +36,17 @@ public class CardStackManager : MonoBehaviour {
 
     public void PickUpCard(bool forced = false) {
         if (GameManager.GameHasFinished) return;
-        if (!forced && !GameManager.CanPickUpCard) return;
-        if(!forced) GameManager.CanPickUpCard = false;
+        if (!forced) {
+            if (!GameManager.CanPickUpCard) return;
+
+            UIManager.instance.skipTurnButton.interactable = GameManager.PlayerOnTurn.PV.IsMine;
+            GameManager.CanPickUpCard = false;
+        }
 
         if(UndealtCards.Count == 0) {
             ReplenishCardStack();
         }
 
-        UIManager.instance.skipTurnButton.interactable = GameManager.PlayerOnTurn.PV.IsMine;
 
         Card card = GameManager.PlayerOnTurn.cardArranger.SpawnCard(UndealtCards.Pop());
         if (UndealtCards.Count == 0) {
@@ -54,9 +57,10 @@ public class CardStackManager : MonoBehaviour {
         card.transform.localEulerAngles = new Vector3(-90f, 180f, 0f);
 
         SetCardCubeTransform(UndealtCards.Count);
+        AudioManager.Play("PickingUpCard");
     }
-    
-    private void SetCardCubeTransform(int count) {
+
+    public void SetCardCubeTransform(int count) {
         float factor = count / (GameManager.NumberOfDecks * 54f);
         cardStackCube.localScale = new Vector3(2.5f, factor, 3.65f);
 
@@ -66,19 +70,7 @@ public class CardStackManager : MonoBehaviour {
     }
 
     public void ReplenishCardStack() {
-        Card lastCard = GameManager.CardPoolList.Last();
-        GameManager.CardPoolList.Remove(lastCard);
-        GameManager.CardPoolList.Reverse();
-        foreach (Card card in GameManager.CardPoolList) {
-            UndealtCards.Push(card.GetValueString());
-            Destroy(card.gameObject);
-        }
-
-        UIManager.instance.replenishCardStack.gameObject.SetActive(false);
-        cardStackCube.gameObject.SetActive(true);
-        GameManager.CardPoolList.Clear();
-        GameManager.CardPoolList.Add(lastCard);
-        SetCardCubeTransform(UndealtCards.Count);
+        RPCManager.RPC("RPC_ReplenishCardStack", RpcTarget.All);
     }
 
     public static void SetUndealtCards(List<string> listOfUndealtCards) {

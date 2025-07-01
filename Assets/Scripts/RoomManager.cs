@@ -85,8 +85,15 @@ public class RoomManager : MonoBehaviourPunCallbacks {
 
         PlayerManager.instance.characterTransform.GetChild(index).gameObject.SetActive(false);
         Destroy(PlayerManager.Players[index].playerInLobbyPanel.gameObject);
+
         Player leftPlayer = PlayerManager.Players[index];
         PlayerManager.Players[index] = null;
+
+        if(GameManager.GameHasFinished) {
+            foreach(Player p in GameManager.InitialPlayerList) {
+                if (p != null) p.PV.RPC("RPC_Leave", p.PV.Owner);
+            }
+        }
 
         if(!GameManager.GameHasStarted) {
             PlayerManager.Players.RemoveAt(index);
@@ -100,6 +107,7 @@ public class RoomManager : MonoBehaviourPunCallbacks {
             int count = 0;
             foreach (Player p in PlayerManager.Players) {
                 if (p == null) continue;
+                if (p.playerInLeaderboard != null) Destroy(p.playerInLeaderboard.gameObject);
                 count++;
             }
 

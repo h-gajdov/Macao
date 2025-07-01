@@ -51,6 +51,11 @@ public class Player : MonoBehaviour {
     }
 
     [PunRPC]
+    private void RPC_Leave() {
+        if (PV.IsMine) PhotonNetwork.LeaveRoom();
+    }
+
+    [PunRPC]
     private void RPC_SpawnPlayer(string username, int avatarIdx) {
         this.username = username;
         this.avatarIdx = avatarIdx;

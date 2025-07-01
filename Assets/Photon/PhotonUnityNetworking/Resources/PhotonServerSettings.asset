@@ -71,6 +71,8 @@ MonoBehaviour:
   - RPC_TogglePlayAgain
   - RPC_SetDeckAndTimerSettings
   - DebugPrint
+  - RPC_Leave
+  - RPC_ReplenishCardStack
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

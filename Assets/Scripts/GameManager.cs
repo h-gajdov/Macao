@@ -197,7 +197,7 @@ public class GameManager : MonoBehaviour {
         int count = 0;
 
         while (count != 7) {
-            RPCManager.RPC("RPC_PickUpCard", RpcTarget.AllBuffered);
+            RPCManager.RPC("RPC_PickUpCard", RpcTarget.AllBuffered, true);
             yield return new WaitForSecondsRealtime(0.2f);
             RPCManager.RPC("RPC_ChangeTurn", RpcTarget.AllBuffered, false, false);
             rrIndex = (rrIndex + 1) % Players.Count;

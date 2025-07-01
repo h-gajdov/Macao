@@ -136,6 +136,7 @@ public class Card : MonoBehaviour {
             }
 
             if (data.value == 11) {
+                //player.playerPanel.StopAllCoroutines();
                 GameManager.SetPendingCard(this);
                 if (player.PV.IsMine) UIManager.instance.selectSuitButtons.SetActive(true);
                 yield break;
@@ -159,34 +160,6 @@ public class Card : MonoBehaviour {
         GameManager.SetCurrentCard(this);
     }
 
-    private IEnumerator RandomSpinWhenThrowing() {
-        float throwDuration = 0.25f;
-        float elapsed = 0f;
-
-        Vector3 startPos = transform.localPosition;
-        Vector3 targetPos = Vector3.zero;
-
-        float spinSpeed = 720f;
-
-        float startX = transform.localEulerAngles.x;
-        float targetX = 90f;
-        float currentZRotation = transform.localEulerAngles.z;
-
-        while (elapsed < throwDuration) {
-            elapsed += Time.deltaTime;
-            float t = elapsed / throwDuration;
-
-            transform.localPosition = Vector3.Lerp(startPos, targetPos, t);
-
-            float currentX = Mathf.LerpAngle(startX, targetX, t * selectSpeed / 4);
-            currentZRotation += spinSpeed * Time.deltaTime;
-
-            transform.localRotation = Quaternion.Euler(currentX, 0f, currentZRotation);
-
-            yield return null;
-        }
-    }
-
     private void SevensAndJokersLogic(int amount) {
         CardStackManager.PoolOfForcedPickup += amount;
         if (!GameManager.PlayerOnTurn.cardArranger.Contains(7) &&
@@ -203,7 +176,7 @@ public class Card : MonoBehaviour {
             if (cardArranger == null || !cardArranger.player.PV.IsMine) return;
         }
 
-        initialPosition = (!thrown) ? cardArranger.GetTargetPosition(transform) : Vector3.zero;
+        initialPosition = (!thrown) ? cardArranger.GetTargetPosition(transform) : Vector3.up * (transform.GetSiblingIndex() / (54f * GameManager.NumberOfDecks));
 
         if (hovered) {
             if (!soundPlayed) AudioManager.Play("CardHover");

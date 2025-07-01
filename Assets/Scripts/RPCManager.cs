@@ -50,6 +50,11 @@ public class RPCManager : MonoBehaviour {
     }
 
     [PunRPC]
+    private void RPC_PickUpCard(bool forced) {
+        CardStackManager.instance.PickUpCard(forced);
+    }
+
+    [PunRPC]
     private void RPC_PickUpCardsFromPoolOfForcedPickup() {
         CardStackManager.PickUpCardsFromPoolOfForcedPickup();
     }
@@ -152,5 +157,22 @@ public class RPCManager : MonoBehaviour {
         Debug.Log(numberOfDecks);
         Debug.Log("Decks: " + GameManager.NumberOfDecks);
         Debug.Log("Time per turn: " + PlayerPanel.TimeOfTurn);
+    }
+
+    [PunRPC]
+    private void RPC_ReplenishCardStack() {
+        Card lastCard = GameManager.CardPoolList.Last();
+        GameManager.CardPoolList.Remove(lastCard);
+        GameManager.CardPoolList.Reverse();
+        foreach (Card card in GameManager.CardPoolList) {
+            CardStackManager.UndealtCards.Push(card.GetValueString());
+            Destroy(card.gameObject);
+        }
+
+        UIManager.instance.replenishCardStack.gameObject.SetActive(false);
+        CardStackManager.instance.cardStackCube.gameObject.SetActive(true);
+        GameManager.CardPoolList.Clear();
+        GameManager.CardPoolList.Add(lastCard);
+        CardStackManager.instance.SetCardCubeTransform(CardStackManager.UndealtCards.Count);
     }
 }
