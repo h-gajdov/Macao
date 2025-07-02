@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using Photon.Pun;
 
 public class PlayerPanel : MonoBehaviour {
+    public Image panelImage;
     public TextMeshProUGUI username;
     public Image avatarImage;
     public Image timeFrame;
@@ -18,6 +19,7 @@ public class PlayerPanel : MonoBehaviour {
         medal.enabled = false;
         timeFrame.fillAmount = 0f;
         //StartCoroutine(StartCountingTime());
+        DeactivatePanel();
     }
 
     public void SetValues(Player player) {
@@ -33,6 +35,21 @@ public class PlayerPanel : MonoBehaviour {
     public void ActivateMedal(Player player, int medalIndex) {
         medal.enabled = true;
         medal.sprite = UIManager.instance.medals[medalIndex];
+    }
+
+    public void ActivatePanel() {
+        SetTransparency(1f);
+    }
+
+    public void DeactivatePanel() {
+        SetTransparency(0.5f);
+    }
+
+    private void SetTransparency(float value) {
+        panelImage.color = new Color(panelImage.color.r, panelImage.color.b, panelImage.color.g, value);
+        username.color = new Color(username.color.r, username.color.g, username.color.b, value);
+        avatarImage.color = new Color(avatarImage.color.r, avatarImage.color.g, avatarImage.color.b, value);
+        timeFrame.color = new Color(timeFrame.color.r, timeFrame.color.g, timeFrame.color.b, value);
     }
 
     private IEnumerator StartCountingTime_Coroutine() {

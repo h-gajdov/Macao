@@ -93,9 +93,11 @@ public class GameManager : MonoBehaviour {
         } while (Players[playerTurnIndex] == null || Players[playerTurnIndex].finished == true);
 
         Player nextPlayer = Players[playerTurnIndex];
+        PlayerOnTurn.playerPanel.DeactivatePanel();
         PlayerOnTurn.playerPanel.timeFrame.fillAmount = 0;
         PlayerOnTurn.playerPanel.StopAllCoroutines();
         PlayerOnTurn = nextPlayer;
+        PlayerOnTurn.playerPanel.ActivatePanel();
         PlayerOnTurn.playerPanel.StartCountingTime();
 
         PlayerOnTurn.cardArranger.EnableCards();
@@ -117,9 +119,11 @@ public class GameManager : MonoBehaviour {
         } while (Players[playerTurnIndex] == null || Players[playerTurnIndex].finished == true);
 
         Player nextPlayer = Players[playerTurnIndex];
+        PlayerOnTurn.playerPanel.DeactivatePanel();
         PlayerOnTurn.playerPanel.timeFrame.fillAmount = 0;
         PlayerOnTurn.playerPanel.StopAllCoroutines();
         PlayerOnTurn = nextPlayer;
+        PlayerOnTurn.playerPanel.ActivatePanel();
         PlayerOnTurn.playerPanel.StartCountingTime();
 
         PlayerOnTurn.cardArranger.EnableCards();
@@ -164,6 +168,7 @@ public class GameManager : MonoBehaviour {
             p.ready = false;
         }
         foreach (Player p in Players) {
+            if (p == null) continue;
             p.playerPanel.StopAllCoroutines();
             p.ready = false;
         }
@@ -183,11 +188,7 @@ public class GameManager : MonoBehaviour {
     }
 
     private void Update() {
-        debug = Players;
-
-        if(Input.GetKeyDown(KeyCode.G)) {
-            PlayerManager.SpawnPlayer();
-        }
+        debug = GameManager.InitialPlayerList;
     }
 
     public List<string> ShuffleCards() {

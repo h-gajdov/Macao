@@ -48,7 +48,14 @@ public class Player : MonoBehaviour {
         playerPanel.ActivateMedal(this, GameManager.FinishedPlayers.Count - 1);
 
         PlayerManager.Players.Remove(this);
-        if (PlayerManager.Players.Count <= 1) GameManager.FinishGame();
+        int count = 0;
+        foreach (Player p in PlayerManager.Players) if (p != null) count++;
+        if (count <= 1) GameManager.FinishGame();
+    }
+
+    [PunRPC]
+    private void RPC_Finish() {
+        Finish();
     }
 
     [PunRPC]

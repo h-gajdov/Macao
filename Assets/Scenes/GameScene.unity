@@ -5166,6 +5166,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83e86be6fe56fea42b1669c45fe9d188, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  panelImage: {fileID: 779863429}
   username: {fileID: 476917988}
   avatarImage: {fileID: 331921543}
   timeFrame: {fileID: 377898066}
@@ -10047,6 +10048,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83e86be6fe56fea42b1669c45fe9d188, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  panelImage: {fileID: 1589858905}
   username: {fileID: 1912115415}
   avatarImage: {fileID: 266419893}
   timeFrame: {fileID: 1988886994}
@@ -12511,6 +12513,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83e86be6fe56fea42b1669c45fe9d188, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  panelImage: {fileID: 1940250554}
   username: {fileID: 577140003}
   avatarImage: {fileID: 1764996703}
   timeFrame: {fileID: 1012551872}
@@ -12891,6 +12894,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83e86be6fe56fea42b1669c45fe9d188, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  panelImage: {fileID: 2049402157}
   username: {fileID: 1577443071}
   avatarImage: {fileID: 313857846}
   timeFrame: {fileID: 2021633878}

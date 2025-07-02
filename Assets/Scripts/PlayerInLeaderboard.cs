@@ -12,6 +12,7 @@ public class PlayerInLeaderboard : MonoBehaviour
     public GameObject readyTick;
 
     public void SetValues(Player player, int place) {
+        if (player == null) return;
         username.text = player.username;
         avatarImage.sprite = Global.AvatarSprites[player.avatarIdx];
         if (place <= 3) {

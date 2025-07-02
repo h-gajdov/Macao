@@ -10,7 +10,7 @@ using UnityEngine.SceneManagement;
 public class RoomManager : MonoBehaviourPunCallbacks {
     public static RoomManager instance;
 
-    public static int NumberOfDecks = 1, TimePerTurn = 20;
+    public static int NumberOfDecks = 2, TimePerTurn = 40;
 
     private void Awake() {
         if(instance == null) {
@@ -81,7 +81,10 @@ public class RoomManager : MonoBehaviourPunCallbacks {
     public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer) {
         Debug.Log("Player has disconnected: " + otherPlayer.NickName);
         int index = PlayerManager.Players.FindIndex(p => p != null && p.PV.OwnerActorNr == otherPlayer.ActorNumber);
+        int indexInitial = GameManager.InitialPlayerList.FindIndex(p => p != null && p.PV.OwnerActorNr == otherPlayer.ActorNumber);
         if (index == -1) return;
+
+        GameManager.InitialPlayerList.RemoveAt(indexInitial);
 
         PlayerManager.instance.characterTransform.GetChild(index).gameObject.SetActive(false);
         Destroy(PlayerManager.Players[index].playerInLobbyPanel.gameObject);
@@ -111,7 +114,7 @@ public class RoomManager : MonoBehaviourPunCallbacks {
                 count++;
             }
 
-            if (count == 1) {
+            if (count <= 1) {
                 PhotonNetwork.LeaveRoom();
             }
         }

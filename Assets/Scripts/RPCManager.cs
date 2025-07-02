@@ -154,7 +154,6 @@ public class RPCManager : MonoBehaviour {
         GameManager.NumberOfDecks = numberOfDecks;
         PlayerPanel.TimeOfTurn = timePerTurn;
 
-        Debug.Log(numberOfDecks);
         Debug.Log("Decks: " + GameManager.NumberOfDecks);
         Debug.Log("Time per turn: " + PlayerPanel.TimeOfTurn);
     }
