@@ -35,6 +35,11 @@ public class ProfileCustomizationManager : MonoBehaviour {
         arrowImage.color = buttonImage.color;
     }
 
+    public void Randomize() {
+        SetUsername(UsernameGenerator.GenerateUsername());
+        SetAvatarImage(Random.Range(0, Global.AvatarSprites.Count));
+    }
+
     public void OpenAvatarsView() {
         avatarsScrollView.SetActive(true);
     }
