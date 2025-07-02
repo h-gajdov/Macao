@@ -135,4 +135,8 @@ public class MainMenuManager : MonoBehaviour {
         howToPlayPanel.SetActive(false);
         aboutPanel.SetActive(false);
     }
+
+    public void GoToMyGitHub() {
+        Application.OpenURL("https://github.com/h-gajdov");
+    }
 }
