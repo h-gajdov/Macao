@@ -12,7 +12,7 @@ public class Player : MonoBehaviour {
     [HideInInspector] public int avatarIdx;
     [HideInInspector] public PlayerInLobby playerInLobbyPanel;
     [HideInInspector] public PlayerInLeaderboard playerInLeaderboard;
-    public PlayerPanel playerPanel;
+    [HideInInspector] public PlayerPanel playerPanel;
 
     public PhotonView PV;
     public CardArranger cardArranger;
@@ -36,6 +36,7 @@ public class Player : MonoBehaviour {
         foreach (Transform card in cardArranger.transform)
             Destroy(card.gameObject);
 
+        playerPanel.medal.enabled = false;
         playerPanel.StopAllCoroutines();
         cardArranger.cardsInHand.Clear();
     }

@@ -114,7 +114,7 @@ public class RPCManager : MonoBehaviour {
 
     [PunRPC]
     private void RPC_ForcePickUp() {
-        GameManager.ForcePickUp();
+        GameManager.ForcePickUp(null);
     }
 
     [PunRPC]

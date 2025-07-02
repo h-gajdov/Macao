@@ -115,6 +115,7 @@ public class Card : MonoBehaviour {
         if (GameManager.GameHasFinished) yield break;
 
         AudioManager.Play("ThrowingCard");
+        UIManager.instance.skipTurnButton.interactable = false;
 
         thrownByPlayer = player;
         transform.parent = GameManager.instance.cardsPool;

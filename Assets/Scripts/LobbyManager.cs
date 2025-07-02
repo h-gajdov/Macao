@@ -33,7 +33,7 @@ public class LobbyManager : MonoBehaviour {
 
         Color textColor = playButtonText.color;
         bool canPlay = ReadyCount > 1 && ReadyCount == PlayerManager.Players.Count;
-        playButton.interactable = true;
+        playButton.interactable = canPlay;
 
         textColor.a = (canPlay) ? 1f : 0.5f;
         playButtonText.color = textColor;

@@ -60,6 +60,8 @@ public class UIManager : MonoBehaviour {
             GameManager.CurrentCard = GameManager.pendingCard;
             GameManager.pendingCard = null;
             GameManager.CurrentCard.data.suit = toSuit;
+            Player player = GameManager.PlayerOnTurn;
+            if (player.cardArranger.cardsInHand.Count == 0) player.Finish();
             GameManager.ChangeTurn();
         }
 
@@ -89,7 +91,7 @@ public class UIManager : MonoBehaviour {
         if(GameManager.PlayerOnTurn.cardArranger.cardsInHand.Count == 1) {
             pressed = true;
         } else {
-            CardStackManager.instance.PickUpCard();
+            CardStackManager.instance.PickUpCard(true);
         }
         lastCard.interactable = false;
     }
@@ -101,7 +103,7 @@ public class UIManager : MonoBehaviour {
     public void PlayAgain() {
         PlayerManager.LocalPlayer.PV.RPC("RPC_TogglePlayAgain", RpcTarget.All);
         bool allReady = true;
-        foreach(Player p in PlayerManager.Players) {
+        foreach(Player p in GameManager.InitialPlayerList) {
             if (p.ready) continue;
             allReady = false;
             break;
@@ -163,7 +165,7 @@ public class UIManager : MonoBehaviour {
         lastCard.interactable = true;
         yield return new WaitForSeconds(2f);
         if(!pressed) {
-            RPCManager.RPC("RPC_PickUpCard", RpcTarget.AllBuffered);
+            RPCManager.RPC("RPC_PickUpCard", RpcTarget.AllBuffered, true);
         }
         lastCard.interactable = false;
         pressed = false;

@@ -52,12 +52,12 @@ public class GameManager : MonoBehaviour {
         Global.Initialize();
     }
 
-    public static void ForcePickUp() {
+    public static void ForcePickUp(Player next) {
         if (!CanThrow()) {
             if (CardStackManager.PoolOfForcedPickup != 0) {
                 CardStackManager.PickUpCardsFromPoolOfForcedPickup();
                 if(!CanThrow()) {
-                    CardStackManager.instance.PickUpCard();
+                    CardStackManager.instance.PickUpCard(false, next);
                 }
             } else 
                 CardStackManager.instance.PickUpCard();
@@ -80,29 +80,31 @@ public class GameManager : MonoBehaviour {
                cardArranger.Contains(15);
     }
 
-    private static void HandleTurnTransition() {
+    private static Player HandleTurnTransition() {
         CanPickUpCard = true;
-        if (PlayerOnTurn.PV.IsMine) {
+        if (PlayerOnTurn != null && PlayerOnTurn.PV.IsMine) {
             PlayerOnTurn.cardArranger.DisableAllCards();
             UIManager.instance.DisableButtons();
         }
 
         do {
             playerTurnIndex = (playerTurnIndex + 1) % Players.Count;
-            if (GameHasFinished) return;
+            if (GameHasFinished) return null;
         } while (Players[playerTurnIndex] == null || Players[playerTurnIndex].finished == true);
 
+        Player nextPlayer = Players[playerTurnIndex];
         PlayerOnTurn.playerPanel.timeFrame.fillAmount = 0;
         PlayerOnTurn.playerPanel.StopAllCoroutines();
-        PlayerOnTurn = Players[playerTurnIndex];
+        PlayerOnTurn = nextPlayer;
         PlayerOnTurn.playerPanel.StartCountingTime();
 
         PlayerOnTurn.cardArranger.EnableCards();
 
         if (PlayerOnTurn.PV.IsMine) UIManager.instance.replenishCardStack.interactable = true;
+        return nextPlayer;
     }
 
-    private static void HandleTurnTransition(bool toggleButtons) {
+    private static Player HandleTurnTransition(bool toggleButtons) {
         CanPickUpCard = true;
         if (PlayerOnTurn.PV.IsMine && toggleButtons) {
             PlayerOnTurn.cardArranger.DisableAllCards();
@@ -111,32 +113,34 @@ public class GameManager : MonoBehaviour {
 
         do {
             playerTurnIndex = (playerTurnIndex + 1) % Players.Count;
-            if (GameHasFinished) return;
+            if (GameHasFinished) return null;
         } while (Players[playerTurnIndex] == null || Players[playerTurnIndex].finished == true);
 
+        Player nextPlayer = Players[playerTurnIndex];
         PlayerOnTurn.playerPanel.timeFrame.fillAmount = 0;
         PlayerOnTurn.playerPanel.StopAllCoroutines();
-        PlayerOnTurn = Players[playerTurnIndex];
+        PlayerOnTurn = nextPlayer;
         PlayerOnTurn.playerPanel.StartCountingTime();
 
         PlayerOnTurn.cardArranger.EnableCards();
 
         if (PlayerOnTurn.PV.IsMine) UIManager.instance.replenishCardStack.interactable = true;
+        return nextPlayer;
     }
 
     public static void ChangeTurn() {
-        HandleTurnTransition();
-        ForcePickUp();
+        Player next = HandleTurnTransition();
+        ForcePickUp(next);
     }
 
     public static void ChangeTurn(bool forcePickUp) {
-        HandleTurnTransition();
-        if(forcePickUp) ForcePickUp();
+        Player next = HandleTurnTransition();
+        if(forcePickUp) ForcePickUp(next);
     }
 
     public static void ChangeTurn(bool forcePickUp, bool toggleButtons) {
-        HandleTurnTransition(toggleButtons);
-        if (forcePickUp) ForcePickUp();
+        Player next = HandleTurnTransition(toggleButtons);
+        if (forcePickUp) ForcePickUp(next);
     }
 
     public static void SetPendingCard(Card card) {

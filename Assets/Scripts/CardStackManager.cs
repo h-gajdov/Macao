@@ -60,6 +60,32 @@ public class CardStackManager : MonoBehaviour {
         AudioManager.Play("PickingUpCard");
     }
 
+    public void PickUpCard(bool forced, Player player) {
+        if (GameManager.GameHasFinished) return;
+        if (!forced) {
+            if (!GameManager.CanPickUpCard) return;
+
+            UIManager.instance.skipTurnButton.interactable = GameManager.PlayerOnTurn.PV.IsMine;
+            GameManager.CanPickUpCard = false;
+        }
+
+        if (UndealtCards.Count == 0) {
+            ReplenishCardStack();
+        }
+
+
+        Card card = player.cardArranger.SpawnCard(UndealtCards.Pop());
+        if (UndealtCards.Count == 0) {
+            cardStackCube.gameObject.SetActive(false);
+            UIManager.instance.replenishCardStack.gameObject.SetActive(true);
+        }
+        card.transform.position = transform.position;
+        card.transform.localEulerAngles = new Vector3(-90f, 180f, 0f);
+
+        SetCardCubeTransform(UndealtCards.Count);
+        AudioManager.Play("PickingUpCard");
+    }
+
     public void SetCardCubeTransform(int count) {
         float factor = count / (GameManager.NumberOfDecks * 54f);
         cardStackCube.localScale = new Vector3(2.5f, factor, 3.65f);
