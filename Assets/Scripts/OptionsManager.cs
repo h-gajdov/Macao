@@ -22,9 +22,11 @@ public class OptionsManager : MonoBehaviour {
     private List<Resolution> availableResolutions = new List<Resolution>();
     private bool isFullscreen;
 
-    private void Start() {
+    private void Awake() {
         SetResolutionsOnDropdown();
+    }
 
+    private void Start() {
         if(!PlayerPrefs.HasKey("SettingsSet")) {
             SetDefaultSettings();
         } else {
@@ -72,6 +74,7 @@ public class OptionsManager : MonoBehaviour {
 
         InitializeAudio(0.5f, 0.5f);
 
+        applyButton.interactable = false;
         PlayerPrefs.SetInt("SettingsSet", 1);
     }
 
@@ -127,6 +130,11 @@ public class OptionsManager : MonoBehaviour {
         resolutionsDropdown.value = resIndex;
 
         InitializeAudio(PlayerPrefs.GetFloat("MusicVolume"), PlayerPrefs.GetFloat("SFXVolume"));
+    }
+
+    public void Back(GameObject panel) {
+        panel.SetActive(false);
+        SaveSettings();
     }
 
     private void InitializeAudio(float music, float sfx) {
