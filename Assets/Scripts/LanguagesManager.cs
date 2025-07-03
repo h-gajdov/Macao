@@ -16,12 +16,14 @@ public class LanguagesManager : MonoBehaviour
 
     private void Start() {
         languagesPanel.SetActive(false);
-        if (!PlayerPrefs.HasKey("Language"))
+        if (!PlayerPrefs.HasKey("Language")) {
+            SelectLanguage("English");
             ChangeLanguage(0);
+        }
         else {
-            SelectedLanguage = PlayerPrefs.GetString("SelectedLanguageHash");
-            selectedLanguageImage.sprite = Global.CountryFlags[SelectedLanguage];
-            ChangeLanguage(PlayerPrefs.GetInt("Language"));
+            int languageIndex = PlayerPrefs.GetInt("Language");
+            SelectLanguage(Global.AvailableLanguages[languageIndex]);
+            ChangeLanguage(languageIndex);
         }
     }
 
@@ -42,12 +44,11 @@ public class LanguagesManager : MonoBehaviour
         selected.SetAsLastSibling();
     }
 
-    public void SelectLanguage(TextMeshProUGUI text) {
-        SelectedLanguage = text.text;
+    public void SelectLanguage(string text) {
+        SelectedLanguage = text;
         languagesPanel.SetActive(false);
         selectedLanguageImage.sprite = Global.CountryFlags[SelectedLanguage];
         languagesOpen = false;
-        PlayerPrefs.SetString("SelectedLanguageHash", SelectedLanguage);
     }
 
     public void ChangeLanguage(int index) {

@@ -21,6 +21,7 @@ public class MainMenuManager : MonoBehaviour {
     public static MainMenuManager instance;
 
     private void Awake() {
+        Global.Initialize();
         if (instance == null) instance = this;
         else {
             Destroy(this);
@@ -29,7 +30,6 @@ public class MainMenuManager : MonoBehaviour {
     }
 
     private void Start() {
-        Global.Initialize();
         DisableAllPanels();
 
         AudioManager.Play("MainSong");

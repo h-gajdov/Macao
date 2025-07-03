@@ -10,9 +10,12 @@ public class MainMenuCardSpawner : MonoBehaviour
     public float positionOffset = 0.1f;
 
     float prevSpawnTime;
+    private void Awake() {
+        Global.Initialize();
+    }
+
     private void Start()
     {
-        Global.Initialize();
         InvokeRepeating(nameof(Spawn), 0f, spawnTime);
         prevSpawnTime = spawnTime;
     }
