@@ -37,7 +37,7 @@ public class RPCManager : MonoBehaviour {
     [PunRPC]
     private void RPC_InitializeAvailabilityOfCards() {
         foreach (Player p in PlayerManager.Players) {
-            if (!p.PV.IsMine) continue;
+            if (p == null || !p.PV.IsMine) continue;
             p.cardArranger.DisableAllCards();
         }
 

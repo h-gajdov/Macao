@@ -84,8 +84,6 @@ public class RoomManager : MonoBehaviourPunCallbacks {
         int indexInitial = GameManager.InitialPlayerList.FindIndex(p => p != null && p.PV.OwnerActorNr == otherPlayer.ActorNumber);
         if (index == -1) return;
 
-        GameManager.InitialPlayerList.RemoveAt(indexInitial);
-
         PlayerManager.instance.characterTransform.GetChild(index).gameObject.SetActive(false);
         Destroy(PlayerManager.Players[index].playerInLobbyPanel.gameObject);
 
@@ -103,8 +101,9 @@ public class RoomManager : MonoBehaviourPunCallbacks {
             PlayerManager.AssignPositions();
             UIManager.UpdatePlayersInLobby();
         } else {
-            if (GameManager.PlayerOnTurn == leftPlayer) RPCManager.RPC("RPC_ChangeTurn", RpcTarget.All);
+            if (GameManager.PlayerOnTurn == leftPlayer) RPCManager.RPC("RPC_ChangeTurn", RpcTarget.All, false);
 
+            GameManager.InitialPlayerList.RemoveAt(indexInitial);
             leftPlayer.cardArranger.ReturnCards();
 
             int count = 0;

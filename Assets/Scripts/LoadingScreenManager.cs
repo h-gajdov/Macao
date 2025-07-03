@@ -56,7 +56,7 @@ public class LoadingScreenManager : MonoBehaviour
     public void SetProgress(float progress) {
         loadingSlider.value = progress;
         loadingFrame.fillAmount = progress;
-        progressText.text = $"{progress * 100f}%";
+        progressText.text = $"{(int)(progress * 100f)}%";
     }
 
     private void DotAnimation() {

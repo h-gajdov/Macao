@@ -210,11 +210,9 @@ public class GameManager : MonoBehaviour {
         }
 
         RPCManager.RPC("RPC_SetFirstCard", RpcTarget.AllBuffered, last);
-        RPCManager.RPC("RPC_GameHasStarted", RpcTarget.AllBuffered);
         RPCManager.RPC("RPC_InitializeAvailabilityOfCards", RpcTarget.AllBuffered);
         RPCManager.RPC("RPC_ForcePickUp", RpcTarget.AllBuffered);
         RPCManager.RPC("RPC_StartCountingTime", RpcTarget.AllBuffered);
-        RPCManager.RPC("RPC_SyncInitialPlayerList", RpcTarget.AllBuffered);
     }
 
     public void DealCards() {
@@ -232,6 +230,8 @@ public class GameManager : MonoBehaviour {
         deck.Remove(last);
 
         int playerOnTurnIdx = Random.Range(0, Players.Count);
+        RPCManager.RPC("RPC_SyncInitialPlayerList", RpcTarget.AllBuffered);
+        RPCManager.RPC("RPC_GameHasStarted", RpcTarget.AllBuffered);
         RPCManager.RPC("RPC_SetPlayerOnTurn", RpcTarget.AllBuffered, playerOnTurnIdx);
         RPCManager.RPC("RPC_SetUndealtCards", RpcTarget.AllBuffered, deck.ToArray());
         StartCoroutine(DealingAnimation(last));
