@@ -63,7 +63,7 @@ public class Player : MonoBehaviour {
    private void RPC_SpawnPlayer(string username, int avatarIdx) {...}
    [PunRPC]
    private void RPC_Leave() {...}
-   [PunRPC]\
+   [PunRPC]
    private void RPC_Throw(int cardIndex) {...}
 ```
 - RPC\_SpawnPlayer(…): иницијализација на податоци на играчот и прикажување на UI компоненти
@@ -126,3 +126,5 @@ public class Card : MonoBehaviour {
 - Лого: Make me a logo for the game containing all of the suits placed on cards, the logo should be transparent and it should have a grey theme only the colors of the suits and the values should stay.
 
 Користен модел: ChatGPT-4 (OpenAI), пристапен преку ChatGPT Web.
+
+Изработил: Христијан Гајдов 231119
