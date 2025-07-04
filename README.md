@@ -116,8 +116,8 @@ public class Card : MonoBehaviour {
 
 Изглед на играта:
 
-|![Screenshot_1](DocumentationImages/Screenshot_1.png)|![Screenshot_2](DocumentationImages/Screenshot_2.png)|
-| :- | :- |
+|![Screenshot_1](DocumentationImages/Screenshot_1.png)|![Screenshot_2](DocumentationImages/Screenshot_2.png)|![Gameplay](DocumentationImages/Gameplay.gif)|
+| :- | :- | :- |
 # 6. Користење на генеративна вештачка интелигенција
 Генеративна вештачка интелигенција беше користена за генерирање на логото на самата игра како и за текстот во About и How to play во главното мени. Прво изворните датотеки беа поставени на LLM-от и користени prompts беа:
 
