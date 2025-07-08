@@ -212,5 +212,9 @@ MonoBehaviour:
     m_Localized: Error
     m_Metadata:
       m_Items: []
+  - m_Id: 3264606283001856
+    m_Localized: Randomize
+    m_Metadata:
+      m_Items: []
   references:
     version: 1

@@ -149,9 +149,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_StringReference:
     m_TableReference:
-      m_TableCollectionName: GUID:0128cf6f30a0c534dbb755d1c0877fc1
+      m_TableCollectionName: 
     m_TableEntryReference:
-      m_KeyId: 277090370088960
+      m_KeyId: 0
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
@@ -159,19 +159,7 @@ MonoBehaviour:
   m_FormatArguments: []
   m_UpdateString:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5045435581110733795}
-        m_TargetAssemblyTypeName: TMPro.TMP_Text, Unity.TextMeshPro
-        m_MethodName: set_text
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   references:
     version: 1
 --- !u!1 &8239861235741248755
@@ -264,8 +252,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 62.83, y: 0}
-  m_SizeDelta: {x: 424.34, y: 100}
+  m_AnchoredPosition: {x: 14.802597, y: 0}
+  m_SizeDelta: {x: 328.2852, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8239861235856183731
 CanvasRenderer:
@@ -322,7 +310,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
+  m_fontSize: 30.1
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
